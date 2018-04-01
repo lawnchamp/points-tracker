@@ -1,43 +1,72 @@
 <template>
   <div class="points">
     <h1>{{title}}</h1>
-    <input
-      v-model.trim="newCompetition.name"
-      placeholder="Competition Name"
-      @keyup.enter="addCompetition"
-    >
-    <input
-      v-model.trim="newCompetition.winningTeam"
-      placeholder="Winning Team"
-      @keyup.enter="addCompetition"
-    >
-    <input
-      v-model.trim="newCompetition.pointsAwarded"
-      placeholder="Points Awarded"
-      @keyup.enter="addCompetition"
-    >
+    
+    <ul>
+      <li v-for="teamName in teamNames" :key="teamName">
+        {{teamName}}: {{teamScores[teamName]}}
+      </li>
+    </ul>
+    <table align="center">
+      <td>
+        <input
+          v-model.trim="newCompetition.name"
+          placeholder="Competition Name"
+          @keyup.enter="addCompetition"
+        >
+      </td>
+      <td>
+        <input
+          v-model.trim="newCompetition.winningTeam"
+          placeholder="Winning Team"
+          @keyup.enter="addCompetition"
+        >
+      </td>
+      <td>
+        <input
+          v-model.trim="newCompetition.pointsAwarded"
+          placeholder="Points Awarded"
+          @keyup.enter="addCompetition"
+        >
+      </td>
 
-    {{competitions}}
+      <tr v-for="({name, winningTeam, pointsAwarded}, index) in competitions" :key="index + name">
+        <td>{{name}}</td>
+        <td>{{winningTeam}}</td>
+        <td>{{pointsAwarded}}</td>
+      </tr>
+    </table>
   </div>
 </template>
 
 <script>
+import names from '@/data/teamNames.js';
+import seedCompetitions from '@/data/seedCompetitions.js';
+import competitionWeights from '@/data/competitionWeights.js';
+
 export default {
   name: 'Points',
   data: function() {
     return {
         title: 'Points',
-        competitions: [],
+        competitions: seedCompetitions,
         newCompetition: {
           name: '',
           winningTeam: '',
           pointsAwarded: '', 
-        }
+        },
+        message: 'hello!',
+        teamNames: names,
     };
   },
   methods: {
     // How can this be tested?
     addCompetition() {
+      if (!this.validCompetition(this.newCompetition)) {
+        console.log("invalid competition");
+        return;
+      }
+
       this.competitions.push({
         name: this.newCompetition.name,
         winningTeam: this.newCompetition.winningTeam,
@@ -48,7 +77,43 @@ export default {
       this.newCompetition.name = '';
       this.newCompetition.winningTeam = '',
       this.newCompetition.pointsAwarded = '';
-    }
+    },
+
+    // this method should trigger some user feedback so they know why 
+    // data input isn't working
+    //
+    // should this be a computed?
+    validCompetition(competition) {
+      return this.validTeamName(competition.winningTeam) && !this.missingCompetitionData(competition);
+    },
+    validTeamName(teamName) {
+      return this.teamNames.includes(teamName);
+    },
+    missingCompetitionData(competition) {
+      return competition.name == '' || competition.winningTeam == '' || competition.pointsAwarded == '';
+    },
+  },
+  computed: {
+    teamScores() {
+      return this.competitions.reduce((acc, {winningTeam, pointsAwarded}) => {
+        acc[winningTeam] = (acc[winningTeam] || 0) + pointsAwarded;
+        return acc;
+      }, {});
+      // return {
+      //   red: 10, 
+      //   blue: 12,
+      //   brown: 6,
+      //   black: 9, 
+      //   orange: 18, 
+      //   purple: 16
+      // };
+    },
+  },
+
+  // I made this for testing but when would you use something like this?
+  // wouldn't everything be in methods,computed, or data?
+  created() {
+    this.message = 'bye!'
   }
 }
 </script>
@@ -68,5 +133,20 @@ li {
 }
 a {
   color: #42b983;
+}
+
+table {
+    border-collapse: collapse;
+    width: 50%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
 }
 </style>
