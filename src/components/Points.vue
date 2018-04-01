@@ -1,6 +1,23 @@
 <template>
   <div class="points">
     <h1>{{title}}</h1>
+    <input
+      v-model.trim="newCompetition.name"
+      placeholder="Competition Name"
+      @keyup.enter="addCompetition"
+    >
+    <input
+      v-model.trim="newCompetition.winningTeam"
+      placeholder="Winning Team"
+      @keyup.enter="addCompetition"
+    >
+    <input
+      v-model.trim="newCompetition.pointsAwarded"
+      placeholder="Points Awarded"
+      @keyup.enter="addCompetition"
+    >
+
+    {{competitions}}
   </div>
 </template>
 
@@ -8,10 +25,31 @@
 export default {
   name: 'Points',
   data: function() {
-      return {
-          title: 'Points',
-      };
+    return {
+        title: 'Points',
+        competitions: [],
+        newCompetition: {
+          name: '',
+          winningTeam: '',
+          pointsAwarded: '', 
+        }
+    };
   },
+  methods: {
+    // How can this be tested?
+    addCompetition() {
+      this.competitions.push({
+        name: this.newCompetition.name,
+        winningTeam: this.newCompetition.winningTeam,
+        pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10),
+      })
+
+      // can this be cleared faster? feels verbose
+      this.newCompetition.name = '';
+      this.newCompetition.winningTeam = '',
+      this.newCompetition.pointsAwarded = '';
+    }
+  }
 }
 </script>
 
