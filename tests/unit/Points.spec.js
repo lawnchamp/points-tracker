@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { shallow } from '@vue/test-utils'
 import Points from '@/components/Points.vue'
 
 describe('Points.vue', () => {

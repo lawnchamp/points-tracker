@@ -33,7 +33,11 @@
       <tr v-for="({name, winningTeam, pointsAwarded}, index) in competitions" :key="index + name">
         <td>{{name}}</td>
         <td>{{winningTeam}}</td>
-        <td>{{pointsAwarded}}</td>
+        <td>
+          {{pointsAwarded}}
+          <button @click="removeCompetition(index)">remove</button>
+        </td>
+        
       </tr>
     </table>
   </div>
@@ -92,6 +96,9 @@ export default {
     missingCompetitionData(competition) {
       return competition.name == '' || competition.winningTeam == '' || competition.pointsAwarded == '';
     },
+    removeCompetition(index) {
+      this.competitions.splice(index, 1);
+    },
   },
   computed: {
     teamScores() {
@@ -133,6 +140,10 @@ li {
 }
 a {
   color: #42b983;
+}
+
+button {
+  float: right;
 }
 
 table {
