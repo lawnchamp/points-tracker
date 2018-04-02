@@ -35,9 +35,8 @@
         <td>{{winningTeam}}</td>
         <td>
           {{pointsAwarded}}
-          <button @click="removeCompetition(index)">remove</button>
+          <button class="removeButton" @click="removeCompetition(index)">remove</button>
         </td>
-
       </tr>
     </table>
   </div>
@@ -52,7 +51,7 @@ export default {
   data () {
     return {
       title: 'Points',
-      competitions: seedCompetitions,
+      competitions: [],
       newCompetition: {
         name: '',
         winningTeam: '',
@@ -76,7 +75,6 @@ export default {
   methods: {
     addCompetition () {
       if (!this.validCompetition(this.newCompetition)) {
-        console.log('invalid competition')
         return
       }
 

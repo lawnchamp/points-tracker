@@ -35,7 +35,6 @@ describe('Points.vue', () => {
     })
   })
 
-  // pretty weak test
   describe('.removeCompetition', () => {
     it('removes competition given at index 1', () => {
       const originalLength = wrapper.vm.competitions.length
@@ -45,8 +44,29 @@ describe('Points.vue', () => {
     })
   })
 
-  describe('.teamScores', () => {
+  describe('removing competition', () => {
+    it('checks dom for one less remove button', () => {
+      const originalLength = wrapper.findAll('.removeButton').length
+      wrapper.find('.removeButton').trigger('click')
 
+      expect(wrapper.findAll('.removeButton').length).toBe(originalLength - 1)
+    })
+  })
+
+  describe('.teamScores', () => {
+    it('adds the score together for winningTeam with the same name', () => {
+      expect(wrapper.vm.teamScores).toMatchObject({
+        black: 13,
+        red: 5
+      })
+    })
+
+    it('returns empty object when competitions are empty', () => {
+      wrapper.setData({ competitions: [] })
+
+      expect(wrapper.vm.competitions).toEqual([])
+      expect(wrapper.vm.teamScores).toMatchObject({})
+    })
   })
 
   describe('.missingCompetitionData', () => {
