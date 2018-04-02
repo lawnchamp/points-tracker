@@ -37,76 +37,74 @@
           {{pointsAwarded}}
           <button @click="removeCompetition(index)">remove</button>
         </td>
-        
+
       </tr>
     </table>
   </div>
 </template>
 
 <script>
-import names from '@/data/teamNames.js';
-import seedCompetitions from '@/data/seedCompetitions.js';
-import competitionWeights from '@/data/competitionWeights.js';
+import names from '@/data/teamNames.js'
+import seedCompetitions from '@/data/seedCompetitions.js'
 
 export default {
   name: 'Points',
-  data() {
+  data () {
     return {
-        title: 'Points',
-        competitions: seedCompetitions,
-        newCompetition: {
-          name: '',
-          winningTeam: '',
-          pointsAwarded: '',
-        },
-        message: 'hello!',
-        teamNames: names,
-    };
+      title: 'Points',
+      competitions: seedCompetitions,
+      newCompetition: {
+        name: '',
+        winningTeam: '',
+        pointsAwarded: ''
+      },
+      message: 'hello!',
+      teamNames: names
+    }
   },
   methods: {
-    // How can this be tested?
-    addCompetition() {
+    addCompetition () {
       if (!this.validCompetition(this.newCompetition)) {
-        console.log("invalid competition");
-        return;
+        console.log('invalid competition')
+        return
       }
 
       this.competitions.push({
         name: this.newCompetition.name,
         winningTeam: this.newCompetition.winningTeam,
-        pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10),
+        pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10)
       })
 
-      this.newCompetition.name = '';
-      this.newCompetition.winningTeam = '';
-      this.newCompetition.pointsAwarded = '';
+      this.newCompetition.name = ''
+      this.newCompetition.winningTeam = ''
+      this.newCompetition.pointsAwarded = ''
     },
 
-    // this method should trigger some user feedback so they know why 
+    // this method should trigger some user feedback so they know why
     // data input isn't working
     //
     // should this be a computed?
-    validCompetition(competition) {
-      return this.validTeamName(competition.winningTeam) && !this.missingCompetitionData(competition);
+    validCompetition (competition) {
+      return this.validTeamName(competition.winningTeam) && !this.missingCompetitionData(competition)
     },
-    validTeamName(teamName) {
-      return this.teamNames.includes(teamName);
+    validTeamName (teamName) {
+      return this.teamNames.includes(teamName)
     },
-    missingCompetitionData(competition) {
-      return competition.name == '' || competition.winningTeam == '' || competition.pointsAwarded == '';
+    missingCompetitionData (competition) {
+      return competition.name === '' || competition.winningTeam === '' || competition.pointsAwarded === ''
     },
-    removeCompetition(index) {
-      this.competitions.splice(index, 1);
-    },
+    removeCompetition (index) {
+      this.competitions.splice(index, 1)
+    }
   },
   computed: {
-    teamScores() {
+    teamScores () {
       return this.competitions.reduce((acc, {winningTeam, pointsAwarded}) => {
-        acc[winningTeam] = (acc[winningTeam] || 0) + pointsAwarded;
-        return acc;
-      }, {});
-    },
-  },
+        acc[winningTeam] = (acc[winningTeam] || 0) + pointsAwarded
+        return acc
+      }, {})
+    }
+  }
 }
 </script>
 

@@ -1,5 +1,5 @@
-const teamGame = 300;
-const stageCompetition = 150;
+const teamGame = 300
+const stageCompetition = 150
 
 export default {
   soccer: teamGame,
@@ -12,5 +12,5 @@ export default {
   tugOfWar: 200,
   morningSwim: 100,
   lostItem: -20,
-  brokeCurfew: -100,
-};
+  brokeCurfew: -100
+}
