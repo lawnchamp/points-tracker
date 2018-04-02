@@ -1,10 +1,26 @@
 import Points from '@/components/Points.vue'
-import seedCompetitions from '@/data/seedCompetitions.js'
-
 import { mount } from '@vue/test-utils'
 
 describe('Points.vue', () => {
-  const wrapper = mount(Points)
+  let wrapper
+  beforeEach(() => {
+    wrapper = mount(Points)
+    wrapper.setData({
+      competitions: [{
+        name: 'dodge ball',
+        winningTeam: 'black',
+        pointsAwarded: 3
+      }, {
+        name: 'soccer',
+        winningTeam: 'red',
+        pointsAwarded: 5
+      }, {
+        name: 'soccer',
+        winningTeam: 'black',
+        pointsAwarded: 10
+      }]
+    })
+  })
 
   it('properly loads team names', () => {
     expect(wrapper.vm.teamNames).toEqual(['red', 'blue', 'brown', 'black', 'orange', 'purple'])
@@ -22,9 +38,7 @@ describe('Points.vue', () => {
   // pretty weak test
   describe('.removeCompetition', () => {
     it('removes competition given at index 1', () => {
-      wrapper.vm.competitions = seedCompetitions
       const originalLength = wrapper.vm.competitions.length
-
       wrapper.vm.removeCompetition(1)
 
       expect(wrapper.vm.competitions.length).toEqual(originalLength - 1)
