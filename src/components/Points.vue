@@ -62,6 +62,17 @@ export default {
       teamNames: names
     }
   },
+  computed: {
+    teamScores () {
+      return this.competitions.reduce((acc, {winningTeam, pointsAwarded}) => {
+        acc[winningTeam] = (acc[winningTeam] || 0) + pointsAwarded
+        return acc
+      }, {})
+    }
+  },
+  created () {
+    this.competitions = [...seedCompetitions]
+  },
   methods: {
     addCompetition () {
       if (!this.validCompetition(this.newCompetition)) {
@@ -95,14 +106,6 @@ export default {
     },
     removeCompetition (index) {
       this.competitions.splice(index, 1)
-    }
-  },
-  computed: {
-    teamScores () {
-      return this.competitions.reduce((acc, {winningTeam, pointsAwarded}) => {
-        acc[winningTeam] = (acc[winningTeam] || 0) + pointsAwarded
-        return acc
-      }, {})
     }
   }
 }
