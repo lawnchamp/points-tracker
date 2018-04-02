@@ -1,7 +1,7 @@
 <template>
   <div class="points">
     <h1>{{title}}</h1>
-    
+
     <ul>
       <li v-for="teamName in teamNames" :key="teamName">
         {{teamName}}: {{teamScores[teamName]}}
@@ -50,14 +50,14 @@ import competitionWeights from '@/data/competitionWeights.js';
 
 export default {
   name: 'Points',
-  data: function() {
+  data() {
     return {
         title: 'Points',
         competitions: seedCompetitions,
         newCompetition: {
           name: '',
           winningTeam: '',
-          pointsAwarded: '', 
+          pointsAwarded: '',
         },
         message: 'hello!',
         teamNames: names,
@@ -77,9 +77,8 @@ export default {
         pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10),
       })
 
-      // can this be cleared faster? feels verbose
       this.newCompetition.name = '';
-      this.newCompetition.winningTeam = '',
+      this.newCompetition.winningTeam = '';
       this.newCompetition.pointsAwarded = '';
     },
 
@@ -106,22 +105,8 @@ export default {
         acc[winningTeam] = (acc[winningTeam] || 0) + pointsAwarded;
         return acc;
       }, {});
-      // return {
-      //   red: 10, 
-      //   blue: 12,
-      //   brown: 6,
-      //   black: 9, 
-      //   orange: 18, 
-      //   purple: 16
-      // };
     },
   },
-
-  // I made this for testing but when would you use something like this?
-  // wouldn't everything be in methods,computed, or data?
-  created() {
-    this.message = 'bye!'
-  }
 }
 </script>
 
