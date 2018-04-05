@@ -8,28 +8,29 @@
       </li>
     </ul>
     <table align="center">
-      <td>
-        <input
-          v-model.trim="newCompetition.name"
-          placeholder="Competition Name"
-          @keyup.enter="addCompetition"
-        >
-      </td>
-      <td>
-        <input
-          v-model.trim="newCompetition.winningTeam"
-          placeholder="Winning Team"
-          @keyup.enter="addCompetition"
-        >
-      </td>
-      <td>
-        <input
-          v-model.trim="newCompetition.pointsAwarded"
-          placeholder="Points Awarded"
-          @keyup.enter="addCompetition"
-        >
-      </td>
-
+      <tr>
+        <th>
+          <input
+            v-model.trim="newCompetition.name"
+            placeholder="Competition Name"
+            @keyup.enter="addCompetition"
+          >
+        </th>
+        <th>
+          <input
+            v-model.trim="newCompetition.winningTeam"
+            placeholder="Winning Team"
+            @keyup.enter="addCompetition"
+          >
+        </th>
+        <th>
+          <input
+            v-model.trim="newCompetition.pointsAwarded"
+            placeholder="Points Awarded"
+            @keyup.enter="addCompetition"
+          >
+        </th>
+      </tr>
       <tr v-for="({name, winningTeam, pointsAwarded}, index) in competitions" :key="index + name">
         <td>{{name}}</td>
         <td>{{winningTeam}}</td>
