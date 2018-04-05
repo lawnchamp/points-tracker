@@ -10,18 +10,23 @@
     <table align="center">
       <tr>
         <th>
-          <input
-            v-model.trim="newCompetition.name"
-            placeholder="Competition Name"
-            @keyup.enter="addCompetition"
-          >
+          <multiselect
+            v-model="newCompetition.name"
+            placeholder='Competition'
+            :options="competitionNames"
+          />
         </th>
         <th>
-          <input
+          <!-- <input
             v-model.trim="newCompetition.winningTeam"
             placeholder="Winning Team"
             @keyup.enter="addCompetition"
-          >
+          > -->
+          <multiselect
+            v-model="newCompetition.winningTeam"
+            placeholder='Winning Team'
+            :options="teamNames"
+          />
         </th>
         <th>
           <input
@@ -45,10 +50,14 @@
 import names from '@/data/teamNames.js'
 import seedCompetitions from '@/data/seedCompetitions.js'
 import CompetitionRow from '@/components/CompetitionRow.vue'
+import competitionWeights from '@/data/competitionWeights.js'
+import Multiselect from 'vue-multiselect'
+import {startCase as _startCase} from 'lodash'
 
 export default {
   name: 'Points',
   components: {
+    Multiselect,
     CompetitionRow
   },
   data () {
@@ -61,7 +70,8 @@ export default {
         pointsAwarded: ''
       },
       message: 'hello!',
-      teamNames: names
+      teamNames: names,
+      selectedFromDropdown: null
     }
   },
   computed: {
@@ -70,6 +80,9 @@ export default {
         acc[winningTeam] = (acc[winningTeam] || 0) + pointsAwarded
         return acc
       }, {})
+    },
+    competitionNames () {
+      return Object.keys(competitionWeights).map(competitionName => _startCase(competitionName))
     }
   },
   created () {
@@ -90,6 +103,9 @@ export default {
       this.newCompetition.name = ''
       this.newCompetition.winningTeam = ''
       this.newCompetition.pointsAwarded = ''
+    },
+    optionSelected (selected) {
+      this.selectedFromDropdown.push(selected)
     },
 
     // this method should trigger some user feedback so they know why
@@ -113,6 +129,10 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+
+<!-- what is the proper way to do this style script -->
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
 <style scoped lang="scss">
 h3 {
   margin: 40px 0 0;

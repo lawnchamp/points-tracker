@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "vue": "^2.5.13",
+    "vue-multiselect": "^2.1.0",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
@@ -17,7 +18,7 @@
     "@vue/cli-plugin-eslint": "^3.0.0-beta.6",
     "@vue/cli-plugin-unit-jest": "^3.0.0-beta.6",
     "@vue/cli-service": "^3.0.0-beta.6",
-    "@vue/eslint-config-standard": "^3.0.0-beta.6",    
+    "@vue/eslint-config-standard": "^3.0.0-beta.6",
     "@vue/test-utils": "^1.0.0-beta.13",
     "babel-core": "^7.0.0-0",
     "babel-jest": "^22.0.4",
