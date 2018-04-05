@@ -46,6 +46,7 @@ describe('Points.vue', () => {
 
   describe('removing competition', () => {
     it('checks dom for one less remove button', () => {
+      // todo i should really check that the correct row was removed.
       const originalLength = wrapper.findAll('.removeButton').length
       wrapper.find('.removeButton').trigger('click')
 

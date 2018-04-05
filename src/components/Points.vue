@@ -31,14 +31,12 @@
           >
         </th>
       </tr>
-      <tr v-for="({name, winningTeam, pointsAwarded}, index) in competitions" :key="index + name">
-        <td>{{name}}</td>
-        <td>{{winningTeam}}</td>
-        <td>
-          {{pointsAwarded}}
-          <button class="removeButton" @click="removeCompetition(index)">remove</button>
-        </td>
-      </tr>
+      <CompetitionRow
+        v-for="({name, winningTeam, pointsAwarded}, index) in competitions"
+        v-bind="{name, winningTeam, pointsAwarded}"
+        :key="index"
+        @remove-competition="removeCompetition(index)"
+      />
     </table>
   </div>
 </template>
@@ -46,9 +44,13 @@
 <script>
 import names from '@/data/teamNames.js'
 import seedCompetitions from '@/data/seedCompetitions.js'
+import CompetitionRow from '@/components/CompetitionRow.vue'
 
 export default {
   name: 'Points',
+  components: {
+    CompetitionRow
+  },
   data () {
     return {
       title: 'Points',
@@ -125,10 +127,6 @@ li {
 }
 a {
   color: #42b983;
-}
-
-button {
-  float: right;
 }
 
 table {
