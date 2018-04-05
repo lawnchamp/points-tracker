@@ -134,10 +134,8 @@ table {
     width: 50%;
 }
 
-td, th {
-    border: 0px solid #dddddd;
+th {
     text-align: left;
-    padding: 8px;
 }
 
 tr:nth-child(even) {

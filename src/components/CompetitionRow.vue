@@ -26,4 +26,9 @@ export default {
 button {
   float: right;
 }
+td, th {
+    border: 0px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
 </style>
