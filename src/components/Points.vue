@@ -2,11 +2,6 @@
   <div class="points">
     <h1>{{title}}</h1>
 
-    <ul>
-      <li v-for="teamName in teamNames" :key="teamName">
-        {{teamName}}: {{teamScores[teamName]}}
-      </li>
-    </ul>
     <table align="center">
       <tr>
         <th>
@@ -17,11 +12,6 @@
           />
         </th>
         <th>
-          <!-- <input
-            v-model.trim="newCompetition.winningTeam"
-            placeholder="Winning Team"
-            @keyup.enter="addCompetition"
-          > -->
           <multiselect
             v-model="newCompetition.winningTeam"
             placeholder='Winning Team'
