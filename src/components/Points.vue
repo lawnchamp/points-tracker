@@ -1,6 +1,11 @@
 <template>
   <div class="points">
     <h1>{{title}}</h1>
+    <div class="chart">
+      <TeamChart :chart-data="graphData"/>
+    </div>
+
+    <p/>  <!-- how do you normally just add space? -->
 
     <table align="center">
       <tr>
@@ -43,12 +48,14 @@ import CompetitionRow from '@/components/CompetitionRow.vue'
 import competitionWeights from '@/data/competitionWeights.js'
 import Multiselect from 'vue-multiselect'
 import {startCase as _startCase} from 'lodash'
+import TeamChart from '@/TeamChart.js'
 
 export default {
   name: 'Points',
   components: {
     Multiselect,
-    CompetitionRow
+    CompetitionRow,
+    TeamChart
   },
   data () {
     return {
@@ -73,6 +80,25 @@ export default {
     },
     competitionNames () {
       return Object.keys(competitionWeights).map(competitionName => _startCase(competitionName))
+    },
+
+    // Can this logic be pushed into TeamChart.js while keeping the chart reactive?
+    graphData () {
+      return {
+        labels: Object.keys(this.teamScores),
+        datasets: [{
+          label: 'team points',
+          backgroundColor: [
+            '#000000',
+            '#4084dd',
+            '#cc0a33',
+            '#800080',
+            '#A52A2A',
+            '#FFA500'
+          ],
+          data: Object.values(this.teamScores)
+        }]
+      }
     }
   },
   created () {
@@ -137,6 +163,11 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.chart {
+  width: 50%;
+  margin: 0 auto;
 }
 
 table {
