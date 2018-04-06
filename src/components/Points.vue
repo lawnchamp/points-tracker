@@ -49,6 +49,7 @@ import competitionWeights from '@/data/competitionWeights.js'
 import Multiselect from 'vue-multiselect'
 import {startCase as _startCase} from 'lodash'
 import TeamChart from '@/TeamChart.js'
+import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 export default {
   name: 'Points',
@@ -145,9 +146,6 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-
-<!-- what is the proper way to do this style script -->
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped lang="scss">
 h3 {

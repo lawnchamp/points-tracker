@@ -12,8 +12,8 @@
     "chart.js": "^2.7.2",
     "firebase": "^4.12.1",
     "vue": "^2.5.13",
-    "vue-multiselect": "^2.1.0",
     "vue-chartjs": "^3.3.1",
+    "vue-multiselect": "^2.1.0",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
@@ -27,6 +27,7 @@
     "babel-jest": "^22.0.4",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
+    "tailwindcss": "^0.5.2",
     "vue-template-compiler": "^2.5.13"
   },
   "babel": {
@@ -43,7 +44,8 @@
   },
   "postcss": {
     "plugins": {
-      "autoprefixer": {}
+      "autoprefixer": {},
+      "tailwindcss": "./tailwind.js"
     }
   },
   "browserslist": [
