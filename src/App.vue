@@ -8,6 +8,10 @@
   </div>
 </template>
 
+<script>
+import './styles/app.scss'
+</script>
+
 <style lang="scss">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
