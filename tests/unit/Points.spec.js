@@ -4,7 +4,9 @@ import { mount } from '@vue/test-utils'
 describe('Points.vue', () => {
   let wrapper
   beforeEach(() => {
+    console.log("mounting vue")
     wrapper = mount(Points)
+    console.log("printing wrapper:", wrapper)
     wrapper.setData({
       competitions: [{
         name: 'dodge ball',
@@ -22,11 +24,12 @@ describe('Points.vue', () => {
     })
   })
 
-  it('properly loads team names', () => {
+  fit('properly loads team names', () => {
+    console.log("logging team names: ", wrapper.vm.teamNames)
     expect(wrapper.vm.teamNames).toEqual(['red', 'blue', 'brown', 'black', 'orange', 'purple'])
   })
 
-  describe('.validTeamName', () => {
+  fdescribe('.validTeamName', () => {
     it('detects bad team name', () => {
       expect(wrapper.vm.validTeamName('bad name')).toBe(false)
       expect(wrapper.vm.validTeamName('')).toBe(false)

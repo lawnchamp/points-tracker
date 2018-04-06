@@ -91,9 +91,9 @@ export default {
           backgroundColor: [
             '#000000',
             '#4084dd',
-            '#cc0a33',
+            '#FF0000',
             '#800080',
-            '#A52A2A',
+            '#5C4033',
             '#FFA500'
           ],
           data: Object.values(this.teamScores)
