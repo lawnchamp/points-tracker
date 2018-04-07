@@ -1,10 +1,10 @@
 <template>
-  <tr>
-    <td>{{name}}</td>
+  <tr class="text-left">
+    <td class="p-2">{{name}}</td>
     <td>{{winningTeam}}</td>
     <td>
       {{pointsAwarded}}
-      <button class="removeButton" @click="$emit('remove-competition')">remove</button>
+      <button class="hover:bg-blue-dark text-white py-2 px-4 rounded float-right" @click="$emit('remove-competition')">remove</button>
     </td>
   </tr>
 </template>
@@ -23,12 +23,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-button {
-  float: right;
-}
-td, th {
-    border: 0px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
+
 </style>
