@@ -118,6 +118,7 @@ export default {
       this.competitions.unshift({
         name: this.newCompetition.name,
         winner: this.newCompetition.winner,
+        loser: this.newCompetition.loser,
         pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10)
       })
 
@@ -141,7 +142,7 @@ export default {
       return this.teamNames.includes(teamName)
     },
     missingCompetitionData (competition) {
-      return competition.name === '' || competition.winner === '' || competition.pointsAwarded === ''
+      return competition.name === '' || competition.winner === '' || competition.loser === '' || competition.pointsAwarded === ''
     },
     removeCompetition (index) {
       this.competitions.splice(index, 1)
