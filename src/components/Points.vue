@@ -115,7 +115,7 @@ export default {
         return
       }
 
-      this.competitions.push({
+      this.competitions.unshift({
         name: this.newCompetition.name,
         winner: this.newCompetition.winner,
         pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10)
