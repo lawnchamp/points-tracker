@@ -1,24 +1,20 @@
 <template>
-  <div class="text-left m-3 bg-white shadow-lg rounded-lg py-2 px-1">
+  <div class="text-left m-3 bg-white rounded-lg py-2 px-1 shadow-md">
     <div class="p-2">
       <div class="flex justify-between">
         <div class="flex">
           <div class="team-icon text-s" v-bind:class="teamColor()">{{winner}}</div>
           <div class="px-3">
             <h1 class="capitalize">{{name}}</h1>
-            <div class="text-s">beat {{loser}}</div>
+            <div class="text-s">vs {{loser}}</div>
           </div>
         </div>
-        <div class="self-center">
-          <svg
-            class="float-right fill-current text-white hover:fill-current hover:text-black"
-            xmlns="http://www.w3.org/2000/svg"
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
+        <div class="flex self-center">
+          <h1 class="px-2">{{pointsAwarded}}</h1>
+          <button
+            class="text-xl float-right fill-current text-white hover:fill-current hover:text-black"
             @click="$emit('remove-competition')"
-          ><path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/></svg>
-          <h1 class="px-4">{{pointsAwarded}}</h1>
+          >X</button>
         </div>
       </div>
     </div>

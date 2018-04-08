@@ -8,16 +8,27 @@
     <p/>  <!-- how do you normally just add space? -->
 
     <multiselect
+      class="px-1 py-1"
       v-model="newCompetition.name"
       placeholder='Competition'
       :options="competitionNames"
     />
-    <multiselect
-      v-model="newCompetition.winner"
-      placeholder='Winner'
-      :options="teamNames"
-    />
+    <span class="flex">
+      <multiselect
+        class="py-1 px-1"
+        v-model="newCompetition.winner"
+        placeholder='Winner'
+        :options="teamNames"
+      />
+      <multiselect
+        class="py-1 px-1"
+        v-model="newCompetition.loser"
+        placeholder='Loser'
+        :options="teamNames"
+      />
+    </span>
     <input
+      class="rounded-lg text-blue-black py-3 px-2"
       v-model.trim="newCompetition.pointsAwarded"
       placeholder="Points Awarded"
       @keyup.enter="addCompetition"
