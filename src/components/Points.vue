@@ -1,14 +1,13 @@
 <template>
-  <div class="points container md:w-1/2">
+  <div class="points container md:w-1/2 lg:w-1/3">
     <h2>{{title}}</h2>
-    <div>
+    <div class="pb-4">
       <TeamChart :chart-data="graphData"/>
     </div>
 
-    <p/>  <!-- how do you normally just add space? -->
-
+    <!-- pading on the right side of the competition name input is broken -->
     <multiselect
-      class="px-1 py-1"
+      class="py-1 px-1"
       v-model="newCompetition.name"
       placeholder='Competition'
       :options="competitionNames"
