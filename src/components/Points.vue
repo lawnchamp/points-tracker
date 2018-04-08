@@ -32,14 +32,15 @@
       placeholder="Points Awarded"
       @keyup.enter="addCompetition"
     >
-    <div class="">
-      <CompetitionRow
+
+    <!-- I don't know why i need to call parseInt(). pointsAwarded is already a number -->
+    <CompetitionRow
       v-for="({name, winner, loser, pointsAwarded}, index) in competitions"
-      v-bind="{name, winner, loser, pointsAwarded}"
-      :key="index"
-      @remove-competition="removeCompetition(index)"
-      />
-    </div>
+        v-bind="{name, winner, loser}"
+        :pointsAwarded="parseInt(pointsAwarded, 10)"
+        :key="index"
+        @remove-competition="removeCompetition(index)"
+    />
   </div>
 </template>
 
