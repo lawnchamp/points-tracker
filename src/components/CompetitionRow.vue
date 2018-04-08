@@ -3,7 +3,7 @@
     <div class="p-2">
       <div class="flex justify-between">
         <div class="flex">
-          <div class="team-icon text-s" v-bind:class="teamColor">{{winner}}</div>
+          <div class="team-icon text-s" v-bind:class="teamColor()">{{winner}}</div>
           <div class="px-3">
             <h1 class="capitalize">{{name}}</h1>
             <div class="text-s">beat {{loser}}</div>
@@ -35,9 +35,9 @@ export default {
     loser: String,
     pointsAwarded: Number
   },
-  data () {
-    return {
-      teamColor: `bg-${this.winner.toLowerCase()}`
+  methods: {
+    teamColor () {
+      return `bg-${this.winner.toLowerCase()}`
     }
   }
 }
