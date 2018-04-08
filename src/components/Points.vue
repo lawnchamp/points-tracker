@@ -46,13 +46,23 @@
 
 <script>
 import names from '@/data/teamNames.js'
-import seedCompetitions from '@/data/seedCompetitions.js'
 import CompetitionRow from '@/components/CompetitionRow.vue'
 import competitionWeights from '@/data/competitionWeights.js'
 import Multiselect from 'vue-multiselect'
 import {startCase as _startCase} from 'lodash'
 import TeamChart from '@/TeamChart.js'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
+import firebase from 'firebase'
+require('firebase/firestore')
+
+firebase.initializeApp({
+  apiKey: 'AIzaSyDJGzhHLQp8oW794Egqm7j1UToE4CmHpPk',
+  authDomain: 'point-tracker18.firebaseapp.com',
+  databaseURL: 'https://point-tracker18.firebaseio.com',
+  projectId: 'point-tracker18',
+  storageBucket: 'point-tracker18.appspot.com',
+  messagingSenderId: '727305853236'
+})
 
 export default {
   name: 'Points',
@@ -63,6 +73,7 @@ export default {
   },
   data () {
     return {
+      db: {},
       title: 'Points',
       competitions: [],
       newCompetition: {
@@ -93,21 +104,24 @@ export default {
         labels: Object.keys(this.teamScores),
         datasets: [{
           label: 'team points',
-          backgroundColor: [
-            '#000000',
-            '#3490DC',
-            '#FF0000',
-            '#800080',
-            '#38C172',
-            '#F6993F'
-          ],
+          backgroundColor: Object.keys(this.teamScores),
           data: Object.values(this.teamScores)
         }]
       }
     }
   },
   created () {
-    this.competitions = [...seedCompetitions]
+    this.db = firebase.firestore()
+    this.db.collection('competitions').get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        this.competitions.push({
+          name: doc.data().name,
+          winner: doc.data().winner,
+          loser: doc.data().loser,
+          pointsAwarded: doc.data().pointsAwarded
+        })
+      })
+    })
   },
   methods: {
     addCompetition () {
@@ -115,11 +129,24 @@ export default {
         return
       }
 
+      // save data locally - should i be doing this anymore?
       this.competitions.unshift({
         name: this.newCompetition.name,
         winner: this.newCompetition.winner,
         loser: this.newCompetition.loser,
         pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10)
+      })
+
+      // save data on remote db
+      this.db.collection('competitions').add({
+        name: this.newCompetition.name.toLowerCase(),
+        winner: this.newCompetition.winner,
+        loser: this.newCompetition.loser,
+        pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10)
+      }).then(function (docRef) {
+        console.log('Document written with ID: ', docRef.id)
+      }).catch(function (error) {
+        console.error('Error adding document: ', error)
       })
 
       this.newCompetition.name = ''
