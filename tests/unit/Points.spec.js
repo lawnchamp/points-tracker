@@ -4,29 +4,29 @@ import { mount } from '@vue/test-utils'
 describe('Points.vue', () => {
   let wrapper
   beforeEach(() => {
-    console.log("mounting vue")
     wrapper = mount(Points)
-    console.log("printing wrapper:", wrapper)
     wrapper.setData({
       competitions: [{
         name: 'dodge ball',
-        winningTeam: 'black',
+        winner: 'Black',
+        loser: 'Green',
         pointsAwarded: 3
       }, {
         name: 'soccer',
-        winningTeam: 'red',
+        winner: 'Red',
+        loser: 'Orange',
         pointsAwarded: 5
       }, {
         name: 'soccer',
-        winningTeam: 'black',
+        winner: 'Black',
+        loser: 'Purple',
         pointsAwarded: 10
       }]
     })
   })
 
   fit('properly loads team names', () => {
-    console.log("logging team names: ", wrapper.vm.teamNames)
-    expect(wrapper.vm.teamNames).toEqual(['red', 'blue', 'brown', 'black', 'orange', 'purple'])
+    expect(wrapper.vm.teamNames).toEqual(['red', 'blue', 'green', 'black', 'orange', 'purple'])
   })
 
   fdescribe('.validTeamName', () => {
@@ -58,7 +58,7 @@ describe('Points.vue', () => {
   })
 
   describe('.teamScores', () => {
-    it('adds the score together for winningTeam with the same name', () => {
+    it('adds the score together for winner with the same name', () => {
       expect(wrapper.vm.teamScores).toMatchObject({
         black: 13,
         red: 5
@@ -77,7 +77,7 @@ describe('Points.vue', () => {
     it('detects empty competition data', () => {
       expect(wrapper.vm.missingCompetitionData({
         name: '',
-        winningTeam: '',
+        winner: '',
         pointsAwarded: ''
       })).toBe(true)
     })
@@ -85,7 +85,7 @@ describe('Points.vue', () => {
     it('detects missing competition data', () => {
       expect(wrapper.vm.missingCompetitionData({
         name: 'Dodge Ball',
-        winningTeam: 'blue',
+        winner: 'blue',
         pointsAwarded: ''
       })).toBe(true)
     })
@@ -93,7 +93,7 @@ describe('Points.vue', () => {
     it('passes when all fields are filled', () => {
       expect(wrapper.vm.missingCompetitionData({
         name: 'Dodge Ball',
-        winningTeam: 'blue',
+        winner: 'blue',
         pointsAwarded: '350'
       })).toBe(false)
     })

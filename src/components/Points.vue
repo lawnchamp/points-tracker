@@ -1,43 +1,35 @@
 <template>
-  <div class="points">
-    <h1>{{title}}</h1>
+  <div class="points container md:w-1/2">
+    <h2>{{title}}</h2>
     <div>
       <TeamChart :chart-data="graphData"/>
     </div>
 
     <p/>  <!-- how do you normally just add space? -->
 
-    <table align="center">
-      <tr>
-        <th>
-          <multiselect
-            v-model="newCompetition.name"
-            placeholder='Competition'
-            :options="competitionNames"
-          />
-        </th>
-        <th>
-          <multiselect
-            v-model="newCompetition.winningTeam"
-            placeholder='Winner'
-            :options="teamNames"
-          />
-        </th>
-        <th>
-          <input
-            v-model.trim="newCompetition.pointsAwarded"
-            placeholder="Points Awarded"
-            @keyup.enter="addCompetition"
-          >
-        </th>
-      </tr>
+    <multiselect
+      v-model="newCompetition.name"
+      placeholder='Competition'
+      :options="competitionNames"
+    />
+    <multiselect
+      v-model="newCompetition.winner"
+      placeholder='Winner'
+      :options="teamNames"
+    />
+    <input
+      v-model.trim="newCompetition.pointsAwarded"
+      placeholder="Points Awarded"
+      @keyup.enter="addCompetition"
+    >
+    <div class="">
       <CompetitionRow
-        v-for="({name, winningTeam, pointsAwarded}, index) in competitions"
-        v-bind="{name, winningTeam, pointsAwarded}"
-        :key="index"
-        @remove-competition="removeCompetition(index)"
+      v-for="({name, winner, loser, pointsAwarded}, index) in competitions"
+      v-bind="{name, winner, loser, pointsAwarded}"
+      :key="index"
+      @remove-competition="removeCompetition(index)"
       />
-    </table>
+    </div>
   </div>
 </template>
 
@@ -64,7 +56,8 @@ export default {
       competitions: [],
       newCompetition: {
         name: '',
-        winningTeam: '',
+        winner: '',
+        loser: '',
         pointsAwarded: ''
       },
       message: 'hello!',
@@ -74,8 +67,8 @@ export default {
   },
   computed: {
     teamScores () {
-      return this.competitions.reduce((acc, {winningTeam, pointsAwarded}) => {
-        acc[winningTeam] = (acc[winningTeam] || 0) + pointsAwarded
+      return this.competitions.reduce((acc, {winner, pointsAwarded}) => {
+        acc[winner] = (acc[winner] || 0) + pointsAwarded
         return acc
       }, {})
     },
@@ -91,11 +84,11 @@ export default {
           label: 'team points',
           backgroundColor: [
             '#000000',
-            '#4084dd',
+            '#3490DC',
             '#FF0000',
             '#800080',
-            '#5C4033',
-            '#FFA500'
+            '#38C172',
+            '#F6993F'
           ],
           data: Object.values(this.teamScores)
         }]
@@ -113,12 +106,13 @@ export default {
 
       this.competitions.push({
         name: this.newCompetition.name,
-        winningTeam: this.newCompetition.winningTeam,
+        winner: this.newCompetition.winner,
         pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10)
       })
 
       this.newCompetition.name = ''
-      this.newCompetition.winningTeam = ''
+      this.newCompetition.winner = ''
+      this.newCompetition.loser = ''
       this.newCompetition.pointsAwarded = ''
     },
     optionSelected (selected) {
@@ -130,13 +124,13 @@ export default {
     //
     // should this be a computed?
     validCompetition (competition) {
-      return this.validTeamName(competition.winningTeam) && !this.missingCompetitionData(competition)
+      return this.validTeamName(competition.winner) && !this.missingCompetitionData(competition)
     },
     validTeamName (teamName) {
       return this.teamNames.includes(teamName)
     },
     missingCompetitionData (competition) {
-      return competition.name === '' || competition.winningTeam === '' || competition.pointsAwarded === ''
+      return competition.name === '' || competition.winner === '' || competition.pointsAwarded === ''
     },
     removeCompetition (index) {
       this.competitions.splice(index, 1)
@@ -148,5 +142,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
 <style scoped lang="scss">
-
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
 </style>

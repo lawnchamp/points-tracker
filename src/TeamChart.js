@@ -5,7 +5,6 @@ export default {
   extends: Bar,
   mixins: [reactiveProp],
   mounted () {
-    console.log("chart data: ", this.chartData)
     this.renderChart(this.chartData, {
       legend: {
         display: false
