@@ -1,38 +1,38 @@
 export default [
   {
     name: 'dodge ball',
-    winner: 'Black',
-    loser: 'Blue',
+    winner: 'black',
+    loser: 'blue',
     pointsAwarded: 10
   }, {
     name: 'kickball',
-    winner: 'Blue',
-    loser: 'Green',
+    winner: 'blue',
+    loser: 'green',
     pointsAwarded: 20
   }, {
     name: 'capture the flag',
-    winner: 'Blue',
-    loser: 'Red',
+    winner: 'blue',
+    loser: 'red',
     pointsAwarded: 5
   }, {
     name: 'soccer',
-    winner: 'Red',
-    loser: 'Purple',
+    winner: 'red',
+    loser: 'purple',
     pointsAwarded: 15
   }, {
     name: 'dodge ball',
-    winner: 'Purple',
-    loser: 'Orange',
+    winner: 'purple',
+    loser: 'orange',
     pointsAwarded: 12
   }, {
     name: 'long jump',
-    winner: 'Green',
-    loser: 'Black',
+    winner: 'green',
+    loser: 'black',
     pointsAwarded: 8
   }, {
     name: 'basketball',
-    winner: 'Orange',
-    loser: 'Red',
+    winner: 'orange',
+    loser: 'red',
     pointsAwarded: 17
   }
 ]

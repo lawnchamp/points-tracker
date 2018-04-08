@@ -8,18 +8,18 @@ describe('Points.vue', () => {
     wrapper.setData({
       competitions: [{
         name: 'dodge ball',
-        winner: 'Black',
-        loser: 'Green',
+        winner: 'black',
+        loser: 'green',
         pointsAwarded: 3
       }, {
         name: 'soccer',
-        winner: 'Red',
-        loser: 'Orange',
+        winner: 'red',
+        loser: 'orange',
         pointsAwarded: 5
       }, {
         name: 'soccer',
-        winner: 'Black',
-        loser: 'Purple',
+        winner: 'black',
+        loser: 'purple',
         pointsAwarded: 10
       }]
     })
