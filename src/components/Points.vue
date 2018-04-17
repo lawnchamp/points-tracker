@@ -32,14 +32,17 @@
       placeholder="Points Awarded"
       @keyup.enter="addCompetition"
     >
+    <div v-show="saving">
+      saving...
+    </div>
 
     <!-- I don't know why i need to call parseInt(). pointsAwarded is already a number -->
     <CompetitionRow
-      v-for="({name, winner, loser, pointsAwarded}, index) in competitions"
+      v-for="({id, name, winner, loser, pointsAwarded}, index) in competitions"
         v-bind="{name, winner, loser}"
         :pointsAwarded="parseInt(pointsAwarded, 10)"
-        :key="index"
-        @remove-competition="removeCompetition(index)"
+        :key="id"
+        @remove-competition="removeCompetition(index, id)"
     />
   </div>
 </template>
@@ -75,16 +78,17 @@ export default {
     return {
       db: {},
       title: 'Points',
-      competitions: [],
+      competitions: [], // this should be a hash indexed by firebase id
       newCompetition: {
+        id: '',
         name: '',
         winner: '',
         loser: '',
         pointsAwarded: ''
       },
-      message: 'hello!',
       teamNames: names,
-      selectedFromDropdown: null
+      selectedFromDropdown: null,
+      saving: false
     }
   },
   computed: {
@@ -115,6 +119,7 @@ export default {
     this.db.collection('competitions').get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         this.competitions.push({
+          id: doc.id,
           name: doc.data().name,
           winner: doc.data().winner,
           loser: doc.data().loser,
@@ -129,30 +134,32 @@ export default {
         return
       }
 
-      // save data locally - should i be doing this anymore?
-      this.competitions.unshift({
-        name: this.newCompetition.name,
-        winner: this.newCompetition.winner,
-        loser: this.newCompetition.loser,
-        pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10)
-      })
-
       // save data on remote db
+      this.saving = true
       this.db.collection('competitions').add({
         name: this.newCompetition.name.toLowerCase(),
         winner: this.newCompetition.winner,
         loser: this.newCompetition.loser,
         pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10)
-      }).then(function (docRef) {
-        console.log('Document written with ID: ', docRef.id)
-      }).catch(function (error) {
+      }).then((docRef) => {
+        this.saving = false
+
+        this.competitions.unshift({
+          id: docRef.id,
+          name: this.newCompetition.name,
+          winner: this.newCompetition.winner,
+          loser: this.newCompetition.loser,
+          pointsAwarded: parseInt(this.newCompetition.pointsAwarded, 10)
+        })
+
+        this.newCompetition.name = ''
+        this.newCompetition.winner = ''
+        this.newCompetition.loser = ''
+        this.newCompetition.pointsAwarded = ''
+      }).catch((error) => {
+        this.saving = false
         console.error('Error adding document: ', error)
       })
-
-      this.newCompetition.name = ''
-      this.newCompetition.winner = ''
-      this.newCompetition.loser = ''
-      this.newCompetition.pointsAwarded = ''
     },
     optionSelected (selected) {
       this.selectedFromDropdown.push(selected)
@@ -171,8 +178,21 @@ export default {
     missingCompetitionData (competition) {
       return competition.name === '' || competition.winner === '' || competition.loser === '' || competition.pointsAwarded === ''
     },
-    removeCompetition (index) {
-      this.competitions.splice(index, 1)
+    removeCompetition (index, id) {
+      this.saving = true
+      this.db.collection('competitions').doc(id).delete()
+      .then(() => {
+        if (this.competitions[index].id == id) {
+          this.competitions.splice(index, 1)
+        } else {
+          console.log('race condition! using longer remove')
+          this.competitions = this.competitions.filter(competition => competition.id != id)
+        }
+        this.saving = false
+      }).catch((error) => {
+        this.saving = false
+        console.error('Error removing document: ', error)
+      })
     }
   }
 }
