@@ -39,8 +39,10 @@
 
     <div class="container">
       <p>sort by:</p>
-      <div class="inline-flex py-1 w-1/3 justify-center" v-for="team in teamNames" :key="team">
-        <button @click="selectedTeamSort = team" class="h-6 w-16 rounded-full bg-red text-xs">{{team}}</button>
+      <div class="inline-flex py-1 px-1 justify-center" v-for="team in teamNames" :key="team">
+        <button @click="selectedTeamSort = team"
+                :class="`bg-${team}`"
+                class="h-6 w-12 rounded-full text-xs text-white">{{team}}</button>
       </div>
     </div>
 
