@@ -1,20 +1,22 @@
 <template>
   <div class="points container md:w-1/2 lg:w-1/3">
     <h2>{{title}}</h2>
-    <div class="pb-4">
+    <div>
       <TeamChart :chart-data="graphData"/>
     </div>
 
     <!-- this needs to be a component -->
-    <div v-if="adminMode">
+    <div v-if="adminMode" class="py-8">
       <!-- pading on the right side of the competition name input is broken -->
-      <p>Add a new competition</p>
-      <multiselect
-        class="py-1 px-1"
-        v-model="newCompetition.name"
-        placeholder='Competition'
-        :options="competitionNames"
-      />
+      <h3 class="">Add a new competition</h3>
+      <span class="flex">
+        <multiselect
+          class="py-1 px-1"
+          v-model="newCompetition.name"
+          placeholder='Competition'
+          :options="competitionNames"
+        />
+      </span>
       <span class="flex">
         <multiselect
           class="py-1 px-1"
@@ -38,11 +40,11 @@
     </div>
 
     <div class="container">
-      <p>sort by:</p>
+      <h3>Sort by</h3>
       <div class="inline-flex py-1 px-1 justify-center" v-for="team in teamNames" :key="team">
         <button @click="selectedTeamSort = team"
-                :class="`bg-${team}`"
-                class="h-6 w-12 rounded-full text-xs text-white">{{team}}</button>
+                :class="stylingForTeam(team)"
+                class="h-6 w-12 rounded-full text-xs capitalize">{{team}}</button>
       </div>
     </div>
 
@@ -175,6 +177,9 @@ export default {
         this.saving = false
         console.error('Error adding document: ', error)
       })
+    },
+    stylingForTeam (team) {
+      return team === this.selectedTeamSort ? `text-${team} border-2 border-${team}` : 'text-grey-dark border border-grey-dark'
     },
     optionSelected (selected) {
       this.selectedFromDropdown.push(selected)
