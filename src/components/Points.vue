@@ -5,40 +5,52 @@
       <TeamChart :chart-data="graphData"/>
     </div>
 
-    <!-- pading on the right side of the competition name input is broken -->
-    <multiselect
-      class="py-1 px-1"
-      v-model="newCompetition.name"
-      placeholder='Competition'
-      :options="competitionNames"
-    />
-    <span class="flex">
+    <!-- this needs to be a component -->
+    <div v-if="adminMode">
+      <!-- pading on the right side of the competition name input is broken -->
+      <p>Add a new competition</p>
       <multiselect
         class="py-1 px-1"
-        v-model="newCompetition.winner"
-        placeholder='Winner'
-        :options="teamNames"
+        v-model="newCompetition.name"
+        placeholder='Competition'
+        :options="competitionNames"
       />
-      <multiselect
-        class="py-1 px-1"
-        v-model="newCompetition.loser"
-        placeholder='Loser'
-        :options="teamNames"
-      />
-    </span>
-    <input
-      class="rounded-lg text-blue-black py-3 px-2"
-      v-model.trim="newCompetition.pointsAwarded"
-      placeholder="Points Awarded"
-      @keyup.enter="addCompetition"
-    >
+      <span class="flex">
+        <multiselect
+          class="py-1 px-1"
+          v-model="newCompetition.winner"
+          placeholder='Winner'
+          :options="teamNames"
+        />
+        <multiselect
+          class="py-1 px-1"
+          v-model="newCompetition.loser"
+          placeholder='Loser'
+          :options="teamNames"
+        />
+      </span>
+      <input
+        class="rounded-lg text-blue-black py-3 px-2"
+        v-model.trim="newCompetition.pointsAwarded"
+        placeholder="Points Awarded"
+        @keyup.enter="addCompetition"
+      >
+    </div>
+
+    <div class="container">
+      <p>sort by:</p>
+      <div class="inline-flex py-1 w-1/3 justify-center" v-for="team in teamNames" :key="team">
+        <button @click="selectedTeamSort = team" class="h-6 w-16 rounded-full bg-red text-xs">{{team}}</button>
+      </div>
+    </div>
+
     <div v-show="saving">
       saving...
     </div>
 
     <!-- I don't know why i need to call parseInt(). pointsAwarded is already a number -->
     <CompetitionRow
-      v-for="({id, name, winner, loser, pointsAwarded}, index) in competitions"
+      v-for="({id, name, winner, loser, pointsAwarded}, index) in orderedCompetitions"
         v-bind="{name, winner, loser}"
         :pointsAwarded="parseInt(pointsAwarded, 10)"
         :key="id"
@@ -52,7 +64,10 @@ import names from '@/data/teamNames.js'
 import CompetitionRow from '@/components/CompetitionRow.vue'
 import competitionWeights from '@/data/competitionWeights.js'
 import Multiselect from 'vue-multiselect'
-import {startCase as _startCase} from 'lodash'
+import {
+  startCase as _startCase,
+  sortBy as _sortBy
+} from 'lodash'
 import TeamChart from '@/TeamChart.js'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 import firebase from '@/firebase.js'
@@ -69,6 +84,7 @@ export default {
       db: {},
       title: 'Points',
       competitions: [], // this should be a hash indexed by firebase id
+      adminMode: true,
       newCompetition: {
         id: '',
         name: '',
@@ -78,9 +94,11 @@ export default {
       },
       teamNames: names,
       selectedFromDropdown: null,
-      saving: false
+      saving: false,
+      selectedTeamSort: ''
     }
   },
+
   computed: {
     teamScores () {
       return this.competitions.reduce((acc, {winner, pointsAwarded}) => {
@@ -102,8 +120,12 @@ export default {
           data: Object.values(this.teamScores)
         }]
       }
+    },
+    orderedCompetitions () {
+      return _sortBy(this.competitions, [(competition) => { return (competition.winner !== this.selectedTeamSort) }])
     }
   },
+
   created () {
     this.db = firebase.firestore()
     this.db.collection('competitions').get().then((querySnapshot) => {
@@ -118,6 +140,7 @@ export default {
       })
     })
   },
+
   methods: {
     addCompetition () {
       if (!this.validCompetition(this.newCompetition)) {
@@ -171,18 +194,18 @@ export default {
     removeCompetition (index, id) {
       this.saving = true
       this.db.collection('competitions').doc(id).delete()
-      .then(() => {
-        if (this.competitions[index].id == id) {
-          this.competitions.splice(index, 1)
-        } else {
-          console.log('race condition! using longer remove')
-          this.competitions = this.competitions.filter(competition => competition.id != id)
-        }
-        this.saving = false
-      }).catch((error) => {
-        this.saving = false
-        console.error('Error removing document: ', error)
-      })
+        .then(() => {
+          if (this.competitions[index].id === id) {
+            this.competitions.splice(index, 1)
+          } else {
+            console.log('race condition! using longer remove')
+            this.competitions = this.competitions.filter(competition => competition.id !== id)
+          }
+          this.saving = false
+        }).catch((error) => {
+          this.saving = false
+          console.error('Error removing document: ', error)
+        })
     }
   }
 }
