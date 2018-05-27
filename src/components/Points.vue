@@ -1,13 +1,13 @@
 <template>
-  <div class="points container md:w-1/2 lg:w-1/3">
-    <h2>{{title}}</h2>
-    <div>
+  <div class="container md:w-1/2 lg:w-1/3">
+    <AuthenticateButton/>
+    <h1 class="pt-4">{{title}}</h1>
+    <div class="bg-grey-lightest my-4">
       <TeamChart :chart-data="graphData"/>
     </div>
 
     <!-- this needs to be a component -->
-    <div v-if="adminMode" class="py-8">
-      <!-- pading on the right side of the competition name input is broken -->
+    <div v-if="adminSignedIn" class="py-8">
       <h3 class="">Add a new competition</h3>
       <span class="flex">
         <multiselect
@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import AuthenticateButton from '@/components/AuthenticateButton.vue'
 import names from '@/data/teamNames.js'
 import CompetitionRow from '@/components/CompetitionRow.vue'
 import competitionWeights from '@/data/competitionWeights.js'
@@ -79,8 +80,9 @@ import firebase from '@/firebase.js'
 export default {
   name: 'Points',
   components: {
-    Multiselect,
+    AuthenticateButton,
     CompetitionRow,
+    Multiselect,
     TeamChart
   },
   data () {
@@ -88,7 +90,6 @@ export default {
       db: {},
       title: 'Points',
       competitions: [], // this should be a hash indexed by firebase id
-      adminMode: true,
       newCompetition: {
         id: '',
         name: '',
@@ -109,6 +110,9 @@ export default {
         acc[winner] = (acc[winner] || 0) + pointsAwarded
         return acc
       }, {})
+    },
+    adminSignedIn () {
+      return !!firebase.auth().currentUser
     },
     competitionNames () {
       return Object.keys(competitionWeights).map(competitionName => _startCase(competitionName))
@@ -147,11 +151,6 @@ export default {
 
   methods: {
     addCompetition () {
-      if (!this.validCompetition(this.newCompetition)) {
-        return
-      }
-
-      // save data on remote db
       this.saving = true
       this.db.collection('competitions').add({
         name: this.newCompetition.name.toLowerCase(),
@@ -185,19 +184,6 @@ export default {
       this.selectedFromDropdown.push(selected)
     },
 
-    // this method should trigger some user feedback so they know why
-    // data input isn't working
-    //
-    // should this be a computed?
-    validCompetition (competition) {
-      return this.validTeamName(competition.winner) && !this.missingCompetitionData(competition)
-    },
-    validTeamName (teamName) {
-      return this.teamNames.includes(teamName)
-    },
-    missingCompetitionData (competition) {
-      return competition.name === '' || competition.winner === '' || competition.loser === '' || competition.pointsAwarded === ''
-    },
     removeCompetition (index, id) {
       this.saving = true
       this.db.collection('competitions').doc(id).delete()
@@ -221,9 +207,5 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
 <style scoped lang="scss">
-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
+
 </style>
