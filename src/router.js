@@ -1,8 +1,9 @@
 import Vue from 'vue'
-import Router from 'vue-router'
 import Login from '@/views/Login.vue'
-import Register from '@/views/Register.vue'
 import Points from '@/components/Points.vue'
+import Register from '@/views/Register.vue'
+import Router from 'vue-router'
+import Weights from '@/views/Weights.vue'
 import firebase from '@/firebase.js'
 
 Vue.use(Router)
@@ -26,17 +27,29 @@ let router = new Router({
     {
       path: '/points',
       name: 'Points',
-      component: Points,
+      component: Points
+    },
+    {
+      path: '/weights',
+      name: 'Weights',
+      component: Weights,
+      meta: { requiresAuth: true }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
   let currentUser = firebase.auth().currentUser
-  let onAuthPage = to.name.match(/(Login)|(Register)/)
 
+  let onAuthPage = to.name.match(/(Login)|(Register)/)
   if (currentUser && onAuthPage) next('points')
-  else next()
+
+  if (to.matched.some(record => record.meta.requiresAuth) && !currentUser) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  } else next()
 })
 
 export default router
