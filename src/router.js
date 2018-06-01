@@ -12,7 +12,7 @@ let router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/points'
     },
     {
       path: '/login',
