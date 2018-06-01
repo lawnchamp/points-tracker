@@ -8,7 +8,11 @@
 import './styles/app.scss'
 
 export default {
-  name: 'app'
+  name: 'app',
+  created () {
+    this.$store.dispatch('getCompetitions')
+    this.$store.dispatch('getWeights')
+  }
 }
 </script>
 
