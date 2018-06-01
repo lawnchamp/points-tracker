@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Login from '@/views/Login.vue'
-import Points from '@/components/Points.vue'
+import PointsPage from '@/components/PointsPage.vue'
 import Register from '@/views/Register.vue'
 import Router from 'vue-router'
 import Weights from '@/views/Weights.vue'
@@ -27,7 +27,7 @@ let router = new Router({
     {
       path: '/points',
       name: 'Points',
-      component: Points
+      component: PointsPage
     },
     {
       path: '/weights',
