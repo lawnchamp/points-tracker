@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>
-      <input 
+      <input
         type="text"
         v-model="name"
         placeholder="Competition Name"
@@ -12,7 +12,7 @@
       <input
         type="number"
         class="rounded-lg py-3 px-2"
-        v-model="value"
+        v-model.number="value"
         placeholder="Points Awarded"
       >
     </td>
@@ -40,6 +40,7 @@ export default {
   methods: {
     emitNewWeight () {
       if (this.name == '' || this.value == null) return
+
       this.$emit('new-weight', {name: this.name, value: this.value})
       this.name = ''
       this.value = null
