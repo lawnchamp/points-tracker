@@ -2,8 +2,6 @@
   <div class="container md:w-1/2 lg:w-1/3">
     <AuthenticateButton/>
 
-    <h1 class="pt-4">{{title}}</h1>
-
     <div class="bg-grey-lightest my-4">
       <TeamChart :chart-data="graphData"/>
     </div>
