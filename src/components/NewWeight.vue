@@ -4,7 +4,7 @@
       <input
         type="text"
         v-model="name"
-        placeholder="Competition Name"
+        placeholder="Competition"
         class="rounded-lg py-3 px-2"
       >
     </td>
@@ -14,6 +14,7 @@
         class="rounded-lg py-3 px-2"
         v-model.number="value"
         placeholder="Points Awarded"
+        @keyup.enter="emitNewWeight"
       >
     </td>
     <td>

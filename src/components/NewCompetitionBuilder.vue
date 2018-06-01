@@ -7,6 +7,7 @@
         v-model="newCompetition.name"
         placeholder='Competition'
         :options="competitionNames"
+        @close=addCompetition
       />
     </span>
     <span class="flex">
@@ -15,20 +16,16 @@
         v-model="newCompetition.winner"
         placeholder='Winner'
         :options="teamNames"
+        @close=addCompetition
       />
       <multiselect
         class="py-1 px-1"
         v-model="newCompetition.loser"
         placeholder='Loser'
         :options="teamNames"
+        @close=addCompetition
       />
     </span>
-    <input
-      class="rounded-lg text-blue-black py-3 px-2"
-      v-model.number="newCompetition.pointsAwarded"
-      placeholder="Points Awarded"
-      @keyup.enter="addCompetition"
-    >
   </div>
 </template>
 
@@ -47,8 +44,7 @@ export default {
       newCompetition: {
         name: '',
         winner: '',
-        loser: '',
-        pointsAwarded: ''
+        loser: ''
       },
       teamNames: names,
       saving: false
@@ -61,7 +57,17 @@ export default {
   },
   methods: {
     addCompetition () {
+      console.log('in addCompetition', this.newCompetition)
+      if (this.newCompetition.name === '' || this.newCompetition.winner === '' || this.newCompetition.loser === '') return
+
       this.saving = true
+
+      this.newCompetition.pointsAwarded = this.$store.state.weights[this.newCompetition.name].value
+      if (isNaN(this.newCompetition.pointsAwarded)) {
+        // this can't happening if the possible competitions are a coming from a dropdown
+        this.$store.dispatch('addWeight', {name: this.name, value: 0})
+      }
+
       this.$store.dispatch('addCompetition', this.newCompetition).then(() => {
         this.saving = false
 

@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from '@/firebase.js'
-import {
-  startCase as _startCase
-} from 'lodash'
 
 Vue.use(Vuex)
 
@@ -83,7 +80,7 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    competitionNames: state => Object.keys(state.weights).map(_startCase)
+    competitionNames: state => Object.keys(state.weights)
   },
   strict: process.env.NODE_ENV !== 'production'
 })
