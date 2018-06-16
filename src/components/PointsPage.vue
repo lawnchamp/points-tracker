@@ -3,7 +3,7 @@
     <AuthenticateButton/>
 
     <div class="bg-grey-lightest my-4">
-      <TeamChart :chart-data="graphData"/>
+      <GraphWrapper :teamScores="teamScores"></GraphWrapper>
     </div>
 
     <NewCompetitionBuilder v-if="adminSignedIn"></NewCompetitionBuilder>
@@ -34,13 +34,13 @@
 
 <script>
 import AuthenticateButton from '@/components/AuthenticateButton.vue'
+import GraphWrapper from '@/components/GraphWrapper.vue'
 import names from '@/data/teamNames.js'
 import CompetitionRow from '@/components/CompetitionRow.vue'
 import NewCompetitionBuilder from '@/components/NewCompetitionBuilder.vue'
 import firebase from '@/firebase.js'
 
 import {sortBy as _sortBy} from 'lodash'
-import TeamChart from '@/TeamChart.js'
 
 export default {
   name: 'PointsPage',
@@ -48,7 +48,7 @@ export default {
     AuthenticateButton,
     CompetitionRow,
     NewCompetitionBuilder,
-    TeamChart
+    GraphWrapper
   },
   data () {
     return {
@@ -66,25 +66,12 @@ export default {
     adminSignedIn () {
       return !!firebase.auth().currentUser
     },
-
-    // Can this logic be pushed into TeamChart.js while keeping the chart reactive?
-    graphData () {
-      return {
-        labels: Object.keys(this.teamScores),
-        datasets: [{
-          label: 'team points',
-          backgroundColor: Object.keys(this.teamScores),
-          data: Object.values(this.teamScores)
-        }]
-      }
-    },
     teamScores () {
       return this.competitions.reduce((acc, {winner, pointsAwarded}) => {
         acc[winner] = (acc[winner] || 0) + pointsAwarded
         return acc
       }, {})
     },
-
     orderedCompetitions () {
       return _sortBy(this.competitions, [(competition) => (competition.winner !== this.selectedTeamSort)])
     }
