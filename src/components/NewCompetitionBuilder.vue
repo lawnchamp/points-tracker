@@ -57,20 +57,12 @@ export default {
   },
   methods: {
     addCompetition () {
-      console.log('in addCompetition', this.newCompetition)
       if (this.newCompetition.name === '' || this.newCompetition.winner === '' || this.newCompetition.loser === '') return
 
       this.saving = true
 
-      this.newCompetition.pointsAwarded = this.$store.state.weights[this.newCompetition.name].value
-      if (isNaN(this.newCompetition.pointsAwarded)) {
-        // this can't happening if the possible competitions are a coming from a dropdown
-        this.$store.dispatch('addWeight', {name: this.name, value: 0})
-      }
-
       this.$store.dispatch('addCompetition', this.newCompetition).then(() => {
         this.saving = false
-
         Object.keys(this.newCompetition).forEach(prop => { this.newCompetition[prop] = '' })
       }).catch((error) => {
         this.saving = false
