@@ -2,16 +2,16 @@
   <div class="container md:w-1/2 lg:w-1/3">
     <AuthenticateButton/>
     <table class="bg-grey-lightest py-8">
-      <tr class="py-8" v-for="(points, name) in weights" :key="name">
+      <tr class="py-8" v-for="(competitionValue, competitionName) in weights" :key="competitionName">
         <td class="text-left width py-2">
-          {{name}}
+          {{competitionName}}
         </td>
         <td>
-          <input type="number" v-model.number="points.value" class="rounded-lg py-3 px-2"/>
+          {{competitionValue}}
         </td>
 
         <td>
-          <button @click.prevent="remove(name)">X</button>
+          <button @click.prevent="remove(competitionName)">X</button>
         </td>
       </tr>
       <NewWeight @new-weight="addNewWeight"></NewWeight>
