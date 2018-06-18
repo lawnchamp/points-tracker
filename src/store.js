@@ -20,13 +20,16 @@ const store = new Vuex.Store({
       state.competitions.unshift(newCompetition)
     },
     SET_WEIGHTS: (state, weights) => {
-      state.weights = weights
+      state.weights = Object.keys(weights).reduce((acc, weight) => {
+        acc[weight] = weights[weight].value
+        return acc
+      }, {})
     },
     REMOVE_WEIGHT: (state, id) => {
       Vue.delete(state.weights, id)
     },
     ADD_WEIGHT: (state, newWeight) => {
-      Vue.set(state.weights, newWeight.name, {value: newWeight.value})
+      Vue.set(state.weights, newWeight.name, newWeight.value)
     }
   },
   actions: {
