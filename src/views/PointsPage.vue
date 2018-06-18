@@ -21,11 +21,10 @@
       saving...
     </div>
 
-    <!-- I don't know why i need to call parseInt(). pointsAwarded is already a number -->
     <CompetitionRow
-      v-for="({id, name, winner, loser, pointsAwarded}) in orderedCompetitions"
+      v-for="({id, name, winner, loser}) in orderedCompetitions"
         v-bind="{name, winner, loser}"
-        :pointsAwarded="parseInt(pointsAwarded, 10)"
+        :pointsAwarded="weights[name] || 0"
         :key="id"
         @remove-competition="removeCompetition(id)"
     />
@@ -63,12 +62,15 @@ export default {
     competitions () {
       return this.$store.state.competitions
     },
+    weights () {
+      return this.$store.state.weights
+    },
     adminSignedIn () {
       return !!firebase.auth().currentUser
     },
     teamScores () {
-      return this.competitions.reduce((acc, {winner, pointsAwarded}) => {
-        acc[winner] = (acc[winner] || 0) + pointsAwarded
+      return this.competitions.reduce((acc, {winner, name}) => {
+        acc[winner] = (acc[winner] || 0) + (this.weights[name] || 0)
         return acc
       }, {})
     },
