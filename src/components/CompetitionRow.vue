@@ -6,7 +6,10 @@
           <div class="team-icon text-s" v-bind:class="teamColor()">{{winner}}</div>
           <div class="px-3">
             <h1 class="capitalize">{{name}}</h1>
-            <div class="text-s">vs {{loser}}</div>
+            <div class="text-s">
+              vs {{loser}}
+              <div class="inline" v-if="tied"> - tied</div>
+            </div>
           </div>
         </div>
         <div class="flex self-center">
@@ -29,7 +32,13 @@ export default {
     name: String,
     winner: String.capitalize,
     loser: String,
-    pointsAwarded: Number
+    possiblePoints: Number,
+    tied: Boolean
+  },
+  computed: {
+    pointsAwarded () {
+      return this.possiblePoints / (this.tied ? 2 : 1)
+    }
   },
   methods: {
     teamColor () {

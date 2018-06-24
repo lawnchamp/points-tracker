@@ -7,6 +7,7 @@
         v-model="newCompetition.name"
         placeholder='Competition'
         :options="competitionNames"
+        :show-labels="false"
         @close=addCompetition
       />
     </span>
@@ -14,15 +15,27 @@
       <multiselect
         class="py-1 px-1"
         v-model="newCompetition.winner"
-        placeholder='Winner'
+        :placeholder="firstTeamPlaceholder"
         :options="teamNames"
+        :show-labels="false"
         @close=addCompetition
       />
+      <ul class="list-reset">
+        <li>
+          <input type="radio" :value="false" v-model="newCompetition.tied">
+          <label for="beat" class="text-xs px-1">Beat</label>
+        </li>
+        <li>
+          <input type="radio" :value="true" v-model="newCompetition.tied">
+          <label for="tied" class="text-xs px-1">Tied</label>
+        </li>
+      </ul>
       <multiselect
         class="py-1 px-1"
         v-model="newCompetition.loser"
-        placeholder='Loser'
+        :placeholder='secondTeamPlaceholder'
         :options="teamNames"
+        :show-labels="false"
         @close=addCompetition
       />
     </span>
@@ -44,7 +57,8 @@ export default {
       newCompetition: {
         name: '',
         winner: '',
-        loser: ''
+        loser: '',
+        tied: false
       },
       teamNames: names,
       saving: false
@@ -53,6 +67,12 @@ export default {
   computed: {
     competitionNames () {
       return this.$store.getters.competitionNames
+    },
+    firstTeamPlaceholder () {
+      return this.newCompetition.tied ? 'Team 1' : 'Winner'
+    },
+    secondTeamPlaceholder () {
+      return this.newCompetition.tied ? 'Team 2' : 'Loser'
     }
   },
   methods: {

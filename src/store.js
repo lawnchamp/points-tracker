@@ -44,6 +44,13 @@ const store = new Vuex.Store({
         })
     },
     addCompetition ({commit}, newCompetition) {
+      if (newCompetition.tied) {
+        const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}
+        firebase.firestore().collection('competitions').add(otherTeam)
+          .then((docRef) => {
+            commit('ADD_COMPETITIONS', { id: docRef.id, ...otherTeam })
+          })
+      }
       return firebase.firestore().collection('competitions').add(newCompetition)
         .then((docRef) => {
           commit('ADD_COMPETITIONS', {id: docRef.id, ...newCompetition})

@@ -22,11 +22,11 @@
     </div>
 
     <CompetitionRow
-      v-for="({id, name, winner, loser}) in orderedCompetitions"
-        v-bind="{name, winner, loser}"
-        :pointsAwarded="weights[name] || 0"
-        :key="id"
-        @remove-competition="removeCompetition(id)"
+      v-for="competition in orderedCompetitions"
+        v-bind="competition"
+        :possiblePoints="weights[competition.name] || 0"
+        :key="competition.id"
+        @remove-competition="removeCompetition(competition.id)"
     />
   </div>
 </template>
