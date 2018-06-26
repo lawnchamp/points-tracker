@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     emitNewWeight () {
-      if (this.name == '' || this.value == null) return
+      if (this.name === '' || this.value == null) return
 
       this.$emit('new-weight', {name: this.name, value: this.value})
       this.name = ''
