@@ -3,7 +3,7 @@
     <AuthenticateButton/>
 
     <div class="bg-grey-lightest my-4">
-      <GraphWrapper :teamScores="teamScores"></GraphWrapper>
+      <GraphWrapper :teamScores="publishedTeamScores"></GraphWrapper>
     </div>
 
     <NewCompetitionBuilder v-if="adminSignedIn"></NewCompetitionBuilder>
@@ -27,6 +27,7 @@
         :possiblePoints="weights[competition.name] || 0"
         :key="competition.id"
         @remove-competition="removeCompetition(competition.id)"
+        @approval-state-change="approvalStateChange"
     />
   </div>
 </template>
@@ -68,9 +69,11 @@ export default {
     adminSignedIn () {
       return !!firebase.auth().currentUser
     },
-    teamScores () {
-      return this.competitions.reduce((acc, {winner, name}) => {
-        acc[winner] = (acc[winner] || 0) + (this.weights[name] || 0)
+    publishedTeamScores () {
+      return this.competitions.reduce((acc, {winner, name, approvalState}) => {
+        if (approvalState === 'published') {
+          acc[winner] = (acc[winner] || 0) + (this.weights[name] || 0)
+        }
         return acc
       }, {})
     },
@@ -87,6 +90,13 @@ export default {
       this.saving = true
       this.$store.dispatch('removeCompetition', id)
         .then(() => { this.saving = false })
+    },
+    approvalStateChange ({id, approvalState}) {
+      const updatingCompetition = this.competitions.find(comp => comp.id === id)
+      this.$store.dispatch('updateCompetition', {
+        ...updatingCompetition,
+        approvalState: approvalState
+      })
     }
   }
 }

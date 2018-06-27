@@ -19,6 +19,10 @@ const store = new Vuex.Store({
     ADD_COMPETITIONS: (state, newCompetition) => {
       state.competitions.unshift(newCompetition)
     },
+    UPDATE_COMPETITION: (state, newCompetition) => {
+      const index = state.competitions.findIndex(comp => comp.id === newCompetition.id)
+      Vue.set(state.competitions, index, newCompetition)
+    },
     SET_WEIGHTS: (state, weights) => {
       state.weights = Object.keys(weights).reduce((acc, weight) => {
         acc[weight] = weights[weight].value
@@ -38,22 +42,26 @@ const store = new Vuex.Store({
         .then((querySnapshot) => {
           const competitions = []
           querySnapshot.forEach((doc) => {
-            competitions.push({id: doc.id, ...doc.data()})
+            const competition = { id: doc.id, ...doc.data() }
+            if (!competition.approvalState) competition.approvalState = 'submitted'
+            competitions.push(competition)
           })
           commit('SET_COMPETITIONS', competitions)
         })
     },
     addCompetition ({commit}, newCompetition) {
+      newCompetition.approvalState = 'submitted'
+
       if (newCompetition.tied) {
         const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}
         firebase.firestore().collection('competitions').add(otherTeam)
           .then((docRef) => {
-            commit('ADD_COMPETITIONS', { id: docRef.id, ...otherTeam })
+            commit('ADD_COMPETITIONS', {...otherTeam, id: docRef.id})
           })
       }
       return firebase.firestore().collection('competitions').add(newCompetition)
         .then((docRef) => {
-          commit('ADD_COMPETITIONS', {id: docRef.id, ...newCompetition})
+          commit('ADD_COMPETITIONS', {...newCompetition, id: docRef.id})
         })
     },
     removeCompetition ({commit}, id) {
@@ -62,6 +70,13 @@ const store = new Vuex.Store({
           commit('REMOVE_COMPETITION', id)
         }).catch((error) => {
           console.error('Error removing document: ', error)
+        })
+    },
+    updateCompetition ({ commit }, updatedCompetition) {
+      return firebase.firestore().collection('competitions').doc(updatedCompetition.id)
+        .set(updatedCompetition)
+        .then(() => {
+          commit('UPDATE_COMPETITION', updatedCompetition)
         })
     },
     getWeights ({commit}) {
@@ -90,7 +105,12 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    competitionNames: state => Object.keys(state.weights)
+    competitionNames: state => Object.keys(state.weights),
+    currentUserRoll: () => {
+      // not sure if i should be storing currentUser in state
+      // return firebase.auth().currentUser.roll
+      return firebase.auth().currentUser ? 'admin' : 'student'
+    }
   },
   strict: process.env.NODE_ENV !== 'production'
 })
