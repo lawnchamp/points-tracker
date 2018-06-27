@@ -8,7 +8,6 @@
         placeholder='Competition'
         :options="competitionNames"
         :show-labels="false"
-        @close=addCompetition
       />
     </span>
     <span class="flex">
@@ -18,7 +17,6 @@
         :placeholder="firstTeamPlaceholder"
         :options="teamNames"
         :show-labels="false"
-        @close=addCompetition
       />
       <ul class="list-reset">
         <li>
@@ -36,8 +34,13 @@
         :placeholder='secondTeamPlaceholder'
         :options="teamNames"
         :show-labels="false"
-        @close=addCompetition
       />
+    </span>
+    <span class="flex-center">
+      <button 
+        class="center text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-green text-green hover:bg-green hover:text-white"
+        @click="addCompetition"
+      >{{saving ? 'Saving' : 'Submit'}}</button>
     </span>
   </div>
 </template>
