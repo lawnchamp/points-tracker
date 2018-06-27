@@ -54,11 +54,6 @@ export default {
       this.$emit('submit-clicked', {email: this.email, password: this.password})
       this.email = ''
       this.password = ''
-    },
-    kebobCase (string) {
-      return string.replace(/([a-z])([A-Z])/g, '$1-$2')
-        .replace(/\s+/g, '-')
-        .toLowerCase()
     }
   }
 }
