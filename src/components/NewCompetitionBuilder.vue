@@ -18,16 +18,10 @@
         :options="teamNames"
         :show-labels="false"
       />
-      <ul class="list-reset">
-        <li>
-          <input type="radio" :value="false" v-model="newCompetition.tied">
-          <label for="beat" class="text-xs px-1">Beat</label>
-        </li>
-        <li>
-          <input type="radio" :value="true" v-model="newCompetition.tied">
-          <label for="tied" class="text-xs px-1">Tied</label>
-        </li>
-      </ul>
+      <div>
+        <input class="inline" type="checkbox" id="checkbox" v-model="newCompetition.tied">
+        <label class="px-1 inline" for="checkbox">tied</label>
+      </div>
       <multiselect
         class="py-1 px-1"
         v-model="newCompetition.loser"
