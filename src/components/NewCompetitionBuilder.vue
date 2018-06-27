@@ -1,6 +1,6 @@
 <template>
   <div  class="py-8">
-    <h3 class="">Add a new competition</h3>
+    <h3 class="">Add a new score</h3>
     <span class="flex">
       <multiselect
         class="py-1 px-1"
