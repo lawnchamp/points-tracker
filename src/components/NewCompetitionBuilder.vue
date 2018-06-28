@@ -57,7 +57,7 @@ export default {
         loser: '',
         tied: false
       },
-      teamNames: names,
+      teamNames: [...names, 'n/a'],
       saving: false
     }
   },

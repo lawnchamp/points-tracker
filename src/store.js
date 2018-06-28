@@ -110,6 +110,12 @@ const store = new Vuex.Store({
       // not sure if i should be storing currentUser in state
       // return firebase.auth().currentUser.roll
       return firebase.auth().currentUser ? 'admin' : 'student'
+    },
+    currentUser: () => {
+      return {
+        isAdmin: !!firebase.auth().currentUser,
+        isStudent: !firebase.auth().currentUser
+      }
     }
   },
   strict: process.env.NODE_ENV !== 'production'
