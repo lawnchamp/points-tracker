@@ -1,6 +1,6 @@
 <template>
   <div v-if="userCanSeePoints" class="relative text-left m-3 bg-white rounded-lg py-2 px-1 shadow-md">
-    <button
+    <button v-if="isAdmin"
       class="btn-close"
       @click="$emit('remove-competition')"
     >x</button>
@@ -19,9 +19,6 @@
                   <option>approved</option>
                   <option>published</option>
                 </select>
-              </div>
-              <div v-else class="inline px-2 text-s text-grey-light">
-                {{approvalState}}
               </div>
             </div>
           </div>
@@ -55,7 +52,8 @@ export default {
     userCanSeePoints () {
       // choosing to view data in front end is dangerous, this can easily be faked
       if (this.approvalState === 'published') return true
-      if (this.$store.getters.currentUser.isAdmin) return true
+      // if (this.$store.getters.currentUser.isAdmin) return true
+      if (this.isAdmin) return true
       return false
     },
     isAdmin () {
