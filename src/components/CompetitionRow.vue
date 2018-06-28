@@ -1,11 +1,15 @@
 <template>
   <div v-if="userCanSeePoints" class="relative text-left m-3 bg-white rounded-lg py-2 px-1 shadow-md">
+    <button
+      class="btn-close"
+      @click="$emit('remove-competition')"
+    >x</button>
     <div class="p-2">
       <div class="flex justify-between">
         <div class="flex">
-          <div class="team-icon text-s" v-bind:class="teamColor()">{{winner}}</div>
+          <div class="team-icon text-s" v-bind:class="teamColor()"></div>
           <div class="px-3">
-            <h2 class="capitalize">{{name}}</h2>
+            <h3 class="capitalize">{{name}}</h3>
             <div class="text-s">
               vs {{loser}}
               <div v-if="tied" class="inline" > - tied</div>
@@ -23,10 +27,6 @@
           </div>
         </div>
         <div class="flex self-center">
-          <button
-            class="text-xl float-right fill-current text-white hover:fill-current hover:text-black"
-            @click="$emit('remove-competition')"
-          >X</button>
           <h2 class="px-2">{{pointsAwarded}}</h2>
         </div>
       </div>
@@ -74,14 +74,22 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .team-icon {
-    display: block;
-    height: 60px;
-    width: 60px;
-    line-height: 60px;
+  display: block;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
 
-    border-radius: 30px;
-
-    color: white;
-    text-align: center;
+.btn-close {
+  line-height: 15px;
+  padding: 6px 8px;
+  position: absolute;
+  right: 0;
+  opacity: 1;
+  top: 0;
+  color: lightgray;
+  background: white;
+  border-radius: 50%;
+  font-weight: bold;
 }
 </style>
