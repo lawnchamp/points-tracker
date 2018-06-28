@@ -1,5 +1,5 @@
 <template>
-  <div v-if="userCanSee" class="text-left m-3 bg-white rounded-lg py-2 px-1 shadow-md">
+  <div v-if="userCanSeePoints" class="relative text-left m-3 bg-white rounded-lg py-2 px-1 shadow-md">
     <div class="p-2">
       <div class="flex justify-between">
         <div class="flex">
@@ -8,14 +8,17 @@
             <h2 class="capitalize">{{name}}</h2>
             <div class="text-s">
               vs {{loser}}
-              <div class="inline" v-if="tied"> - tied</div>
-            </div>
-            <div>
-              <select :value="approvalState" @change="$emit('approval-state-change', {id: id, approvalState: $event.target.value})">
-                <option>submitted</option>
-                <option>approved</option>
-                <option>published</option>
-              </select>
+              <div v-if="tied" class="inline" > - tied</div>
+              <div v-if="isAdmin" class="inline">
+                <select :value="approvalState" @change="$emit('approval-state-change', {id: id, approvalState: $event.target.value})">
+                  <option>submitted</option>
+                  <option>approved</option>
+                  <option>published</option>
+                </select>
+              </div>
+              <div v-else class="inline px-2 text-s text-grey-light">
+                {{approvalState}}
+              </div>
             </div>
           </div>
         </div>
@@ -33,6 +36,7 @@
 
 <script>
 
+import firebase from '@/firebase.js'
 export default {
   name: 'CompetitionRow',
   props: {
@@ -48,11 +52,15 @@ export default {
     pointsAwarded () {
       return this.possiblePoints / (this.tied ? 2 : 1)
     },
-    userCanSee () {
+    userCanSeePoints () {
       // choosing to view data in front end is dangerous, this can easily be faked
       if (this.approvalState === 'published') return true
-      if (this.$store.getters.currentUserRoll === 'admin') return true
+      if (this.$store.getters.currentUser.isAdmin) return true
       return false
+    },
+    isAdmin () {
+      // return this.$store.getters.currentUser.isAdmin
+      return !!firebase.auth().currentUser
     }
   },
   methods: {
