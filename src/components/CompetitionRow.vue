@@ -20,6 +20,9 @@
                   <option>published</option>
                 </select>
               </div>
+              <div v-if=submittedBy>
+                {{submittedBy.email}}
+              </div>
             </div>
           </div>
         </div>
@@ -38,6 +41,7 @@ export default {
   props: {
     name: String,
     winner: String.capitalize,
+    submittedBy: Object,
     loser: String,
     possiblePoints: Number,
     id: String,

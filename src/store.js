@@ -98,8 +98,9 @@ const store = new Vuex.Store({
           commit('SET_COMPETITIONS', competitions)
         })
     },
-    addCompetition ({commit}, newCompetition) {
+    addCompetition ({commit, state}, newCompetition) {
       newCompetition.approvalState = 'submitted'
+      newCompetition.submittedBy = state.user
 
       if (newCompetition.tied) {
         const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}
