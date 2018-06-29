@@ -10,7 +10,6 @@
 
 <script>
 import './styles/app.scss'
-import firebase from '@/firebase.js'
 
 export default {
   name: 'app',
@@ -20,7 +19,7 @@ export default {
   },
   computed: {
     adminSignedIn () {
-      return !!firebase.auth().currentUser
+      return this.$store.getters.isAuthenticated
     }
   }
 }

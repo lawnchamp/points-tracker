@@ -7,7 +7,6 @@
 <script>
 
 import AuthenticateForm from '@/components/AuthenticateForm.vue'
-import firebase from '@/firebase.js'
 
 export default {
   components: {
@@ -15,14 +14,7 @@ export default {
   },
   methods: {
     login ({email, password}) {
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((stuff) => {
-          console.log('logging stuff returned from successful login: ', stuff)
-          this.$router.replace('/points')
-        }).catch((error) => {
-          console.log('error.code: ', error.code)
-          console.log('error.message: ', error.message)
-        })
+      this.$store.dispatch('userSignIn', { email, password })
     }
   }
 }

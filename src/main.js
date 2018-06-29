@@ -6,18 +6,19 @@ import firebase from '@/firebase.js'
 
 Vue.config.productionTip = false
 
+/* eslint-disable no-new */
 const unsubscribe = firebase.auth()
   .onAuthStateChanged((firebaseUser) => {
     new Vue({
+      el: '#app',
       router,
-      firebaseUser,
       store,
       render: h => h(App),
       created () {
-        // if (firebaseUser) {
-        //   store.dispatch('autoSignIn', firebaseUser)
-        // }
+        if (firebaseUser) {
+          store.dispatch('autoSignIn', firebaseUser)
+        }
       }
-    }).$mount('#app')
+    })
+    unsubscribe()
   })
-// unsubscribe()

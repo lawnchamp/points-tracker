@@ -38,7 +38,6 @@ import GraphWrapper from '@/components/GraphWrapper.vue'
 import names from '@/data/teamNames.js'
 import CompetitionRow from '@/components/CompetitionRow.vue'
 import NewCompetitionBuilder from '@/components/NewCompetitionBuilder.vue'
-import firebase from '@/firebase.js'
 
 import {sortBy as _sortBy} from 'lodash'
 
@@ -67,7 +66,7 @@ export default {
       return this.$store.state.weights
     },
     adminSignedIn () {
-      return !!firebase.auth().currentUser
+      return this.$store.getters.isAuthenticated
     },
     publishedTeamScores () {
       return this.competitions.reduce((acc, {winner, name, approvalState}) => {

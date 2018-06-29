@@ -10,22 +10,18 @@
 </template>
 
 <script>
-import firebase from '@/firebase.js'
 
 export default {
   name: 'AuthenticateButton',
   computed: {
     loginOrOut () {
-      return this.currentUser ? 'logout' : 'sign in'
-    },
-    currentUser () {
-      return firebase.auth().currentUser
+      return this.$store.getters.isAuthenticated ? 'logout' : 'sign in'
     }
   },
   methods: {
     changeAuthState () {
-      if (this.currentUser) {
-        firebase.auth().signOut()
+      if (this.$store.getters.isAuthenticated) {
+        this.$store.dispatch('userSignOut')
       } else {
         this.$router.replace('login')
       }

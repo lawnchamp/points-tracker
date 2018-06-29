@@ -33,7 +33,6 @@
 
 <script>
 
-import firebase from '@/firebase.js'
 export default {
   name: 'CompetitionRow',
   props: {
@@ -57,8 +56,7 @@ export default {
       return false
     },
     isAdmin () {
-      // return this.$store.getters.currentUser.isAdmin
-      return !!firebase.auth().currentUser
+      return this.$store.getters.isAuthenticated
     }
   },
   methods: {

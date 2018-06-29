@@ -7,7 +7,6 @@
 <script>
 
 import AuthenticateForm from '@/components/AuthenticateForm.vue'
-import firebase from '@/firebase.js'
 
 export default {
   components: {
@@ -15,15 +14,7 @@ export default {
   },
   methods: {
     register ({email, password}) {
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((stuff) => {
-          console.log('printing returned stuff', stuff)
-        })
-        .catch((error) => {
-          // how would i tell the child component that there has been a problem?
-          console.log('error code', error.code)
-          console.log('error message', error.message)
-        })
+      this.$store.dispatch('registerUser', { email, password })
     }
   }
 }

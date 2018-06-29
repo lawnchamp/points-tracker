@@ -1,15 +1,22 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from '@/firebase.js'
+import router from '@/router'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    user: null,
+    error: null,
     weights: {},
-    competitions: []
+    competitions: [],
+    loading: false
   },
   mutations: {
+    SET_USER (state, user) {
+      state.user = user
+    },
     SET_COMPETITIONS: (state, competitions) => {
       state.competitions = competitions
     },
@@ -34,9 +41,51 @@ const store = new Vuex.Store({
     },
     ADD_WEIGHT: (state, newWeight) => {
       Vue.set(state.weights, newWeight.name, newWeight.value)
+    },
+    SET_LOADING (state, payload) {
+      state.loading = payload
+    },
+    SET_ERROR (state, payload) {
+      state.error = payload
     }
   },
   actions: {
+    userSignIn ({ commit }, {email, password}) {
+      commit('SET_LOADING', true)
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(firebaseUser => {
+          commit('SET_USER', { email: firebaseUser.email })
+          commit('SET_LOADING', false)
+          commit('SET_ERROR', null)
+          router.push('/points')
+        })
+        .catch(error => {
+          commit('SET_ERROR', error.message)
+          commit('SET_LOADING', false)
+        })
+    },
+    autoSignIn ({ commit }, user) {
+      commit('SET_USER', { email: user.email })
+    },
+    userSignOut ({ commit }) {
+      firebase.auth().signOut()
+      commit('SET_USER', null)
+      router.push('/')
+    },
+    registerUser ({commit}, {email, password}) {
+      commit('SET_LOADING', true)
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((firebaseUser) => {
+          commit('SET_USER', { email: firebaseUser.email })
+          commit('SET_LOADING', false)
+          commit('SET_ERROR', null)
+          router.push('/points')
+        })
+        .catch((error) => {
+          commit('SET_ERROR', error.message)
+          commit('SET_LOADING', false)
+        })
+    },
     getCompetitions ({commit}) {
       return firebase.firestore().collection('competitions').get()
         .then((querySnapshot) => {
@@ -106,16 +155,8 @@ const store = new Vuex.Store({
   },
   getters: {
     competitionNames: state => Object.keys(state.weights),
-    currentUserRoll: () => {
-      // not sure if i should be storing currentUser in state
-      // return firebase.auth().currentUser.roll
-      return firebase.auth().currentUser ? 'admin' : 'student'
-    },
-    currentUser: () => {
-      return {
-        isAdmin: !!firebase.auth().currentUser,
-        isStudent: !firebase.auth().currentUser
-      }
+    isAuthenticated (state) {
+      return state.user !== null && state.user !== undefined
     }
   },
   strict: process.env.NODE_ENV !== 'production'

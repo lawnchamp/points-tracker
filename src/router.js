@@ -41,7 +41,7 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   let currentUser = firebase.auth().currentUser
 
-  let onAuthPage = to.name.match(/(Login)|(Register)/)
+  let onAuthPage = to.name && to.name.match(/(Login)|(Register)/)
   if (currentUser && onAuthPage) next('points')
 
   if (to.matched.some(record => record.meta.requiresAuth) && !currentUser) {
