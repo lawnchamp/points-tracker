@@ -26,7 +26,7 @@
         class="py-1 px-1"
         v-model="newCompetition.loser"
         :placeholder='secondTeamPlaceholder'
-        :options="teamNames"
+        :options="[...teamNames, 'n/a']"
         :show-labels="false"
       />
     </span>
