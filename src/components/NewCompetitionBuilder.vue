@@ -31,7 +31,7 @@
       />
     </span>
     <span class="flex-center">
-      <button 
+      <button
         class="center text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-green text-green hover:bg-green hover:text-white"
         @click="addCompetition"
       >{{saving ? 'Saving' : 'Submit'}}</button>
@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import names from '@/data/teamNames.js'
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 
@@ -48,6 +47,9 @@ export default {
   name: 'NewCompetitionBuilder',
   components: {
     Multiselect
+  },
+  props: {
+    teamNames: Array
   },
   data () {
     return {
@@ -57,7 +59,6 @@ export default {
         loser: '',
         tied: false
       },
-      teamNames: [...names, 'n/a'],
       saving: false
     }
   },

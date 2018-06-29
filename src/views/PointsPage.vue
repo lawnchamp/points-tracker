@@ -6,7 +6,7 @@
       <GraphWrapper :teamScores="publishedTeamScores"></GraphWrapper>
     </div>
 
-    <NewCompetitionBuilder v-if="adminSignedIn"></NewCompetitionBuilder>
+    <NewCompetitionBuilder v-if="adminSignedIn" :teamNames="teamNames"></NewCompetitionBuilder>
 
     <div class="container">
       <h3>Sort by</h3>
@@ -35,7 +35,6 @@
 <script>
 import AuthenticateButton from '@/components/AuthenticateButton.vue'
 import GraphWrapper from '@/components/GraphWrapper.vue'
-import names from '@/data/teamNames.js'
 import CompetitionRow from '@/components/CompetitionRow.vue'
 import NewCompetitionBuilder from '@/components/NewCompetitionBuilder.vue'
 
@@ -52,7 +51,6 @@ export default {
   data () {
     return {
       title: 'Points',
-      teamNames: names,
       saving: false,
       selectedTeamSort: ''
     }
@@ -78,6 +76,9 @@ export default {
     },
     orderedCompetitions () {
       return _sortBy(this.competitions, [(competition) => (competition.winner !== this.selectedTeamSort)])
+    },
+    teamNames () {
+      return Object.keys(this.publishedTeamScores)
     }
   },
 
