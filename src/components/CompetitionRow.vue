@@ -7,12 +7,11 @@
     <div class="p-2">
       <div class="flex justify-between">
         <div class="flex">
-          <div class="team-icon text-s" v-bind:class="teamColor()"></div>
+          <div class="team-icon" v-bind:class="teamColor()"></div>
           <div class="px-3">
             <h3 class="capitalize">{{name}}</h3>
             <div class="text-s">
-              vs {{loser}}
-              <div v-if="tied" class="inline" > - tied</div>
+              {{loserText}}
               <div v-if="isAdmin" class="inline">
                 <select :value="approvalState" @change="$emit('approval-state-change', {id: id, approvalState: $event.target.value})">
                   <option>submitted</option>
@@ -61,6 +60,15 @@ export default {
     },
     isAdmin () {
       return this.$store.getters.isAuthenticated
+    },
+    loserText () {
+      if (this.tied) {
+        return `tied ${this.loser}`
+      } else if (this.loser === 'n/a') {
+        return ''
+      } else {
+        return `vs ${this.loser}`
+      }
     }
   },
   methods: {
