@@ -7,6 +7,7 @@
 <script>
 
 import TeamChart from '@/TeamChart.js'
+import {colors} from '@/../tailwind.js'
 
 export default {
   name: 'GraphWrapper',
@@ -25,7 +26,7 @@ export default {
         labels: Object.keys(this.teamScores),
         datasets: [{
           label: 'team points',
-          backgroundColor: Object.keys(this.teamScores),
+          backgroundColor: Object.keys(this.teamScores).map(color => colors[color]),
           data: Object.values(this.teamScores)
         }]
       }
