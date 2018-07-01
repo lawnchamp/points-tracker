@@ -124,7 +124,31 @@ let colors = {
   'pink': '#f66d9b',
   'pink-light': '#fa7ea8',
   'pink-lighter': '#ffbbca',
-  'pink-lightest': '#ffebef'
+  'pink-lightest': '#ffebef',
+
+  'brown-darkest': '#8B4513',
+  'brown-darker': '#8B4513',
+  'brown-dark': '#8B4513',
+  'brown': '#8B4513',
+  'brown-light': '#8B4513',
+  'brown-lighter': '#8B4513',
+  'brown-lightest': '#8B4513',
+
+  'lime-darkest': '#00FF00',
+  'lime-darker': '#00FF00',
+  'lime-dark': '#00FF00',
+  'lime': '#00FF00',
+  'lime-light': '#00FF00',
+  'lime-lighter': '#00FF00',
+  'lime-lightest': '#00FF00',
+
+  'turquoise-darkest': '#40e0d0',
+  'turquoise-darker': '#40e0d0',
+  'turquoise-dark': '#40e0d0',
+  'turquoise': '#40e0d0',
+  'turquoise-light': '#40e0d0',
+  'turquoise-lighter': '#40e0d0',
+  'turquoise-lightest': '#40e0d0'
 }
 
 module.exports = {
