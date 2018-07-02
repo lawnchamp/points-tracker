@@ -1,19 +1,16 @@
-# point-tracker
-http://points-tracker.netlify.com/ is used to track points for mutiple teams across many different competitions
-
 # Site description
-My site is to help summer camps track points for multiple teams competing in a wide range of competitions that all give different amount of points. For example dodgeball may give 300 points to the blue team in the afternoon but later in the day the red team won the singing competition and earned 100 points.
+http://points-tracker.netlify.com/ is used to track points for mutiple teams across many different competitions. For example dodgeball may give 300 points to the blue team in the afternoon but later in the day the red team won the singing competition and earned 100 points.
 
 # Summer Camp Pain Points
 * As a highschooler attending this camp, I have just been told my team has 3405 points. 
   * Where are these points coming from?
-  * Why does the team in first have tripple our team score? How is that even possible given that we did pretty well today?
+  * Why does the team in first have tripple our team score? How is that even possible given that we beat them yesterday in dodgeball?
   * When we won dodgeball did the admin team give us 500 points or did they make a mistake and give 200?
   * My teammate pulled a prank on the admin cabin last night, do they hate my team now and thats why we are losing?
   * How are all the competitions weighted? Is winning dodgeball the same coming in first place for the all camp relay race?
 
 
-# user rolls:
+# User rolls:
 ### Students
 * Can look at what events are giving their team points and also see how other teams are getting points
 * All points students view must be approved and published
