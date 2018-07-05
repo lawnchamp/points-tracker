@@ -6,7 +6,7 @@
       <GraphWrapper :teamScores="publishedTeamScores"></GraphWrapper>
     </div>
 
-    <NewCompetitionBuilder v-if="adminSignedIn" :teamNames="teamNames"></NewCompetitionBuilder>
+    <NewCompetitionBuilder v-if="canAddPoints" :teamNames="teamNames"></NewCompetitionBuilder>
 
     <div class="container">
       <h3>Sort by</h3>
@@ -24,7 +24,6 @@
     <CompetitionRow
       v-for="competition in orderedCompetitions"
         v-bind="competition"
-        :possiblePoints="weights[competition.name] || 0"
         :key="competition.id"
         @remove-competition="removeCompetition(competition.id)"
         @approval-state-change="approvalStateChange"
@@ -52,30 +51,29 @@ export default {
     return {
       title: 'Points',
       saving: false,
-      selectedTeamSort: ''
+      selectedTeamSort: null
     }
   },
-
   computed: {
     competitions () {
       return this.$store.state.competitions
     },
-    weights () {
-      return this.$store.state.weights
-    },
-    adminSignedIn () {
-      return this.$store.getters.isAuthenticated
+    canAddPoints () {
+      return this.$store.getters.isAdmin || this.$store.getters.isLeader
     },
     publishedTeamScores () {
-      return this.competitions.reduce((acc, {winner, name, approvalState}) => {
+      return this.competitions.reduce((acc, {winner, points, approvalState}) => {
         if (approvalState === 'published') {
-          acc[winner] = (acc[winner] || 0) + (this.weights[name] || 0)
+          acc[winner] = (acc[winner] || 0) + (points || 0)
         }
         return acc
       }, {})
     },
+    teamSortBy () {
+      return this.selectedTeamSort || this.$store.getters.currentUserTeam
+    },
     orderedCompetitions () {
-      return _sortBy(this.competitions, [(competition) => (competition.winner !== this.selectedTeamSort)])
+      return _sortBy(this.competitions, [(competition) => (competition.winner !== this.teamSortBy)])
     },
     teamNames () {
       return Object.keys(this.publishedTeamScores)
@@ -84,7 +82,7 @@ export default {
 
   methods: {
     stylingForTeam (team) {
-      return team === this.selectedTeamSort ? `text-${team} border-2 border-${team}` : 'text-grey-dark border border-grey-dark'
+      return team === this.teamSortBy ? `text-${team} border-2 border-${team}` : 'text-grey-dark border border-grey-dark'
     },
     removeCompetition (id) {
       this.saving = true

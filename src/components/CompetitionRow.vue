@@ -1,5 +1,5 @@
 <template>
-  <div v-if="userCanSeePoints" class="relative text-left m-3 bg-white rounded-lg py-2 px-1 shadow-md">
+  <div v-if="userCanSeeCompetition" class="relative text-left m-3 bg-white rounded-lg py-2 px-1 shadow-md">
     <button v-if="isAdmin"
       class="btn-close"
       @click="$emit('remove-competition')"
@@ -19,14 +19,19 @@
                   <option>published</option>
                 </select>
               </div>
-              <div v-if=submittedBy>
+              <div v-else-if="approvalState != 'published'" class="text-grey">
+                {{approvalState}}
+              </div>
+              <div v-if="isAdmin && submittedBy">
                 {{submittedBy.email}}
               </div>
             </div>
           </div>
         </div>
         <div class="flex self-center">
-          <h2 class="px-2">{{pointsAwarded}}</h2>
+          <h2 :class="'px-2 ' + customValueIndicatorClass">
+            {{pointsAwarded}}<sup v-if="usingCustomValue && isAdmin">*</sup>
+          </h2>
         </div>
       </div>
     </div>
@@ -42,24 +47,34 @@ export default {
     winner: String.capitalize,
     submittedBy: Object,
     loser: String,
-    possiblePoints: Number,
+    defaultPoints: Number,
+    points: Number,
     id: String,
     approvalState: String,
     tied: Boolean
   },
   computed: {
     pointsAwarded () {
-      return this.possiblePoints / (this.tied ? 2 : 1)
+      return this.points / (this.tied ? 2 : 1)
     },
-    userCanSeePoints () {
+    customValueIndicatorClass () {
+      return this.$store.getters.authenticatedUser && this.usingCustomValue ? 'italic text-blue-dark' : ''
+    },
+    usingCustomValue () {
+      return this.defaultPoints && this.defaultPoints !== this.points
+    },
+    userCanSeeCompetition () {
       // choosing to view data in front end is dangerous, this can easily be faked
       if (this.approvalState === 'published') return true
-      // if (this.$store.getters.currentUser.isAdmin) return true
-      if (this.isAdmin) return true
-      return false
+
+      if (this.isAdmin) {
+        return true
+      } else {
+        return this.$store.getters.currentUserTeam === this.winner
+      }
     },
     isAdmin () {
-      return this.$store.getters.isAuthenticated
+      return this.$store.getters.isAdmin
     },
     loserText () {
       if (this.tied) {

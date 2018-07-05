@@ -1,6 +1,9 @@
 <template>
   <div  class="py-8">
-    <h3 class="">Add a new score</h3>
+    <h3 v-if="$store.getters.isAdmin">Add new points</h3>
+    <h3 v-else-if="$store.getters.isLeader">
+      Add points for <span :class="`text-${team} uppercase`">{{team}}</span> team
+    </h3>
     <span class="flex">
       <multiselect
         class="py-1 px-1"
@@ -8,10 +11,18 @@
         placeholder='Competition'
         :options="competitionNames"
         :show-labels="false"
+        @input="initializePoints"
       />
+      <input
+        class="rounded border h-10 px-1 my-1"
+        placeholder="Points awarded"
+        type="number"
+        v-model.number="newCompetition.points"
+      >
     </span>
     <span class="flex">
       <multiselect
+        v-if="$store.getters.isAdmin"
         class="py-1 px-1"
         v-model="newCompetition.winner"
         :placeholder="firstTeamPlaceholder"
@@ -30,9 +41,15 @@
         :show-labels="false"
       />
     </span>
-    <span class="flex-center">
+    <span class="flex">
+      <textarea
+        type="text"
+        v-model="newCompetition.notes"
+        class="width-64 py-2 px-3 mx-1 my-1 border rounded"
+        placeholder="Notes">
+      </textarea>
       <button
-        class="center text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-green text-green hover:bg-green hover:text-white"
+        class="h-8 text-xs font-semibold rounded-full px-4 py-1 my-1 leading-normal bg-white border border-green text-green hover:bg-green hover:text-white"
         @click="addCompetition"
       >{{saving ? 'Saving' : 'Submit'}}</button>
     </span>
@@ -57,12 +74,18 @@ export default {
         name: '',
         winner: '',
         loser: '',
-        tied: false
+        points: null,
+        defaultPoints: 0,
+        tied: false,
+        notes: ''
       },
       saving: false
     }
   },
   computed: {
+    team () {
+      return this.$store.getters.currentUserTeam
+    },
     competitionNames () {
       return this.$store.getters.competitionNames
     },
@@ -70,22 +93,45 @@ export default {
       return this.newCompetition.tied ? 'Team 1' : 'Winner'
     },
     secondTeamPlaceholder () {
-      return this.newCompetition.tied ? 'Team 2' : 'Loser'
+      return this.newCompetition.tied ? 'Team 2' : 'Won against'
+    },
+    weights () {
+      return this.$store.state.weights
+    },
+    canAddPoints () {
+      return this.$store.getters.isAdmin || this.$store.getters.isLeader
     }
   },
   methods: {
     addCompetition () {
-      if (this.newCompetition.name === '' || this.newCompetition.winner === '' || this.newCompetition.loser === '') return
+      if (this.newCompetition.name === '') return
 
       this.saving = true
+      if (this.newCompetition.winner === '') this.newCompetition.winner = this.team
 
       this.$store.dispatch('addCompetition', this.newCompetition).then(() => {
         this.saving = false
-        Object.keys(this.newCompetition).forEach(prop => { this.newCompetition[prop] = '' })
+        this.resetNewCompetitionData()
       }).catch((error) => {
         this.saving = false
         console.error('Error adding document: ', error)
+        this.resetNewCompetitionData()
       })
+    },
+    initializePoints () {
+      this.newCompetition.defaultPoints = this.weights[this.newCompetition.name]
+      this.newCompetition.points = this.weights[this.newCompetition.name]
+    },
+    resetNewCompetitionData () {
+      this.newCompetition = {
+        name: '',
+        winner: this.team,
+        loser: '',
+        points: '',
+        defaultPoints: '',
+        tied: false,
+        notes: ''
+      }
     }
   }
 }

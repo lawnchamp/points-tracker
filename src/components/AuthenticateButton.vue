@@ -15,12 +15,12 @@ export default {
   name: 'AuthenticateButton',
   computed: {
     loginOrOut () {
-      return this.$store.getters.isAuthenticated ? 'logout' : 'sign in'
+      return this.$store.getters.authenticatedUser ? 'logout' : 'sign in'
     }
   },
   methods: {
     changeAuthState () {
-      if (this.$store.getters.isAuthenticated) {
+      if (this.$store.getters.authenticatedUser) {
         this.$store.dispatch('userSignOut')
       } else {
         this.$router.replace('login')

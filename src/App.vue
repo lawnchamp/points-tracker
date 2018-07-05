@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="bg-grey-lightest">
-    <div v-if="adminSignedIn" id="nav">
+    <div v-if="isAdmin" id="nav">
       <router-link to="/points">Points</router-link> |
       <router-link to="/weights">Weights</router-link>
     </div>
@@ -18,8 +18,8 @@ export default {
     this.$store.dispatch('getWeights')
   },
   computed: {
-    adminSignedIn () {
-      return this.$store.getters.isAuthenticated
+    isAdmin () {
+      return this.$store.getters.isAdmin
     }
   }
 }

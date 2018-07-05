@@ -7,15 +7,34 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    user: null,
+    user: {
+      name: {
+        first: '',
+        Last: ''
+      },
+      email: '',
+      role: 'student',
+      team: ''
+    },
     error: null,
     weights: {},
     competitions: [],
     loading: false
   },
   mutations: {
-    SET_USER (state, user) {
-      state.user = user
+    SET_USER_PROPERTIES (state, user) {
+      state.user = {...state.user, ...user}
+    },
+    SIGN_OUT (state) {
+      state.user = {
+        name: {
+          first: '',
+          last: ''
+        },
+        email: '',
+        role: 'student',
+        team: ''
+      }
     },
     SET_COMPETITIONS: (state, competitions) => {
       state.competitions = competitions
@@ -50,11 +69,25 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    userSignIn ({ commit }, {email, password}) {
+    getAdditionUserProps ({commit}, email) {
+      firebase.firestore().collection('users').doc(email).get()
+        .then(function (user) {
+          if (user.exists) {
+            const {name, role, team} = user.data()
+            commit('SET_USER_PROPERTIES', {name, role, team})
+          } else {
+            throw new Error(`Error: could not find user with email: ${email}`)
+          }
+        }).catch(function (error) {
+          throw new Error('Error getting document:', error)
+        })
+    },
+    userSignIn ({commit, dispatch}, {email, password}) {
       commit('SET_LOADING', true)
       firebase.auth().signInWithEmailAndPassword(email, password)
         .then(firebaseUser => {
-          commit('SET_USER', { email: firebaseUser.email })
+          commit('SET_USER_PROPERTIES', { email: firebaseUser.email })
+          dispatch('getAdditionUserProps', firebaseUser.email)
           commit('SET_LOADING', false)
           commit('SET_ERROR', null)
           router.push('/points')
@@ -64,19 +97,20 @@ const store = new Vuex.Store({
           commit('SET_LOADING', false)
         })
     },
-    autoSignIn ({ commit }, user) {
-      commit('SET_USER', { email: user.email })
+    autoSignIn ({commit, dispatch}, user) {
+      commit('SET_USER_PROPERTIES', {email: user.email})
+      dispatch('getAdditionUserProps', user.email)
     },
     userSignOut ({ commit }) {
       firebase.auth().signOut()
-      commit('SET_USER', null)
-      router.push('/')
+      commit('SIGN_OUT')
+      router.push('/points')
     },
     registerUser ({commit}, {email, password}) {
       commit('SET_LOADING', true)
       firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((firebaseUser) => {
-          commit('SET_USER', { email: firebaseUser.email })
+          commit('SET_USER_PROPERTIES', {email: firebaseUser.email})
           commit('SET_LOADING', false)
           commit('SET_ERROR', null)
           router.push('/points')
@@ -100,7 +134,7 @@ const store = new Vuex.Store({
     },
     addCompetition ({commit, state}, newCompetition) {
       newCompetition.approvalState = 'submitted'
-      newCompetition.submittedBy = state.user
+      newCompetition.submittedBy = {email: state.user.email, name: state.user.name}
 
       if (newCompetition.tied) {
         const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}
@@ -156,9 +190,10 @@ const store = new Vuex.Store({
   },
   getters: {
     competitionNames: state => Object.keys(state.weights),
-    isAuthenticated (state) {
-      return state.user !== null && state.user !== undefined
-    }
+    currentUserTeam: state => state.user.team,
+    isAdmin: state => state.user.role === 'admin',
+    isLeader: state => state.user.role === 'leader',
+    authenticatedUser: state => state.user.email
   },
   strict: process.env.NODE_ENV !== 'production'
 })
