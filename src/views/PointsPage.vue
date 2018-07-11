@@ -2,11 +2,12 @@
   <div class="container md:w-1/2 lg:w-1/3">
     <AuthenticateButton/>
 
+    <NewCompetitionBuilder v-if="canAddPoints" :teamNames="teamNames"></NewCompetitionBuilder>
+
     <div class="bg-grey-lightest my-4">
       <GraphWrapper :teamScores="publishedTeamScores"></GraphWrapper>
     </div>
 
-    <NewCompetitionBuilder v-if="canAddPoints" :teamNames="teamNames"></NewCompetitionBuilder>
     <button
       v-if="isAdmin"
       class="h-8 text-xs font-semibold rounded-full px-4 py-1 my-1
@@ -20,7 +21,7 @@
       <div class="inline-flex py-1 px-1 justify-center" v-for="team in teamNames" :key="team">
         <button @click="selectedTeamSort = team"
                 :class="stylingForTeam(team)"
-                class="h-6 w-12 rounded-full text-xs capitalize">{{team}}</button>
+                class="h-6 w-14 rounded-full text-xs capitalize">{{team}}</button>
       </div>
     </div>
 

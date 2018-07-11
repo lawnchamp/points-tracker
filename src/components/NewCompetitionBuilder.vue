@@ -1,5 +1,5 @@
 <template>
-  <div  class="py-8">
+  <div>
     <h3 v-if="$store.getters.isAdmin">Add new points</h3>
     <h3 v-else-if="$store.getters.isLeader">
       Add points for <span :class="`text-${team} uppercase`">{{team}}</span> team
@@ -26,7 +26,7 @@
         class="py-1 px-1"
         v-model="newCompetition.winner"
         :placeholder="firstTeamPlaceholder"
-        :options="teamNames"
+        :options="[...teamNames, 'turquoise', 'pink']"
         :show-labels="false"
       />
       <div>
