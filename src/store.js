@@ -66,6 +66,13 @@ const store = new Vuex.Store({
     },
     SET_ERROR (state, payload) {
       state.error = payload
+    },
+    PUBLISH_ALL (state, newlyPublishedIds) {
+      state.competitions.forEach(competition => {
+        if (newlyPublishedIds.includes(competition.id)) {
+          Vue.set(competition, 'approvalState', 'published')
+        }
+      })
     }
   },
   actions: {
@@ -186,6 +193,18 @@ const store = new Vuex.Store({
         }).catch((error) => {
           console.error('Error removing weight: ', error)
         })
+    },
+    publishAll ({ commit, state }) {
+      const db = firebase.firestore()
+      const batch = db.batch()
+      const approvedCompetitions = state.competitions.filter(comp => comp.approvalState === 'approved')
+      approvedCompetitions.forEach(competition => {
+        const compRef = db.collection('competitions').doc(competition.id)
+        batch.update(compRef, { approvalState: 'published' })
+      })
+      batch.commit().then(() => {
+        commit('PUBLISH_ALL', approvedCompetitions.map(comp => comp.id))
+      })
     }
   },
   getters: {

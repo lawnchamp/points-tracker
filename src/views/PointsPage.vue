@@ -7,6 +7,13 @@
     </div>
 
     <NewCompetitionBuilder v-if="canAddPoints" :teamNames="teamNames"></NewCompetitionBuilder>
+    <button
+      v-if="isAdmin"
+      class="h-8 text-xs font-semibold rounded-full px-4 py-1 my-1
+             leading-normal bg-white border border-green text-green
+             hover:bg-green hover:text-white"
+      @click="publishAll"
+    >Publish all approved points</button>
 
     <div class="container">
       <h3>Sort by</h3>
@@ -59,7 +66,7 @@ export default {
       return this.$store.state.competitions
     },
     canAddPoints () {
-      return this.$store.getters.isAdmin || this.$store.getters.isLeader
+      return this.isAdmin || this.$store.getters.isLeader
     },
     publishedTeamScores () {
       return this.competitions.reduce((acc, {winner, points, approvalState}) => {
@@ -77,6 +84,9 @@ export default {
     },
     teamNames () {
       return Object.keys(this.publishedTeamScores)
+    },
+    isAdmin () {
+      return this.$store.getters.isAdmin
     }
   },
 
@@ -95,6 +105,9 @@ export default {
         ...updatingCompetition,
         approvalState: approvalState
       })
+    },
+    publishAll () {
+      this.$store.dispatch('publishAll')
     }
   }
 }
