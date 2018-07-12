@@ -70,9 +70,10 @@ export default {
       return this.isAdmin || this.$store.getters.isLeader
     },
     publishedTeamScores () {
-      return this.competitions.reduce((acc, {winner, points, approvalState}) => {
+      return this.competitions.reduce((acc, {winner, points, approvalState, tied}) => {
         if (approvalState === 'published') {
-          acc[winner] = (acc[winner] || 0) + (points || 0)
+          const divisor = tied ? 2 : 1
+          acc[winner] = (acc[winner] || 0) + ((points || 0)/divisor)
         }
         return acc
       }, {})
