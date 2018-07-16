@@ -87,6 +87,14 @@ export default {
     }
   },
   methods: {
+    approvalStateChange ({id, approvalState}) {
+      // todo!! - just pass the id and new state to the store and let the store handle the rest
+      // const updatingCompetition = this.competitions.find(comp => comp.id === id)
+      // this.$store.dispatch('updateCompetition', {
+      //   ...updatingCompetition,
+      //   approvalState: approvalState
+      // })
+    },
     teamColor () {
       return `bg-${this.winner.toLowerCase()}`
     }
