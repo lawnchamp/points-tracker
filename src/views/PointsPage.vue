@@ -101,12 +101,6 @@ export default {
       this.$store.dispatch('removeCompetition', id)
         .then(() => { this.saving = false })
     },
-    approvalStateChange ({id, approvalState}) {
-      const updatingCompetition = this.competitions.find(comp => comp.id === id)
-      this.$store.dispatch('updateCompetition', {
-        ...updatingCompetition,
-        approvalState: approvalState
-      })
     },
     publishAll () {
       this.$store.dispatch('publishAll')
