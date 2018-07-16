@@ -8,6 +8,8 @@
 
 import TeamChart from '@/TeamChart.js'
 import {colors} from '@/../tailwind.js'
+const NAME_INDEX = 0
+const SCORE_INDEX = 1
 
 export default {
   name: 'GraphWrapper',
@@ -21,13 +23,22 @@ export default {
     }
   },
   computed: {
+    sortedTeamScoreInfo () {
+      return Object.entries(this.teamScores).sort()
+    },
+    sortedNames () {
+      return this.sortedTeamScoreInfo.map(scoreInfo => scoreInfo[NAME_INDEX])
+    },
+    sortedScores () {
+      return this.sortedTeamScoreInfo.map(scoreInfo => scoreInfo[SCORE_INDEX])
+    },
     graphData () {
       return {
-        labels: Object.keys(this.teamScores),
+        labels: this.sortedNames,
         datasets: [{
           label: 'team points',
-          backgroundColor: Object.keys(this.teamScores).map(color => colors[color]),
-          data: Object.values(this.teamScores)
+          backgroundColor: this.sortedNames.map(color => colors[color]),
+          data: this.sortedScores
         }]
       }
     }
