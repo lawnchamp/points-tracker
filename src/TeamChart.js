@@ -10,9 +10,23 @@ export default {
         display: false
       },
       scales: {
-        yAxes: [{
+        xAxes: [{
+          gridLines: {
+            display: false
+          },
           ticks: {
-            beginAtZero: true
+            fontSize: 10,
+            fontColor: 'lightgrey'
+          }
+        }],
+        yAxes: [{
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          ticks: {
+            beginAtZero: true,
+            display: false
           }
         }]
       }
