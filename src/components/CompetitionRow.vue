@@ -112,15 +112,8 @@ export default {
 }
 
 .btn-close {
-  line-height: 15px;
-  padding: 6px 8px;
   position: absolute;
   right: 0;
-  opacity: 1;
   top: 0;
-  color: lightgray;
-  background: white;
-  border-radius: 50%;
-  font-weight: bold;
 }
 </style>
