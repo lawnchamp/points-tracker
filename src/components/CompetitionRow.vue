@@ -79,7 +79,7 @@ export default {
     loserText () {
       if (this.tied) {
         return `tied ${this.loser}`
-      } else if (this.loser === 'n/a') {
+      } else if (this.loser === 'n/a' || this.loser === '') {
         return ''
       } else {
         return `vs ${this.loser}`
