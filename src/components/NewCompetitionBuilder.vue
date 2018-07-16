@@ -1,9 +1,5 @@
 <template>
   <div>
-    <h3 v-if="$store.getters.isAdmin">Add new points</h3>
-    <h3 v-else-if="$store.getters.isLeader">
-      Add points for <span :class="`text-${team} uppercase`">{{team}}</span> team
-    </h3>
     <span class="flex">
       <multiselect
         class="py-1 px-1"
@@ -79,7 +75,8 @@ export default {
         tied: false,
         notes: ''
       },
-      saving: false
+      saving: false,
+      show: true
     }
   },
   computed: {

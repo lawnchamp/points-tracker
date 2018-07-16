@@ -1,57 +1,60 @@
 <template>
-  <div v-if="userCanSeeCompetition" class="relative text-left m-3 bg-white rounded-lg py-2 px-1 shadow-md">
+  <div v-if="userCanSeeCompetition" class="relative border-b">
     <button v-if="isAdmin"
-      class="btn-close"
+      class="btn-close text-grey-light"
       @click="$emit('remove-competition')"
     >x</button>
-    <div class="p-2">
-      <div class="flex justify-between">
+    <div class="py-2">
+      <div class="flex justify-between" @click="showDetails = !showDetails">
         <div class="flex">
-          <div class="team-icon" v-bind:class="teamColor()"></div>
-          <div class="px-3">
-            <h3 class="capitalize">{{name}}</h3>
-            <div class="text-s">
+          <div class="team-icon flex-no-shrink" v-bind:class="teamColor()"></div>
+          <div class="px-2">
+            <div class="capitalize font-semibold text-xl">{{name}}</div>
+            <div class="text-xs inline text-grey">
               {{loserText}}
-              <div v-if="isAdmin" class="inline">
-                <select :value="approvalState" @change="$emit('approval-state-change', {id: id, approvalState: $event.target.value})">
-                  <option>submitted</option>
-                  <option>approved</option>
-                  <option>published</option>
-                </select>
-              </div>
-              <div v-else-if="approvalState != 'published'" class="text-grey">
-                {{approvalState}}
-              </div>
-              <div v-if="isAdmin && submittedBy">
-                {{submittedBy.email}}
-              </div>
             </div>
           </div>
         </div>
         <div class="flex self-center">
-          <h2 :class="'px-2 ' + customValueIndicatorClass">
+          <div :class="'font-semibold text-2xl px-2 ' + customValueIndicatorClass">
             {{pointsAwarded}}<sup v-if="usingCustomValue && isAdmin">*</sup>
-          </h2>
+          </div>
         </div>
       </div>
+      <CompetitionDetails
+        v-if="showDetails"
+        v-bind="{isAdmin, approvalState, notes, submittedBy}"
+        @state-change="approvalStateChange"
+      ></CompetitionDetails>
     </div>
+
   </div>
 </template>
 
 <script>
+import CompetitionDetails from '@/components/CompetitionDetails.vue'
 
 export default {
   name: 'CompetitionRow',
+  components: {
+    CompetitionDetails
+  },
   props: {
-    name: String,
-    winner: String.capitalize,
-    submittedBy: Object,
-    loser: String,
-    defaultPoints: Number,
-    points: Number,
-    id: String,
     approvalState: String,
-    tied: Boolean
+    defaultPoints: Number,
+    id: String,
+    loser: String,
+    name: String,
+    notes: String,
+    points: Number,
+    submittedBy: Object,
+    tied: Boolean,
+    winner: String.capitalize
+  },
+  data () {
+    return {
+      showDetails: false
+    }
   },
   computed: {
     pointsAwarded () {
