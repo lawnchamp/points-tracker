@@ -44,6 +44,8 @@ View the full documentation at https://tailwindcss.com.
 let colors = {
   'transparent': 'transparent',
 
+  'black-20': 'rgba(0,0,0,.2)',
+
   'black': '#22292f',
   'grey-darkest': '#3d4852',
   'grey-darker': '#606f7b',
@@ -652,7 +654,9 @@ module.exports = {
     '3': '0.75rem',
     '4': '1rem',
     '6': '1.5rem',
-    '8': '2rem'
+    '8': '2rem',
+    '24': '6rem',
+    '32': '8rem'
   },
 
   /*
@@ -706,7 +710,9 @@ module.exports = {
     '3': '0.75rem',
     '4': '1rem',
     '6': '1.5rem',
-    '8': '2rem'
+    '8': '2rem',
+    '24': '6rem',
+    '32': '8rem'
   },
 
   /*
@@ -896,7 +902,7 @@ module.exports = {
 
   plugins: [
     require('tailwindcss/plugins/container')({
-      center: true
+      // center: true
       // padding: '1rem',
     })
   ],
