@@ -14,9 +14,9 @@
         @input="initializePoints"
       />
       <input
-        class="rounded border h-10 px-1 my-1"
-        placeholder="Points awarded"
-        type="number"
+        class="rounded border h-10 w-14 px-1 my-1"
+        placeholder="Points"
+        type="text"
         v-model.number="newCompetition.points"
       >
     </span>
@@ -41,7 +41,7 @@
         :show-labels="false"
       />
     </span>
-    <span class="flex">
+    <span class="flex justify-between items-center">
       <textarea
         type="text"
         v-model="newCompetition.notes"
@@ -49,7 +49,7 @@
         placeholder="Notes">
       </textarea>
       <button
-        class="h-8 text-xs font-semibold rounded-full px-4 py-1 my-1 leading-normal bg-white border border-green text-green hover:bg-green hover:text-white"
+        class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-green text-green hover:bg-green hover:text-white"
         @click="addCompetition"
       >{{saving ? 'Saving' : 'Submit'}}</button>
     </span>
@@ -93,7 +93,7 @@ export default {
       return this.newCompetition.tied ? 'Team 1' : 'Winner'
     },
     secondTeamPlaceholder () {
-      return this.newCompetition.tied ? 'Team 2' : 'Won against'
+      return this.newCompetition.tied ? 'Team 2' : 'Loser'
     },
     weights () {
       return this.$store.state.weights
