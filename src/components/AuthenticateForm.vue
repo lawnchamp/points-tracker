@@ -51,9 +51,20 @@ export default {
   },
   methods: {
     submitCredentials () {
-      this.$emit('submit-clicked', {email: this.email, password: this.password})
-      this.email = ''
-      this.password = ''
+      if (this.action === 'Login') {
+        console.log('about to dispatch login')
+        this.$store.dispatch('userSignIn', {email: this.email, password: this.password})
+          .then(() => {
+            this.email = ''
+            this.password = ''
+          })
+      } else {
+        this.$store.dispatch('registerUser', {email: this.email, password: this.password})
+          .then(() => {
+            this.email = ''
+            this.password = ''
+          })
+      }
     }
   }
 }
