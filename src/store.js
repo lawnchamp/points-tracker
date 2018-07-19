@@ -91,7 +91,7 @@ const store = new Vuex.Store({
     },
     userSignIn ({commit, dispatch}, {email, password}) {
       commit('SET_LOADING', true)
-      firebase.auth().signInWithEmailAndPassword(email, password)
+      return firebase.auth().signInWithEmailAndPassword(email, password)
         .then(firebaseUser => {
           commit('SET_USER_PROPERTIES', { email: firebaseUser.email })
           dispatch('getAdditionUserProps', firebaseUser.email)
