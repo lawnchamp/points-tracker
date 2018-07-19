@@ -94,7 +94,6 @@ export default {
         all: ['submitted', 'approved', 'published'],
         selected: ['published']
       },
-      campTitle: 'Worthy 18',
       selectedTeamSort: null
     }
   },
