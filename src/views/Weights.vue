@@ -1,6 +1,5 @@
 <template>
   <div class="container md:w-1/2 lg:w-1/3">
-    <AuthenticateButton/>
     <table class="bg-grey-lightest py-8">
       <tr class="py-8" v-for="(competitionValue, competitionName) in weights" :key="competitionName">
         <td class="text-left width py-2">
@@ -21,15 +20,11 @@
 
 <script>
 
-import AuthenticateButton from '@/components/AuthenticateButton.vue'
 import NewWeight from '@/components/NewWeight.vue'
 
 export default {
   name: 'Weights',
-  components: {
-    AuthenticateButton,
-    NewWeight
-  },
+  components: { NewWeight },
   computed: {
     weights () {
       return this.$store.state.weights

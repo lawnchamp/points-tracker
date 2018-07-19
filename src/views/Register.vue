@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AuthenticateForm action="Register" v-on:submit-clicked="register($event)"></AuthenticateForm>
+    <AuthenticateForm action="Register"></AuthenticateForm>
     <p>Already have an account? Login <router-link to="/login">here</router-link></p>
   </div>
 </template>
@@ -11,11 +11,6 @@ import AuthenticateForm from '@/components/AuthenticateForm.vue'
 export default {
   components: {
     AuthenticateForm
-  },
-  methods: {
-    register ({email, password}) {
-      this.$store.dispatch('registerUser', { email, password })
-    }
   }
 }
 </script>
