@@ -205,6 +205,10 @@ const store = new Vuex.Store({
       batch.commit().then(() => {
         commit('PUBLISH_ALL', approvedCompetitions.map(comp => comp.id))
       })
+    },
+    updateApprovalState ({commit, state}, {id, newApprovalState}) {
+      const targetCompetition = state.competitions.find(comp => comp.id === id)
+      commit('UPDATE_COMPETITION', { ...targetCompetition, approvalState: newApprovalState })
     }
   },
   getters: {
