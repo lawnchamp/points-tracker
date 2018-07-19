@@ -1,19 +1,19 @@
 <template>
   <div class="text-xs">
-    <div v-if="isAdmin">
+    <div v-if="isAdmin" class="py-1">
       State:
-      <select :value="approvalState" @change="$emit('state-change', $event.target.value)" class="text-grey">
+      <select :value="approvalState" @change="$emit('state-change', $event.target.value)" class="text-grey-dark">
         <option>submitted</option>
         <option>approved</option>
         <option>published</option>
       </select>
     </div>
     <div>
-      <div v-if="isAdmin && submittedBy">
-        Owner: <div class="text-grey-dark inline">{{submittedBy.email}}</div>
+      <div v-if="isAdmin && submittedBy" class="py-1">
+        Owner: <div class="inline text-grey-dark">{{submittedBy.email}}</div>
       </div>
-      <div v-if="notes">
-        Notes: <div class="text-grey-dark inline">{{ notes }}</div>
+      <div v-if="notes" class="py-1">
+        Notes: <div class="inline text-grey-dark">{{ notes }}</div>
       </div>
     </div>
   </div>
