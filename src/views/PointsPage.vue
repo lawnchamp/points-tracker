@@ -18,7 +18,7 @@
 
     <HideAndShowContainer v-if="canAddPoints" :initial-show="true">
       <template slot="title">
-        <div v-if="isAdmin" class="inline font-semibold">Add Competition</div>
+        <div v-if="isAdmin" class="inline">Add Competition</div>
         <div v-else-if="isLeader" class="inline font-semibold">
           Add points for <span :class="`text-${currentUserTeam} capitalize`">{{currentUserTeam}}</span> team
         </div>
@@ -32,7 +32,7 @@
           <div>
             {{state}}
           </div>
-          <div v-if="state === 'approved'">
+          <div v-if="state === 'approved'" class="-my-1">
             <button
               v-if="isAdmin"
               class="text-xs font-semibold rounded-full px-4 py-1
