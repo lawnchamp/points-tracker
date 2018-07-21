@@ -21,7 +21,7 @@
             type="submit"
             :disabled="fieldsAreEmpty"
             class="my-1 text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white"
-            @click="submitCredentials"
+            @click.prevent="submitCredentials"
           >{{ action }}</button>
         </form>
       </div>

@@ -9,7 +9,8 @@
           </div>
         </div>
         <div>
-          <AuthenticateButton/>
+          <DropdownMenu></DropdownMenu>
+
         </div>
       </div>
       <nav class="flex py-2" v-if="isAdmin">
@@ -23,8 +24,10 @@
 
 <script>
 import AuthenticateButton from '@/components/AuthenticateButton.vue'
+import DropdownMenu from '@/components/DropdownMenu.vue'
+
 export default {
-  components: { AuthenticateButton },
+  components: { AuthenticateButton, DropdownMenu },
   data () {
     return {
       campTitle: 'YouthCamp 2018'
