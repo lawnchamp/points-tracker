@@ -1,8 +1,8 @@
 <template>
   <div class="container mx-auto max-w-md px-4 py-1">
-    <div class="bg-white rounded-lg shadow p-2">
+    <div class="bg-white rounded-lg shadow p-3">
       <div @click="show = !show">
-        <div class="font-semibold inline capitalize text-2xl">
+        <div class="inline capitalize text-l text-grey-darker">
           <slot name="title"></slot>
         </div>
       </div>
