@@ -41,14 +41,17 @@
       <textarea
         type="text"
         v-model="newCompetition.notes"
-        class="width-64 py-2 px-3 mx-1 my-1 border rounded"
+        class="w-full py-2 px-3 mx-1 my-1 border rounded"
         placeholder="Notes">
       </textarea>
-      <button
-        class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-green text-green hover:bg-green hover:text-white"
-        @click="addCompetition"
-      >{{saving ? 'Saving' : 'Submit'}}</button>
     </span>
+      <div class="h-6">
+        <button
+          style="float:right;"
+          class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-green text-green hover:bg-green hover:text-white"
+          @click="addCompetition"
+        >{{saving ? 'Saving' : 'Submit'}}</button>
+      </div>
   </div>
 </template>
 
