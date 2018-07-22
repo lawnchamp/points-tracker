@@ -45,9 +45,9 @@ const store = new Vuex.Store({
     ADD_COMPETITIONS: (state, newCompetition) => {
       state.competitions.unshift(newCompetition)
     },
-    UPDATE_COMPETITION: (state, newCompetition) => {
-      const index = state.competitions.findIndex(comp => comp.id === newCompetition.id)
-      Vue.set(state.competitions, index, newCompetition)
+    UPDATE_APPROVAL_STATE: (state, {id, newApprovalState}) => {
+      const index = state.competitions.findIndex(comp => comp.id === id)
+      Vue.set(state.competitions[index], 'approvalState', newApprovalState)
     },
     SET_WEIGHTS: (state, weights) => {
       state.weights = Object.keys(weights).reduce((acc, weight) => {
@@ -163,13 +163,6 @@ const store = new Vuex.Store({
           console.error('Error removing document: ', error)
         })
     },
-    updateCompetition ({ commit }, updatedCompetition) {
-      return firebase.firestore().collection('competitions').doc(updatedCompetition.id)
-        .set(updatedCompetition)
-        .then(() => {
-          commit('UPDATE_COMPETITION', updatedCompetition)
-        })
-    },
     getWeights ({commit}) {
       return firebase.firestore().collection('weights').get()
         .then((querySnapshot) => {
@@ -207,8 +200,12 @@ const store = new Vuex.Store({
       })
     },
     updateApprovalState ({commit, state}, {id, newApprovalState}) {
-      const targetCompetition = state.competitions.find(comp => comp.id === id)
-      commit('UPDATE_COMPETITION', { ...targetCompetition, approvalState: newApprovalState })
+      return firebase.firestore().collection('competitions').doc(id)
+        .set({ approvalState: newApprovalState }, { merge: true })
+        .then(() => {
+          commit('UPDATE_APPROVAL_STATE', { id, newApprovalState })
+        })
+        .catch((error) => console.log('printing error: ', error))
     }
   },
   getters: {
