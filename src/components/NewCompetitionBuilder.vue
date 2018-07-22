@@ -25,9 +25,9 @@
         :options="[...teamNames, 'turquoise', 'pink']"
         :show-labels="false"
       />
-      <div>
-        <input class="inline" type="checkbox" id="checkbox" v-model="newCompetition.tied">
-        <label class="px-1 inline" for="checkbox">tied</label>
+      <div class="flex items-center">
+        <input class="inline-block" type="checkbox" id="checkbox" v-model="newCompetition.tied">
+        <label class="px-1 inline-block text-xs text-grey-dark uppercase" for="checkbox">tied</label>
       </div>
       <multiselect
         class="py-1 px-1"
