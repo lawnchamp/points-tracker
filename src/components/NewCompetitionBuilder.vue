@@ -22,7 +22,7 @@
         class="py-1 px-1"
         v-model="newCompetition.winner"
         :placeholder="firstTeamPlaceholder"
-        :options="[...teamNames, 'turquoise', 'pink']"
+        :options="teamNames"
         :show-labels="false"
       />
       <div class="flex items-center">
@@ -45,7 +45,7 @@
         placeholder="Notes">
       </textarea>
     </span>
-      <div class="h-6">
+      <div class="h-8">
         <button
           style="float:right;"
           class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-green text-green hover:bg-green hover:text-white"
