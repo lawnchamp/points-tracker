@@ -22,7 +22,7 @@
         </div>
       </div>
       <CompetitionDetails
-        v-if="showDetails"
+        v-if="showDetails && canSeeDetails"
         v-bind="{isAdmin, approvalState, notes, submittedBy}"
         @state-change="approvalStateChange"
       ></CompetitionDetails>
@@ -78,6 +78,9 @@ export default {
     },
     isAdmin () {
       return this.$store.getters.isAdmin
+    },
+    canSeeDetails () {
+      return this.isAdmin || this.$store.getters.isLeader
     },
     loserText () {
       if (this.tied) {
