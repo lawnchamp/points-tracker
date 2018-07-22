@@ -1,6 +1,6 @@
 <template>
   <div class="border-grey-light p-4">
-    <div class="bg-white mx-auto max-w-sm shadow-lg rounded-lg">
+    <div class="bg-white mx-auto max-w-sm shadow rounded-lg">
       <div class="sm:flex sm:items-center px-6 py-4">
         <form class="mx-auto">
           <legend>{{ action }}</legend>
@@ -52,7 +52,6 @@ export default {
   methods: {
     submitCredentials () {
       if (this.action === 'Login') {
-        console.log('about to dispatch login')
         this.$store.dispatch('userSignIn', {email: this.email, password: this.password})
           .then(() => {
             this.email = ''
