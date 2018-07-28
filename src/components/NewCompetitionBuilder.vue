@@ -1,50 +1,57 @@
 <template>
-  <div>
-    <span class="flex">
-      <multiselect
-        class="py-1 px-1"
-        v-model="newCompetition.name"
-        placeholder='Competition'
-        :options="competitionNames"
-        :show-labels="false"
-        @input="initializePoints"
-      />
-      <input
-        class="rounded border h-10 w-14 px-1 my-1"
-        placeholder="Points"
-        type="text"
-        v-model.number="newCompetition.points"
-      >
-    </span>
-    <span class="flex">
-      <multiselect
-        v-if="$store.getters.isAdmin"
-        class="py-1 px-1"
-        v-model="newCompetition.winner"
-        :placeholder="firstTeamPlaceholder"
-        :options="teamNames"
-        :show-labels="false"
-      />
-      <div class="flex items-center">
-        <input class="inline-block" type="checkbox" id="checkbox" v-model="newCompetition.tied">
-        <label class="px-1 inline-block text-xs text-grey-dark uppercase" for="checkbox">tied</label>
+  <HideAndShowContainer v-if="canAddPoints" :initial-show="true">
+    <template slot="title">
+      <div v-if="isAdmin" class="inline">Add Competition</div>
+      <div v-else-if="isLeader" class="inline font-semibold">
+        Add points for <span :class="`text-${team} capitalize`">{{team}}</span> team
       </div>
-      <multiselect
-        class="py-1 px-1"
-        v-model="newCompetition.loser"
-        :placeholder='secondTeamPlaceholder'
-        :options="[...teamNames, 'n/a']"
-        :show-labels="false"
-      />
-    </span>
-    <span class="flex justify-between items-center">
-      <textarea
-        type="text"
-        v-model="newCompetition.notes"
-        class="w-full py-2 px-3 mx-1 my-1 border rounded"
-        placeholder="Notes">
-      </textarea>
-    </span>
+    </template>
+    <div>
+      <span class="flex">
+        <multiselect
+          class="py-1 px-1"
+          v-model="newCompetition.name"
+          placeholder='Competition'
+          :options="competitionNames"
+          :show-labels="false"
+          @input="initializePoints"
+        />
+        <input
+          class="rounded border h-10 w-14 px-1 my-1"
+          placeholder="Points"
+          type="text"
+          v-model.number="newCompetition.points"
+        >
+      </span>
+      <span class="flex">
+        <multiselect
+          v-if="$store.getters.isAdmin"
+          class="py-1 px-1"
+          v-model="newCompetition.winner"
+          :placeholder="firstTeamPlaceholder"
+          :options="teamNames"
+          :show-labels="false"
+        />
+        <div class="flex items-center">
+          <input class="inline-block" type="checkbox" id="checkbox" v-model="newCompetition.tied">
+          <label class="px-1 inline-block text-xs text-grey-dark uppercase" for="checkbox">tied</label>
+        </div>
+        <multiselect
+          class="py-1 px-1"
+          v-model="newCompetition.loser"
+          :placeholder='secondTeamPlaceholder'
+          :options="[...teamNames, 'n/a']"
+          :show-labels="false"
+        />
+      </span>
+      <span class="flex justify-between items-center">
+        <textarea
+          type="text"
+          v-model="newCompetition.notes"
+          class="w-full py-2 px-3 mx-1 my-1 border rounded"
+          placeholder="Notes">
+        </textarea>
+      </span>
       <div class="h-8">
         <button
           style="float:right;"
@@ -52,16 +59,19 @@
           @click="addCompetition"
         >{{saving ? 'Saving' : 'Submit'}}</button>
       </div>
-  </div>
+    </div>
+  </HideAndShowContainer>
 </template>
 
 <script>
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
+import HideAndShowContainer from '@/components/HideAndShowContainer.vue'
 
 export default {
   name: 'NewCompetitionBuilder',
   components: {
+    HideAndShowContainer,
     Multiselect
   },
   props: {
@@ -100,6 +110,12 @@ export default {
     },
     canAddPoints () {
       return this.$store.getters.isAdmin || this.$store.getters.isLeader
+    },
+    isAdmin () {
+      return this.$store.getters.isAdmin
+    },
+    isLeader () {
+      return this.$store.getters.isLeader
     }
   },
   methods: {
@@ -133,6 +149,9 @@ export default {
         notes: ''
       }
     }
+  },
+  created () {
+    this.$store.dispatch('getWeights')
   }
 }
 </script>
