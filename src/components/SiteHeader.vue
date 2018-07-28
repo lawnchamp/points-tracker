@@ -23,11 +23,10 @@
 </template>
 
 <script>
-import AuthenticateButton from '@/components/AuthenticateButton.vue'
 import DropdownMenu from '@/components/DropdownMenu.vue'
 
 export default {
-  components: { AuthenticateButton, DropdownMenu },
+  components: { DropdownMenu },
   data () {
     return {
       campTitle: 'YouthCamp 2018'
