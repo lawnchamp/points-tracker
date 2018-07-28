@@ -13,8 +13,7 @@ export default {
   name: 'app',
   components: { SiteHeader },
   created () {
-    this.$store.dispatch('getCompetitions')
-    this.$store.dispatch('getWeights')
+    this.$store.dispatch('getAllCompetitions')
   },
   computed: {
     isAdmin () {
