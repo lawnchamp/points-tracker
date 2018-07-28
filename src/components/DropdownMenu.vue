@@ -14,15 +14,12 @@
         <h4>{{ logInOrOut }}</h4>
       </div>
     </div>
-    <!-- <AuthenticateButton/> -->
   </div>
 </template>
 
 <script>
-import AuthenticateButton from '@/components/AuthenticateButton.vue'
 
 export default {
-  components: { AuthenticateButton },
   data () {
     return {
       show: false
