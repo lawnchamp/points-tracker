@@ -2,7 +2,7 @@
   <div v-if="userCanSeeCompetition" class="relative border-b">
     <button v-if="isAdmin"
       class="btn-close text-grey-light"
-      @click="$emit('remove-competition')"
+      @click="removeCompetition"
     >x</button>
     <div class="py-2">
       <div class="flex justify-between" @click="showDetails = !showDetails">
@@ -98,6 +98,9 @@ export default {
     },
     teamColor () {
       return `bg-${this.winner.toLowerCase()}`
+    },
+    removeCompetition () {
+      this.$store.dispatch('removeCompetition', this.id)
     }
   }
 }
