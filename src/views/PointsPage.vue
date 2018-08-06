@@ -1,11 +1,12 @@
 <template>
   <div class="font-sans text-grey-darkest leading tight">
+
     <div class="container mx-auto max-w-md px-4 -mt-32 py-1">
       <div class="bg-white rounded-lg shadow p-2 ">
         <div v-if="isAdmin" class="container mx-auto">
           <div class="flex justify-between items-center">
             <div class="flex items-center">
-              <div v-for="state in graphState.all" :key="state">
+              <div v-for="state in pointStates" :key="state">
                 <div @click="setGraphApprovalState(state)" :class="graphStateStyling(state)">{{ state }}</div>
               </div>
             </div>
@@ -16,62 +17,16 @@
       </div>
     </div>
 
-    <HideAndShowContainer v-if="canAddPoints" :initial-show="true">
-      <template slot="title">
-        <div v-if="isAdmin" class="inline">Add Competition</div>
-        <div v-else-if="isLeader" class="inline font-semibold">
-          Add points for <span :class="`text-${currentUserTeam} capitalize`">{{currentUserTeam}}</span> team
-        </div>
-      </template>
-      <NewCompetitionBuilder v-if="canAddPoints" :teamNames="teamNames"></NewCompetitionBuilder>
-    </HideAndShowContainer>
+    <NewCompetitionBuilder v-if="canAddPoints" :teamNames="teamNames"></NewCompetitionBuilder>
 
-    <HideAndShowContainer v-if="canAddPoints" v-for="state in ['submitted', 'approved', 'published']" :key="state">
-      <template slot="title">
-        <div class="flex justify-between items-center">
-          <div>
-            {{state}}
-          </div>
-          <div v-if="state === 'approved'" class="-my-1">
-            <button
-              v-if="isAdmin"
-              class="text-xs font-semibold rounded-full px-4 py-1
-                    leading-normal bg-white border border-green text-green
-                    hover:bg-green hover:text-white"
-              @click="publishAll"
-            >Publish all</button>
-          </div>
-        </div>
-      </template>
-      <CompetitionRow
-        v-for="competition in orderedCompetitions.filter(comp => comp.approvalState === state)"
-        v-bind="competition"
-        :key="competition.id"
-        @remove-competition="removeCompetition(competition.id)"
-      />
-    </HideAndShowContainer>
-    <HideAndShowContainer v-show="!canAddPoints" :initial-show="true">
-      <template slot="title">Points</template>
-      <CompetitionRow
-        v-for="competition in orderedCompetitions.filter(comp => comp.approvalState === 'published')"
-        v-bind="competition"
-        :key="competition.id"
-      />
-    </HideAndShowContainer>
-    <!-- <div class="container">
-      <h3>Sort by</h3>
-      <div class="inline-flex py-1 px-1 justify-center" v-for="team in teamNames" :key="team">
-        <button @click="selectedTeamSort = team"
-                :class="stylingForTeam(team)"
-                class="h-6 w-14 rounded-full text-xs capitalize">{{team}}</button>
-      </div>
-    </div> -->
+    <PointsContainer v-for="state in pointStates" :key="state + 'container'" :state="state"/>
   </div>
 </template>
 
 <script>
 import GraphWrapper from '@/components/GraphWrapper.vue'
 import HideAndShowContainer from '@/components/HideAndShowContainer.vue'
+import PointsContainer from '@/components/PointsContainer.vue'
 import CompetitionRow from '@/components/CompetitionRow.vue'
 import NewCompetitionBuilder from '@/components/NewCompetitionBuilder.vue'
 import SiteHeader from '@/components/SiteHeader.vue'
@@ -86,14 +41,13 @@ export default {
     GraphWrapper,
     HideAndShowContainer,
     NewCompetitionBuilder,
+    PointsContainer,
     SiteHeader
   },
   data () {
     return {
-      graphState: {
-        all: ['submitted', 'approved', 'published'],
-        selected: ['published']
-      },
+      pointStates: ['submitted', 'approved', 'published'],
+      selectedGraphState: ['published'],
       selectedTeamSort: null
     }
   },
@@ -106,7 +60,7 @@ export default {
     },
     teamScores () {
       return this.competitions.reduce((acc, {winner, points, approvalState, tied}) => {
-        if (this.graphState.selected.includes(approvalState)) {
+        if (this.selectedGraphState.includes(approvalState)) {
           const divisor = tied ? 2 : 1
           acc[winner] = (acc[winner] || 0) + ((points || 0) / divisor)
         }
@@ -135,16 +89,16 @@ export default {
 
   methods: {
     setGraphApprovalState (state) {
-      const index = this.graphState.selected.indexOf(state)
+      const index = this.selectedGraphState.indexOf(state)
       if (index !== -1) {
         // question - is Vue.delete needed?
-        Vue.delete(this.graphState.selected, index)
+        Vue.delete(this.selectedGraphState, index)
       } else {
-        this.graphState.selected.push(state)
+        this.selectedGraphState.push(state)
       }
     },
     graphStateStyling (state) {
-      return `px-2 text-sm ${this.graphState.selected.includes(state) ? 'text-grey-dark border border-grey-dark rounded-full' : 'text-grey-light'}`
+      return `px-2 text-sm ${this.selectedGraphState.includes(state) ? 'text-grey-dark border border-grey-dark rounded-full' : 'text-grey-light'}`
     },
     animateApprovedScores () {
       alert('coming soon :)')
@@ -156,9 +110,6 @@ export default {
     },
     removeCompetition (id) {
       this.$store.dispatch('removeCompetition', id)
-    },
-    publishAll () {
-      this.$store.dispatch('publishAll')
     }
   }
 }

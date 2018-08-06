@@ -1,5 +1,5 @@
 <template>
-  <HideAndShowContainer>
+  <HideAndShowContainer v-if="canSeeContainer">
     <template slot="title">
       <div class="flex justify-between items-center">
         <div>
@@ -16,12 +16,14 @@
         </div>
       </div>
     </template>
+    <div class="flex justify-between items-center">
+      <div v-if="competitions.length == 0" class="font-semibold flex justify-between items-center">Empty</div>
+    </div>
     <CompetitionRow
       v-for="competition in orderedCompetitions"
       v-bind="competition"
       :key="competition.id"
     />
-    <div v-if="competitions.length == 0">empty</div>
   </HideAndShowContainer>
   <!-- <HideAndShowContainer v-show="!canAddPoints" :initial-show="true">
     <template slot="title">Points</template>
@@ -52,13 +54,40 @@ export default {
   },
   computed: {
     competitions () {
-      return this.$store.state.competitions.filter(comp => comp.approvalState === this.state)
+      return this.$store.state.competitions.filter((comp) => {
+        const correctState = comp.approvalState === this.state
+
+        const needToSelectByTeam = this.isLeader && this.state !== 'published'
+        if (needToSelectByTeam) {
+          return correctState && comp.winner === this.currentUserTeam
+        } else {
+          return correctState
+        }
+      })
+    },
+    isLeader () {
+      return this.$store.getters.isLeader
+    },
+    currentUserTeam () {
+      return this.$store.getters.currentUserTeam
     },
     orderedCompetitions () {
       return _sortBy(this.competitions, [(competition) => (competition.winner !== this.teamSortBy)])
     },
     teamSortBy () {
       return this.selectedTeamSort || this.$store.getters.currentUserTeam
+    },
+    canSeeContainer () {
+      switch (this.state) {
+        case 'submitted': return this.$store.getters.authenticatedUser
+        case 'approved': return this.$store.getters.authenticatedUser
+        case 'published': return true
+      }
+    }
+  },
+  methods: {
+    publishAll () {
+      this.$store.dispatch('publishAll')
     }
   }
 }

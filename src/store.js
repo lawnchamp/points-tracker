@@ -36,13 +36,13 @@ const store = new Vuex.Store({
         team: ''
       }
     },
-    SET_COMPETITIONS: (state, competitions) => {
-      state.competitions = competitions
+    ADD_COMPETITIONS: (state, competitions) => {
+      state.competitions.push(...competitions)
     },
     REMOVE_COMPETITION: (state, id) => {
       Vue.delete(state.competitions, state.competitions.findIndex(comp => comp.id === id))
     },
-    ADD_COMPETITIONS: (state, newCompetition) => {
+    ADD_COMPETITION: (state, newCompetition) => {
       state.competitions.unshift(newCompetition)
     },
     UPDATE_APPROVAL_STATE: (state, {id, newApprovalState}) => {
@@ -127,7 +127,7 @@ const store = new Vuex.Store({
           commit('SET_LOADING', false)
         })
     },
-    getCompetitions ({commit}) {
+    getAllCompetitions ({commit}) {
       return firebase.firestore().collection('competitions').get()
         .then((querySnapshot) => {
           const competitions = []
@@ -136,7 +136,7 @@ const store = new Vuex.Store({
             if (!competition.approvalState) competition.approvalState = 'submitted'
             competitions.push(competition)
           })
-          commit('SET_COMPETITIONS', competitions)
+          commit('ADD_COMPETITIONS', competitions)
         })
     },
     addCompetition ({commit, state}, newCompetition) {
@@ -147,12 +147,12 @@ const store = new Vuex.Store({
         const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}
         firebase.firestore().collection('competitions').add(otherTeam)
           .then((docRef) => {
-            commit('ADD_COMPETITIONS', {...otherTeam, id: docRef.id})
+            commit('ADD_COMPETITION', {...otherTeam, id: docRef.id})
           })
       }
       return firebase.firestore().collection('competitions').add(newCompetition)
         .then((docRef) => {
-          commit('ADD_COMPETITIONS', {...newCompetition, id: docRef.id})
+          commit('ADD_COMPETITION', {...newCompetition, id: docRef.id})
         })
     },
     removeCompetition ({commit}, id) {
@@ -209,11 +209,11 @@ const store = new Vuex.Store({
     }
   },
   getters: {
+    authenticatedUser: state => state.user.email,
     competitionNames: state => Object.keys(state.weights),
     currentUserTeam: state => state.user.team,
     isAdmin: state => state.user.role === 'admin',
     isLeader: state => state.user.role === 'leader',
-    authenticatedUser: state => state.user.email
   },
   strict: process.env.NODE_ENV !== 'production'
 })
