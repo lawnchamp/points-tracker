@@ -74,9 +74,6 @@ export default {
     HideAndShowContainer,
     Multiselect
   },
-  props: {
-    teamNames: Array
-  },
   data () {
     return {
       newCompetition: {
@@ -89,7 +86,8 @@ export default {
         notes: ''
       },
       saving: false,
-      show: true
+      show: true,
+      teamNames: ['black', 'blue', 'brown', 'green', 'grey', 'lime', 'orange', 'pink', 'purple', 'red', 'turquoise', 'yellow']
     }
   },
   computed: {

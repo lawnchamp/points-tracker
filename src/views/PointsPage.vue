@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <NewCompetitionBuilder v-if="canAddPoints" :teamNames="teamNames"></NewCompetitionBuilder>
+    <NewCompetitionBuilder v-if="canAddPoints"></NewCompetitionBuilder>
 
     <PointsContainer v-for="state in pointStates" :key="state + 'container'" :state="state"/>
   </div>
@@ -72,9 +72,6 @@ export default {
     },
     orderedCompetitions () {
       return _sortBy(this.competitions, [(competition) => (competition.winner !== this.teamSortBy)])
-    },
-    teamNames () {
-      return Object.keys(this.teamScores)
     },
     isAdmin () {
       return this.$store.getters.isAdmin
