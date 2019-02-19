@@ -10,7 +10,7 @@
           <div class="team-icon flex-no-shrink" v-bind:class="teamColor()"></div>
           <div class="px-2">
             <div class="capitalize font-semibold text-xl">{{name}}</div>
-            <div class="text-xs inline text-grey">
+            <div class="text-xs inline">
               {{loserText}}
             </div>
           </div>

@@ -2,7 +2,7 @@
   <div class="font-sans text-grey-darkest leading tight">
 
     <div class="container mx-auto max-w-md px-4 -mt-32 py-1">
-      <div class="bg-white rounded-lg shadow p-2 ">
+      <div class="bg-white rounded-lg shadow p-2">
         <div v-if="isAdmin" class="container mx-auto">
           <div class="flex justify-between items-center">
             <div class="flex items-center">
