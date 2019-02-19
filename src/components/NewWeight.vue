@@ -1,29 +1,27 @@
 <template>
-  <tr>
-    <td>
+  <div class="py-2 border-b">
+    <div class="flex justify-between relative">
       <input
         type="text"
         v-model="name"
-        placeholder="Competition"
-        class="rounded-lg py-3 px-2"
-      >
-    </td>
-    <td>
+        placeholder="Competition name"
+        class="rounded border h-10 w-48 px-1 my-1"/>
       <input
         type="number"
-        class="rounded-lg py-3 px-2"
         v-model.number="value"
-        placeholder="Points Awarded"
+        placeholder="Points"
         @keyup.enter="emitNewWeight"
-      >
-    </td>
-    <td>
+        class="text-right rounded border h-10 w-20 px-1 my-1"/>
+    </div>
+    <div class="h-8">
       <button
-        class="px-2 mx-2 border border-blue py-3 px-2 rounded"
-        @click="emitNewWeight">Add
-      </button>
-    </td>
-  </tr>
+        @click="emitNewWeight"
+        style="float: right;"
+        class="text-xs font-semibold rounded-full px-4 py-1
+              leading-normal bg-white border border-green text-green
+              hover:bg-green hover:text-white">submit</button>
+    </div>
+  </div>
 </template>
 
 <script>

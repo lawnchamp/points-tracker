@@ -61,6 +61,9 @@ const store = new Vuex.Store({
     ADD_WEIGHT: (state, newWeight) => {
       Vue.set(state.weights, newWeight.name, newWeight.value)
     },
+    UPDATE_WEIGHT: (state, {weightName, updatedWeight}) => {
+      Vue.set(state.weights, weightName, updatedWeight)
+    },
     SET_LOADING (state, payload) {
       state.loading = payload
     },
@@ -178,6 +181,13 @@ const store = new Vuex.Store({
         .then((docRef) => {
           commit('ADD_WEIGHT', newWeight)
         })
+    },
+    changeWeight ({ commit }, {weightName, updatedWeight}) {
+      return firebase.firestore().collection('weights').doc(weightName).update({
+        'value': updatedWeight
+      }).then(() => {
+        commit('UPDATE_WEIGHT', {weightName, updatedWeight})
+      })
     },
     removeWeight ({ commit }, weightName) {
       return firebase.firestore().collection('weights').doc(weightName).delete()

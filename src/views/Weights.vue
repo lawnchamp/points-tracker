@@ -1,20 +1,25 @@
 <template>
-  <div class="container md:w-1/2 lg:w-1/3">
-    <table class="bg-grey-lightest py-8">
-      <tr class="py-8" v-for="(competitionValue, competitionName) in weights" :key="competitionName">
-        <td class="text-left width py-2">
+  <div class="container mx-auto px-4 -mt-32">
+    <div class="bg-white rounded-lg shadow max-w-md px-4 py-2">
+      <div
+        class="flex justify-between py-4 border-b text-lg relative"
+        v-for="(competitionValue, competitionName) in weights"
+        :key="competitionName">
+        <div>
           {{competitionName}}
-        </td>
-        <td>
-          {{competitionValue}}
-        </td>
-
-        <td>
-          <button @click.prevent="remove(competitionName)">X</button>
-        </td>
-      </tr>
+        </div>
+        <input
+          type="number"
+          :value="competitionValue"
+          @change="weightChange(competitionName, parseInt($event.target.value))"
+          class="px-3 w-20 text-right"/>
+        <button
+          class="btn-close text-grey-light text-base"
+          @click="remove(competitionName)"
+        >x</button>
+      </div>
       <NewWeight @new-weight="addNewWeight"></NewWeight>
-    </table>
+    </div>
   </div>
 </template>
 
@@ -36,7 +41,21 @@ export default {
     },
     addNewWeight (newWeight) {
       this.$store.dispatch('addWeight', newWeight)
+    },
+    weightChange (weightName, updatedWeight) {
+      this.$store.dispatch('changeWeight', {weightName, updatedWeight})
     }
+  },
+  created () {
+    this.$store.dispatch('getWeights')
   }
 }
 </script>
+
+// <style scoped lang="scss">
+.btn-close {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+</style>
