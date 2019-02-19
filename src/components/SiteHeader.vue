@@ -29,7 +29,7 @@ export default {
   components: { DropdownMenu },
   data () {
     return {
-      campTitle: 'YouthCamp 2018'
+      campTitle: 'YouthCamp 2019'
     }
   },
   computed: {
