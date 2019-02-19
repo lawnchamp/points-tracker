@@ -19,7 +19,6 @@
         <input
           class="rounded border h-10 w-14 px-1 my-1"
           placeholder="Points"
-          type="text"
           v-model.number="newCompetition.points"
         >
       </span>
