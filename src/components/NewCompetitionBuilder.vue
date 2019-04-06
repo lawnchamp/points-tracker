@@ -6,7 +6,7 @@
         Add points for <span :class="`text-${team} capitalize`">{{team}}</span> team
       </div>
     </template>
-    <div>
+    <div class="overflow-visable">
       <span class="flex">
         <multiselect
           class="py-1 px-1"
