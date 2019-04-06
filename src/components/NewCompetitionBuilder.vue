@@ -17,7 +17,7 @@
           @input="initializePoints"
         />
         <input
-          class="rounded border h-10 w-14 px-1 my-1"
+          class="rounded border h-10 w-14 px-1 my-1 text-sm text-grey-darker"
           placeholder="Points"
           v-model.number="newCompetition.points"
         >
@@ -47,7 +47,7 @@
         <textarea
           type="text"
           v-model="newCompetition.notes"
-          class="w-full py-2 px-3 mx-1 my-1 border rounded"
+          class="w-full py-2 px-3 mx-1 my-1 border rounded text-sm text-grey-darker"
           placeholder="Notes">
         </textarea>
       </span>
