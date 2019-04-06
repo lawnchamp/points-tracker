@@ -223,7 +223,7 @@ const store = new Vuex.Store({
     competitionNames: state => Object.keys(state.weights),
     currentUserTeam: state => state.user.team,
     isAdmin: state => state.user.role === 'admin',
-    isLeader: state => state.user.role === 'leader',
+    isLeader: state => state.user.role === 'leader'
   },
   strict: process.env.NODE_ENV !== 'production'
 })
