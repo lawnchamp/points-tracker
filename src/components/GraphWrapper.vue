@@ -20,11 +20,16 @@ export default {
     teamScores: {
       required: true,
       type: Object
+    },
+    sortByPoints: {
+      required: true,
+      type: Boolean
     }
   },
   computed: {
     sortedTeamScoreInfo () {
-      return Object.entries(this.teamScores).sort()
+      const sortByIndex = this.sortByPoints ? SCORE_INDEX : NAME_INDEX
+      return Object.entries(this.teamScores).sort((a, b) => b[sortByIndex] - a[sortByIndex])
     },
     sortedNames () {
       return this.sortedTeamScoreInfo.map(scoreInfo => scoreInfo[NAME_INDEX])

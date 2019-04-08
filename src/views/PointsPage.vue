@@ -10,10 +10,10 @@
                 <div @click="setGraphApprovalState(state)" :class="graphStateStyling(state)">{{ state }}</div>
               </div>
             </div>
-            <svg @click="animateApprovedScores" class="text-grey-light h-6 w-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM7 6l8 4-8 4V6z"/></svg>
+            <svg @click="sortByPoints = !sortByPoints" class="text-grey-dark h-4 w-4 hover:text-grey-darkest" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M17 16v4h-2v-4h-2v-3h6v3h-2zM1 9h6v3H1V9zm6-4h6v3H7V5zM3 0h2v8H3V0zm12 0h2v12h-2V0zM9 0h2v4H9V0zM3 12h2v8H3v-8zm6-4h2v12H9V8z"/></svg>
           </div>
         </div>
-        <GraphWrapper :teamScores="teamScores"></GraphWrapper>
+        <GraphWrapper :sortByPoints="sortByPoints" :teamScores="teamScores"></GraphWrapper>
       </div>
     </div>
 
@@ -48,7 +48,7 @@ export default {
     return {
       pointStates: ['submitted', 'approved', 'published'],
       selectedGraphState: ['published'],
-      selectedTeamSort: null
+      sortByPoints: false
     }
   },
   computed: {
@@ -66,12 +66,6 @@ export default {
         }
         return acc
       }, {})
-    },
-    teamSortBy () {
-      return this.selectedTeamSort || this.currentUserTeam
-    },
-    orderedCompetitions () {
-      return _sortBy(this.competitions, [(competition) => (competition.winner !== this.teamSortBy)])
     },
     isAdmin () {
       return this.$store.getters.isAdmin
@@ -96,14 +90,6 @@ export default {
     },
     graphStateStyling (state) {
       return `px-2 text-sm ${this.selectedGraphState.includes(state) ? 'text-grey-dark border border-grey-dark rounded-full' : 'text-grey-light'}`
-    },
-    animateApprovedScores () {
-      alert('coming soon :)')
-      console.log('redraw graph starting with published scores then slowly add approved')
-      console.log('or possibly make this the publish all button')
-    },
-    stylingForTeam (team) {
-      return team === this.teamSortBy ? `text-${team} border-2 border-${team}` : 'text-grey-dark border border-grey-dark'
     },
     removeCompetition (id) {
       this.$store.dispatch('removeCompetition', id)
