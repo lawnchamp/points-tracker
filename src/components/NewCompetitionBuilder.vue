@@ -66,6 +66,7 @@
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 import HideAndShowContainer from '@/components/HideAndShowContainer.vue'
+import { TEAM_NAMES } from '@/store.js'
 
 export default {
   name: 'NewCompetitionBuilder',
@@ -86,7 +87,7 @@ export default {
       },
       saving: false,
       show: true,
-      teamNames: ['black', 'blue', 'brown', 'green', 'grey', 'lime', 'orange', 'pink', 'purple', 'red', 'turquoise', 'yellow']
+      teamNames: TEAM_NAMES
     }
   },
   computed: {

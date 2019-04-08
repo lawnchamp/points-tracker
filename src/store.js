@@ -5,6 +5,8 @@ import router from '@/router'
 
 Vue.use(Vuex)
 
+export const TEAM_NAMES = ['black', 'blue', 'brown', 'green', 'grey', 'lime', 'orange', 'pink', 'purple', 'red', 'turquoise', 'yellow']
+
 const store = new Vuex.Store({
   state: {
     user: {

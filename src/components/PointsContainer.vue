@@ -38,6 +38,7 @@
 <script>
 import HideAndShowContainer from '@/components/HideAndShowContainer.vue'
 import CompetitionRow from '@/components/CompetitionRow.vue'
+import {TEAM_NAMES} from '@/store.js'
 import {sortBy as _sortBy} from 'lodash'
 export default {
   components: {HideAndShowContainer, CompetitionRow},
@@ -49,6 +50,7 @@ export default {
   },
   data () {
     return {
+      teamNames: TEAM_NAMES,
       selectedTeamSort: null
     }
   },
