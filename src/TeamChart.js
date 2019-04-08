@@ -16,7 +16,7 @@ export default {
           },
           ticks: {
             fontSize: 10,
-            fontColor: 'lightgrey'
+            fontColor: 'darkgrey'
           }
         }],
         yAxes: [{
