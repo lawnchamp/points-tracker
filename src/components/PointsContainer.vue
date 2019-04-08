@@ -17,7 +17,7 @@
       </div>
     </template>
     <div class="flex justify-between items-center">
-      <div v-if="competitions.length == 0" class="font-semibold flex justify-between items-center">Empty</div>
+      <div v-if="competitions.length == 0" class="font-semibold flex justify-between items-center py-2">Empty</div>
     </div>
     <CompetitionRow
       v-for="competition in orderedCompetitions"
