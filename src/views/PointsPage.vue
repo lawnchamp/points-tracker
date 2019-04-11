@@ -10,16 +10,21 @@
                 <div @click="setGraphApprovalState(state)" :class="graphStateStyling(state)">{{ state }}</div>
               </div>
             </div>
-            <svg @click="sortByPoints = !sortByPoints" class="text-grey-dark h-4 w-4 hover:text-grey-darkest" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M17 16v4h-2v-4h-2v-3h6v3h-2zM1 9h6v3H1V9zm6-4h6v3H7V5zM3 0h2v8H3V0zm12 0h2v12h-2V0zM9 0h2v4H9V0zM3 12h2v8H3v-8zm6-4h2v12H9V8z"/></svg>
+            <svg @click="sortGraphByPoints = !sortGraphByPoints" class="text-grey-dark h-4 w-4 hover:text-grey-darkest" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M17 16v4h-2v-4h-2v-3h6v3h-2zM1 9h6v3H1V9zm6-4h6v3H7V5zM3 0h2v8H3V0zm12 0h2v12h-2V0zM9 0h2v4H9V0zM3 12h2v8H3v-8zm6-4h2v12H9V8z"/></svg>
           </div>
         </div>
-        <GraphWrapper :sortByPoints="sortByPoints" :teamScores="teamScores"></GraphWrapper>
+        <GraphWrapper :sortByPoints="sortGraphByPoints" :teamScores="teamScores"></GraphWrapper>
       </div>
     </div>
 
     <NewCompetitionBuilder v-if="canAddPoints"></NewCompetitionBuilder>
 
-    <PointsContainer v-for="state in pointStates" :key="state + 'container'" :state="state"/>
+    <PointsContainer
+      v-for="state in pointStates"
+      :state="state"
+      :competitionsByApprovalState="competitions.filter(comp => comp.approvalState == state)"
+      :key="state + 'container'"
+    />
   </div>
 </template>
 
@@ -31,8 +36,6 @@ import CompetitionRow from '@/components/CompetitionRow.vue'
 import NewCompetitionBuilder from '@/components/NewCompetitionBuilder.vue'
 import SiteHeader from '@/components/SiteHeader.vue'
 import Vue from 'vue'
-
-import {sortBy as _sortBy} from 'lodash'
 
 export default {
   name: 'PointsPage',
@@ -48,7 +51,7 @@ export default {
     return {
       pointStates: ['submitted', 'approved', 'published'],
       selectedGraphState: ['published'],
-      sortByPoints: false
+      sortGraphByPoints: false
     }
   },
   computed: {
@@ -81,11 +84,10 @@ export default {
   methods: {
     setGraphApprovalState (state) {
       const index = this.selectedGraphState.indexOf(state)
-      if (index !== -1) {
-        // question - is Vue.delete needed?
-        Vue.delete(this.selectedGraphState, index)
-      } else {
+      if (index === -1) {
         this.selectedGraphState.push(state)
+      } else {
+        Vue.delete(this.selectedGraphState, index)
       }
     },
     graphStateStyling (state) {

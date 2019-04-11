@@ -7,7 +7,7 @@
         </div>
         <div v-if="state === 'approved'" class="-my-1">
           <button
-            v-if="$store.getters.isAdmin"
+            v-if="isAdmin"
             class="text-xs font-semibold rounded-full px-4 py-1
                   leading-normal bg-white border border-green text-green
                   hover:bg-green hover:text-white"
@@ -17,10 +17,13 @@
       </div>
     </template>
     <div class="flex justify-between items-center">
-      <div v-if="competitions.length == 0" class="font-semibold flex justify-between items-center py-2">Empty</div>
+      <div
+        v-if="userViewableCompetitions.length == 0"
+        class="font-semibold flex justify-between items-center py-2"
+      >Empty</div>
     </div>
     <CompetitionRow
-      v-for="competition in orderedCompetitions"
+      v-for="competition in orderedViewableCompetitions"
       v-bind="competition"
       :key="competition.id"
     />
@@ -46,6 +49,10 @@ export default {
     state: {
       type: String,
       required: true
+    },
+    competitionsByApprovalState: {
+      type: Array,
+      required: true
     }
   },
   data () {
@@ -55,26 +62,23 @@ export default {
     }
   },
   computed: {
-    competitions () {
-      return this.$store.state.competitions.filter((comp) => {
-        const correctState = comp.approvalState === this.state
-
-        const needToSelectByTeam = this.isLeader && this.state !== 'published'
-        if (needToSelectByTeam) {
-          return correctState && comp.winner === this.currentUserTeam
+    userViewableCompetitions () {
+      return this.competitionsByApprovalState.filter((comp) => {
+        if (this.isAdmin || this.state === 'published') {
+          return true
         } else {
-          return correctState
+          return comp.winner === this.currentUserTeam
         }
       })
     },
-    isLeader () {
-      return this.$store.getters.isLeader
+    isAdmin () {
+      return this.$store.getters.isAdmin
     },
     currentUserTeam () {
       return this.$store.getters.currentUserTeam
     },
-    orderedCompetitions () {
-      return _sortBy(this.competitions, [(competition) => (competition.winner !== this.teamSortBy)])
+    orderedViewableCompetitions () {
+      return _sortBy(this.userViewableCompetitions, [(competition) => (competition.winner !== this.teamSortBy)])
     },
     teamSortBy () {
       return this.selectedTeamSort || this.$store.getters.currentUserTeam
