@@ -10,7 +10,10 @@
           {{ userEmail }}
         </h4>
       </div>
-      <div @click="changeAuthState" class="clickable px-4 py-4 no-select border-r border-b border-l rounded-b hover:bg-grey-light">
+      <div
+        class="clickable px-4 py-4 no-select border-r border-b border-l rounded-b hover:bg-grey-light"
+        @click="changeAuthState"
+      >
         <h4>{{ logInOrOut }}</h4>
       </div>
     </div>
@@ -20,31 +23,31 @@
 <script>
 
 export default {
-  data () {
+  data() {
     return {
-      show: false
+      show: false,
     }
   },
   computed: {
-    isAuthenticated () {
+    isAuthenticated() {
       return !!this.$store.getters.authenticatedUser
     },
-    userEmail () {
+    userEmail() {
       return this.$store.getters.authenticatedUser
     },
-    logInOrOut () {
+    logInOrOut() {
       return this.isAuthenticated ? 'Logout' : 'Login'
-    }
+    },
   },
   methods: {
-    changeAuthState () {
+    changeAuthState() {
       if (this.$store.getters.authenticatedUser) {
         this.$store.dispatch('userSignOut')
       } else {
         this.$router.replace('login')
       }
       this.show = !this.show
-    }
-  }
+    },
+  },
 }
 </script>

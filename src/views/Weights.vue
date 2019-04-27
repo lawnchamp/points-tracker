@@ -2,17 +2,19 @@
   <div class="container mx-auto px-4 -mt-32">
     <div class="bg-white rounded-lg shadow max-w-md px-4 py-2">
       <div
-        class="flex justify-between py-4 border-b text-lg relative"
         v-for="(competitionValue, competitionName) in weights"
-        :key="competitionName">
+        :key="competitionName"
+        class="flex justify-between py-4 border-b text-lg relative"
+      >
         <div>
-          {{competitionName}}
+          {{ competitionName }}
         </div>
         <input
-          type="number"
           :value="competitionValue"
+          type="number"
+          class="px-3 w-20 text-right"
           @change="weightChange(competitionName, parseInt($event.target.value))"
-          class="px-3 w-20 text-right"/>
+        />
         <button
           class="btn-close text-grey-light text-base"
           @click="remove(competitionName)"
@@ -29,26 +31,26 @@ import NewWeight from '@/components/NewWeight.vue'
 
 export default {
   name: 'Weights',
-  components: { NewWeight },
+  components: {NewWeight},
   computed: {
-    weights () {
+    weights() {
       return this.$store.state.weights
-    }
+    },
+  },
+  created() {
+    this.$store.dispatch('getWeights')
   },
   methods: {
-    remove (name) {
+    remove(name) {
       this.$store.dispatch('removeWeight', name)
     },
-    addNewWeight (newWeight) {
+    addNewWeight(newWeight) {
       this.$store.dispatch('addWeight', newWeight)
     },
-    weightChange (weightName, updatedWeight) {
+    weightChange(weightName, updatedWeight) {
       this.$store.dispatch('changeWeight', {weightName, updatedWeight})
-    }
+    },
   },
-  created () {
-    this.$store.dispatch('getWeights')
-  }
 }
 </script>
 

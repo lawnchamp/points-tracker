@@ -12,30 +12,30 @@ const store = new Vuex.Store({
     user: {
       name: {
         first: '',
-        Last: ''
+        Last: '',
       },
       email: '',
       role: 'student',
-      team: ''
+      team: '',
     },
     error: null,
     weights: {},
     competitions: [],
-    loading: false
+    loading: false,
   },
   mutations: {
-    SET_USER_PROPERTIES (state, user) {
+    SET_USER_PROPERTIES(state, user) {
       state.user = {...state.user, ...user}
     },
-    SIGN_OUT (state) {
+    SIGN_OUT(state) {
       state.user = {
         name: {
           first: '',
-          last: ''
+          last: '',
         },
         email: '',
         role: 'student',
-        team: ''
+        team: '',
       }
     },
     ADD_COMPETITIONS: (state, competitions) => {
@@ -66,59 +66,59 @@ const store = new Vuex.Store({
     UPDATE_WEIGHT: (state, {weightName, updatedWeight}) => {
       Vue.set(state.weights, weightName, updatedWeight)
     },
-    SET_LOADING (state, payload) {
+    SET_LOADING(state, payload) {
       state.loading = payload
     },
-    SET_ERROR (state, payload) {
+    SET_ERROR(state, payload) {
       state.error = payload
     },
-    PUBLISH_ALL (state, newlyPublishedIds) {
-      state.competitions.forEach(competition => {
+    PUBLISH_ALL(state, newlyPublishedIds) {
+      state.competitions.forEach((competition) => {
         if (newlyPublishedIds.includes(competition.id)) {
           Vue.set(competition, 'approvalState', 'published')
         }
       })
-    }
+    },
   },
   actions: {
-    getAdditionUserProps ({commit}, email) {
-      firebase.firestore().collection('users').doc(email).get()
-        .then(function (user) {
+    getAdditionUserProps({commit}, email) {
+      return firebase.firestore().collection('users').doc(email).get()
+        .then(function(user) {
           if (user.exists) {
             const {name, role, team} = user.data()
             commit('SET_USER_PROPERTIES', {name, role, team})
           } else {
             throw new Error(`Error: could not find user with email: ${email}`)
           }
-        }).catch(function (error) {
+        }).catch(function(error) {
           throw new Error('Error getting document:', error)
         })
     },
-    userSignIn ({commit, dispatch}, {email, password}) {
+    userSignIn({commit, dispatch}, {email, password}) {
       commit('SET_LOADING', true)
-      return firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(firebaseUser => {
-          commit('SET_USER_PROPERTIES', { email: firebaseUser.email })
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((firebaseUser) => {
+          commit('SET_USER_PROPERTIES', {email: firebaseUser.email})
           dispatch('getAdditionUserProps', firebaseUser.email)
           commit('SET_LOADING', false)
           commit('SET_ERROR', null)
           router.push('/points')
         })
-        .catch(error => {
+        .catch((error) => {
           commit('SET_ERROR', error.message)
           commit('SET_LOADING', false)
         })
     },
-    autoSignIn ({commit, dispatch}, user) {
+    autoSignIn({commit, dispatch}, user) {
       commit('SET_USER_PROPERTIES', {email: user.email})
       dispatch('getAdditionUserProps', user.email)
     },
-    userSignOut ({ commit }) {
+    userSignOut({commit}) {
       firebase.auth().signOut()
       commit('SIGN_OUT')
       router.push('/points')
     },
-    registerUser ({commit}, {email, password}) {
+    registerUser({commit}, {email, password}) {
       commit('SET_LOADING', true)
       firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((firebaseUser) => {
@@ -131,20 +131,20 @@ const store = new Vuex.Store({
           commit('SET_ERROR', error.message)
           commit('SET_LOADING', false)
         })
-    },
-    getAllCompetitions ({commit}) {
+        },
+    getAllCompetitions({commit}) {
       return firebase.firestore().collection('competitions').get()
         .then((querySnapshot) => {
           const competitions = []
           querySnapshot.forEach((doc) => {
-            const competition = { id: doc.id, ...doc.data() }
+            const competition = {id: doc.id, ...doc.data()}
             if (!competition.approvalState) competition.approvalState = 'submitted'
             competitions.push(competition)
           })
           commit('ADD_COMPETITIONS', competitions)
         })
     },
-    addCompetition ({commit, state}, newCompetition) {
+    addCompetition({commit, state}, newCompetition) {
       newCompetition.approvalState = 'submitted'
       newCompetition.submittedBy = {email: state.user.email, name: state.user.name}
 
@@ -160,74 +160,69 @@ const store = new Vuex.Store({
           commit('ADD_COMPETITION', {...newCompetition, id: docRef.id})
         })
     },
-    removeCompetition ({commit}, id) {
+    removeCompetition({commit}, id) {
       return firebase.firestore().collection('competitions').doc(id).delete()
         .then(() => {
           commit('REMOVE_COMPETITION', id)
         }).catch((error) => {
-          console.error('Error removing document: ', error)
+          commit('SET_ERROR', error)
         })
     },
-    getWeights ({commit}) {
+    getWeights({commit}) {
       return firebase.firestore().collection('weights').get()
         .then((querySnapshot) => {
-          let weights = {}
+          const weights = {}
           querySnapshot.forEach((doc) => {
             weights[doc.id] = doc.data()
           })
           commit('SET_WEIGHTS', weights)
         })
     },
-    addWeight ({ commit }, newWeight) {
+    addWeight({commit}, newWeight) {
       return firebase.firestore().collection('weights').doc(newWeight.name).set({value: newWeight.value})
         .then((docRef) => {
           commit('ADD_WEIGHT', newWeight)
         })
     },
-    changeWeight ({ commit }, {weightName, updatedWeight}) {
+    changeWeight({commit}, {weightName, updatedWeight}) {
       return firebase.firestore().collection('weights').doc(weightName).update({
-        'value': updatedWeight
+        'value': updatedWeight,
       }).then(() => {
         commit('UPDATE_WEIGHT', {weightName, updatedWeight})
       })
     },
-    removeWeight ({ commit }, weightName) {
+    removeWeight({commit}, weightName) {
       return firebase.firestore().collection('weights').doc(weightName).delete()
-        .then(() => {
-          commit('REMOVE_WEIGHT', weightName)
-        }).catch((error) => {
-          console.error('Error removing weight: ', error)
-        })
+        .then(() => commit('REMOVE_WEIGHT', weightName))
+        .catch(error => commit('SET_ERROR', error))
     },
-    publishAll ({ commit, state }) {
+    publishAll({commit, state}) {
       const db = firebase.firestore()
       const batch = db.batch()
       const approvedCompetitions = state.competitions.filter(comp => comp.approvalState === 'approved')
-      approvedCompetitions.forEach(competition => {
+      approvedCompetitions.forEach((competition) => {
         const compRef = db.collection('competitions').doc(competition.id)
-        batch.update(compRef, { approvalState: 'published' })
+        batch.update(compRef, {approvalState: 'published'})
       })
       batch.commit().then(() => {
         commit('PUBLISH_ALL', approvedCompetitions.map(comp => comp.id))
       })
     },
-    updateApprovalState ({commit, state}, {id, newApprovalState}) {
+    updateApprovalState({commit}, {id, newApprovalState}) {
       return firebase.firestore().collection('competitions').doc(id)
-        .set({ approvalState: newApprovalState }, { merge: true })
-        .then(() => {
-          commit('UPDATE_APPROVAL_STATE', { id, newApprovalState })
-        })
-        .catch((error) => console.log('printing error: ', error))
-    }
+        .set({approvalState: newApprovalState}, {merge: true})
+        .then(() => commit('UPDATE_APPROVAL_STATE', {id, newApprovalState}))
+        .catch(error => commit('SET_ERROR', error))
+    },
   },
   getters: {
     authenticatedUser: state => state.user.email,
     competitionNames: state => Object.keys(state.weights),
     currentUserTeam: state => state.user.team,
     isAdmin: state => state.user.role === 'admin',
-    isLeader: state => state.user.role === 'leader'
+    isLeader: state => state.user.role === 'leader',
   },
-  strict: process.env.NODE_ENV !== 'production'
+  strict: process.env.NODE_ENV !== 'production',
 })
 
 export default store

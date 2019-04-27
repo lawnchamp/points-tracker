@@ -1,5 +1,5 @@
 import Points from '@/components/Points.vue'
-import { mount } from '@vue/test-utils'
+import {mount} from '@vue/test-utils'
 
 describe('Points.vue', () => {
   let wrapper
@@ -10,18 +10,18 @@ describe('Points.vue', () => {
         name: 'dodge ball',
         winner: 'black',
         loser: 'green',
-        pointsAwarded: 3
+        pointsAwarded: 3,
       }, {
         name: 'soccer',
         winner: 'red',
         loser: 'orange',
-        pointsAwarded: 5
+        pointsAwarded: 5,
       }, {
         name: 'soccer',
         winner: 'black',
         loser: 'purple',
-        pointsAwarded: 10
-      }]
+        pointsAwarded: 10,
+      }],
     })
   })
 
@@ -61,12 +61,12 @@ describe('Points.vue', () => {
     it('adds the score together for winner with the same name', () => {
       expect(wrapper.vm.teamScores).toMatchObject({
         black: 13,
-        red: 5
+        red: 5,
       })
     })
 
     it('returns empty object when competitions are empty', () => {
-      wrapper.setData({ competitions: [] })
+      wrapper.setData({competitions: []})
 
       expect(wrapper.vm.competitions).toEqual([])
       expect(wrapper.vm.teamScores).toMatchObject({})
@@ -78,7 +78,7 @@ describe('Points.vue', () => {
       expect(wrapper.vm.missingCompetitionData({
         name: '',
         winner: '',
-        pointsAwarded: ''
+        pointsAwarded: '',
       })).toBe(true)
     })
 
@@ -86,7 +86,7 @@ describe('Points.vue', () => {
       expect(wrapper.vm.missingCompetitionData({
         name: 'Dodge Ball',
         winner: 'blue',
-        pointsAwarded: ''
+        pointsAwarded: '',
       })).toBe(true)
     })
 
@@ -94,7 +94,7 @@ describe('Points.vue', () => {
       expect(wrapper.vm.missingCompetitionData({
         name: 'Dodge Ball',
         winner: 'blue',
-        pointsAwarded: '350'
+        pointsAwarded: '350',
       })).toBe(false)
     })
   })

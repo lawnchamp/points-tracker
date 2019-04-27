@@ -10,7 +10,7 @@ import AuthenticateForm from '@/components/AuthenticateForm.vue'
 
 export default {
   components: {
-    AuthenticateForm
-  }
+    AuthenticateForm,
+  },
 }
 </script>

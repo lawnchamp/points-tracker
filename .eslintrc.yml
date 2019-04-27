@@ -1,0 +1,68 @@
+# This configuration is intended to replace the legacy .eslintrc and applies
+# only to Webpack-compiled JavaScript in app/javascript and spec/javascript
+extends:
+  - eslint:recommended
+  - google
+  - plugin:vue/recommended
+plugins:
+  - import
+env:
+  browser: true
+  node: true
+  es6: true
+parserOptions:
+  parser: babel-eslint
+  sourceType: module
+  ecmaVersion: 6
+globals:
+  $: true
+  afterAll: true
+  afterEach: true
+  beforeAll: true
+  beforeEach: true
+  clearInterval: true
+  clearTimeout: true
+  console: true
+  describe: true
+  expect: true
+  it: true
+  xit: true
+  jasmine: true
+  setInterval: true
+  setTimeout: true
+  spyOn: true
+  spyOnProperty: true
+  window: true
+rules:
+  arrow-parens:
+  - warn
+  - as-needed
+  - requireForBlockBody: true
+  key-spacing:
+  - warn
+  - mode: minimum
+  max-len:
+  - off
+  - 80
+  new-cap: off
+  no-multi-spaces:
+  - warn
+  - exceptions:
+      Property: true
+      SwitchCase: true
+      VariableDeclarator: true
+  no-console:
+  - warn
+  object-curly-spacing:
+  - warn
+  - never
+  one-var: off
+  require-jsdoc: off
+  semi:
+  - warn
+  - never
+  vue/html-self-closing: off
+  vue/max-attributes-per-line: off
+  vue/attribute-hyphenation: [2, 'never']
+  vue/html-indent:
+  - ignores: [script]

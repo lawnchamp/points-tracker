@@ -7,17 +7,17 @@
     <div class="py-2">
       <div class="flex justify-between" @click="showDetails = !showDetails">
         <div class="flex">
-          <div class="team-icon flex-no-shrink" v-bind:class="teamColor()"></div>
+          <div :class="teamColor()" class="team-icon flex-no-shrink"></div>
           <div class="px-2">
-            <div class="capitalize font-semibold text-xl">{{name}}</div>
+            <div class="capitalize font-semibold text-xl">{{ name }}</div>
             <div class="text-xs inline">
-              {{loserText}}
+              {{ loserText }}
             </div>
           </div>
         </div>
         <div class="flex self-center">
           <div :class="'font-semibold text-2xl px-2 ' + customValueIndicatorClass">
-            {{pointsAwarded}}<sup v-if="usingCustomValue && isAdmin">*</sup>
+            {{ pointsAwarded }}<sup v-if="usingCustomValue && isAdmin">*</sup>
           </div>
         </div>
       </div>
@@ -37,36 +37,40 @@ import CompetitionDetails from '@/components/CompetitionDetails.vue'
 export default {
   name: 'CompetitionRow',
   components: {
-    CompetitionDetails
+    CompetitionDetails,
   },
   props: {
-    approvalState: String,
-    defaultPoints: Number,
-    id: String,
-    loser: String,
-    name: String,
-    notes: String,
-    points: Number,
-    submittedBy: Object,
-    tied: Boolean,
-    winner: String.capitalize
+    approvalState: {type: String, required: true},
+    defaultPoints: {type: Number, required: true},
+    id: {type: String, required: true},
+    loser: {type: String, required: false, default: ''},
+    name: {type: String, required: true},
+    notes: {type: String, required: false, default: ''},
+    points: {type: Number, required: true},
+    submittedBy: {
+      type: Object,
+      required: true,
+      validator: obj => obj.email,
+    },
+    tied: {type: Boolean, required: true},
+    winner: {type: String.capitalize, required: true},
   },
-  data () {
+  data() {
     return {
-      showDetails: false
+      showDetails: false,
     }
   },
   computed: {
-    pointsAwarded () {
+    pointsAwarded() {
       return this.points / (this.tied ? 2 : 1)
     },
-    customValueIndicatorClass () {
+    customValueIndicatorClass() {
       return this.$store.getters.authenticatedUser && this.usingCustomValue ? 'italic text-blue-dark' : ''
     },
-    usingCustomValue () {
+    usingCustomValue() {
       return this.defaultPoints && this.defaultPoints !== this.points
     },
-    userCanSeeCompetition () {
+    userCanSeeCompetition() {
       // choosing to view data in front end is dangerous, this can easily be faked
       if (this.approvalState === 'published') return true
 
@@ -76,13 +80,13 @@ export default {
         return this.$store.getters.currentUserTeam === this.winner
       }
     },
-    isAdmin () {
+    isAdmin() {
       return this.$store.getters.isAdmin
     },
-    canSeeDetails () {
+    canSeeDetails() {
       return this.isAdmin || this.$store.getters.isLeader
     },
-    loserText () {
+    loserText() {
       if (this.tied) {
         return `tied ${this.loser}`
       } else if (this.loser === 'n/a' || this.loser === '') {
@@ -90,19 +94,19 @@ export default {
       } else {
         return `vs ${this.loser}`
       }
-    }
+    },
   },
   methods: {
-    approvalStateChange (newApprovalState) {
-      this.$store.dispatch('updateApprovalState', { id: this.id, newApprovalState: newApprovalState })
+    approvalStateChange(newApprovalState) {
+      this.$store.dispatch('updateApprovalState', {id: this.id, newApprovalState: newApprovalState})
     },
-    teamColor () {
+    teamColor() {
       return `bg-${this.winner.toLowerCase()}`
     },
-    removeCompetition () {
+    removeCompetition() {
       this.$store.dispatch('removeCompetition', this.id)
-    }
-  }
+    },
+  },
 }
 </script>
 

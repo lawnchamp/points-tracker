@@ -10,15 +10,15 @@ import './styles/app.scss'
 import SiteHeader from '@/components/SiteHeader.vue'
 
 export default {
-  name: 'app',
-  components: { SiteHeader },
-  created () {
+  name: 'App',
+  components: {SiteHeader},
+  computed: {
+    isAdmin() {
+      return this.$store.getters.isAdmin
+    },
+  },
+  created() {
     this.$store.dispatch('getAllCompetitions')
   },
-  computed: {
-    isAdmin () {
-      return this.$store.getters.isAdmin
-    }
-  }
 }
 </script>

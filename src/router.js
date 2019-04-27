@@ -8,46 +8,46 @@ import firebase from '@/firebase.js'
 
 Vue.use(Router)
 
-let router = new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/points'
+      redirect: '/points',
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
     },
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: Register,
     },
     {
       path: '/points',
       name: 'Points',
-      component: PointsPage
+      component: PointsPage,
     },
     {
       path: '/weights',
       name: 'Weights',
       component: Weights,
-      meta: { requiresAuth: true }
-    }
-  ]
+      meta: {requiresAuth: true},
+    },
+  ],
 })
 
 router.beforeEach((to, from, next) => {
-  let currentUser = firebase.auth().currentUser
+  const currentUser = firebase.auth().currentUser
 
-  let onAuthPage = to.name && to.name.match(/(Login)|(Register)/)
+  const onAuthPage = to.name && to.name.match(/(Login)|(Register)/)
   if (currentUser && onAuthPage) next('points')
 
   if (to.matched.some(record => record.meta.requiresAuth) && !currentUser) {
     next({
       path: '/login',
-      query: { redirect: to.fullPath }
+      query: {redirect: to.fullPath},
     })
   } else next()
 })

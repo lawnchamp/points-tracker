@@ -1,52 +1,52 @@
 <template>
-  <HideAndShowContainer v-if="canAddPoints" :initial-show="true">
+  <HideAndShowContainer v-if="canAddPoints" :initialShow="true">
     <template slot="title">
       <div v-if="isAdmin" class="inline">Add Competition</div>
       <div v-else-if="isLeader" class="inline font-semibold">
-        Add points for <span :class="`text-${team} capitalize`">{{team}}</span> team
+        Add points for <span :class="`text-${team} capitalize`">{{ team }}</span> team
       </div>
     </template>
-    <div class="overflow-visable">
+    <div>
       <span class="flex">
         <multiselect
-          class="py-1 px-1"
           v-model="newCompetition.name"
-          placeholder='Competition'
           :options="competitionNames"
-          :show-labels="false"
+          :showLabels="false"
+          placeholder="Competition"
+          class="py-1 px-1"
           @input="initializePoints"
         />
         <input
-          class="rounded border h-10 w-14 px-1 my-1 text-sm text-grey-darker"
-          placeholder="Points"
           v-model.number="newCompetition.points"
+          placeholder="Points"
+          class="rounded border h-10 w-14 px-1 my-1 text-sm text-grey-darker"
         >
       </span>
       <span class="flex">
         <multiselect
           v-if="$store.getters.isAdmin"
-          class="py-1 px-1"
           v-model="newCompetition.winner"
           :placeholder="firstTeamPlaceholder"
           :options="teamNames"
-          :show-labels="false"
+          :showLabels="false"
+          class="py-1 px-1"
         />
         <div class="flex items-center">
-          <input class="inline-block" type="checkbox" id="checkbox" v-model="newCompetition.tied">
+          <input id="checkbox" v-model="newCompetition.tied" class="inline-block" type="checkbox">
           <label class="px-1 inline-block text-xs text-grey-dark uppercase" for="checkbox">tied</label>
         </div>
         <multiselect
-          class="py-1 px-1"
           v-model="newCompetition.loser"
-          :placeholder='secondTeamPlaceholder'
+          :placeholder="secondTeamPlaceholder"
           :options="[...teamNames, 'n/a']"
-          :show-labels="false"
+          :showLabels="false"
+          class="py-1 px-1"
         />
       </span>
       <span class="flex justify-between items-center">
         <textarea
-          type="text"
           v-model="newCompetition.notes"
+          type="text"
           class="w-full py-2 px-3 mx-1 my-1 border rounded text-sm text-grey-darker"
           placeholder="Notes">
         </textarea>
@@ -56,7 +56,7 @@
           style="float:right;"
           class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-green text-green hover:bg-green hover:text-white"
           @click="addCompetition"
-        >{{saving ? 'Saving' : 'Submit'}}</button>
+        >{{ saving ? 'Saving' : 'Submit' }}</button>
       </div>
     </div>
   </HideAndShowContainer>
@@ -66,15 +66,15 @@
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 import HideAndShowContainer from '@/components/HideAndShowContainer.vue'
-import { TEAM_NAMES } from '@/store.js'
+import {TEAM_NAMES} from '@/store.js'
 
 export default {
   name: 'NewCompetitionBuilder',
   components: {
     HideAndShowContainer,
-    Multiselect
+    Multiselect,
   },
-  data () {
+  data() {
     return {
       newCompetition: {
         name: '',
@@ -83,41 +83,44 @@ export default {
         points: null,
         defaultPoints: 0,
         tied: false,
-        notes: ''
+        notes: '',
       },
       saving: false,
       show: true,
-      teamNames: TEAM_NAMES
+      teamNames: TEAM_NAMES,
     }
   },
   computed: {
-    team () {
+    team() {
       return this.$store.getters.currentUserTeam
     },
-    competitionNames () {
+    competitionNames() {
       return this.$store.getters.competitionNames
     },
-    firstTeamPlaceholder () {
+    firstTeamPlaceholder() {
       return this.newCompetition.tied ? 'Team 1' : 'Winner'
     },
-    secondTeamPlaceholder () {
+    secondTeamPlaceholder() {
       return this.newCompetition.tied ? 'Team 2' : 'Loser'
     },
-    weights () {
+    weights() {
       return this.$store.state.weights
     },
-    canAddPoints () {
+    canAddPoints() {
       return this.$store.getters.isAdmin || this.$store.getters.isLeader
     },
-    isAdmin () {
+    isAdmin() {
       return this.$store.getters.isAdmin
     },
-    isLeader () {
+    isLeader() {
       return this.$store.getters.isLeader
-    }
+    },
+  },
+  created() {
+    this.$store.dispatch('getWeights')
   },
   methods: {
-    addCompetition () {
+    addCompetition() {
       if (this.newCompetition.name === '') return
 
       this.saving = true
@@ -132,11 +135,11 @@ export default {
         this.resetNewCompetitionData()
       })
     },
-    initializePoints () {
+    initializePoints() {
       this.newCompetition.defaultPoints = this.weights[this.newCompetition.name]
       this.newCompetition.points = this.weights[this.newCompetition.name]
     },
-    resetNewCompetitionData () {
+    resetNewCompetitionData() {
       this.newCompetition = {
         name: '',
         winner: this.team,
@@ -144,12 +147,9 @@ export default {
         points: '',
         defaultPoints: '',
         tied: false,
-        notes: ''
+        notes: '',
       }
-    }
+    },
   },
-  created () {
-    this.$store.dispatch('getWeights')
-  }
 }
 </script>

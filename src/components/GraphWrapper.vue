@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TeamChart :chart-data="graphData"/>
+    <TeamChart :chartData="graphData"/>
   </div>
 </template>
 
@@ -14,39 +14,39 @@ const SCORE_INDEX = 1
 export default {
   name: 'GraphWrapper',
   components: {
-    TeamChart
+    TeamChart,
   },
   props: {
     teamScores: {
       required: true,
-      type: Object
+      type: Object,
     },
     sortByPoints: {
       required: true,
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   computed: {
-    sortedTeamScoreInfo () {
+    sortedTeamScoreInfo() {
       const sortByIndex = this.sortByPoints ? SCORE_INDEX : NAME_INDEX
       return Object.entries(this.teamScores).sort((a, b) => b[sortByIndex] - a[sortByIndex])
     },
-    sortedNames () {
+    sortedNames() {
       return this.sortedTeamScoreInfo.map(scoreInfo => scoreInfo[NAME_INDEX])
     },
-    sortedScores () {
+    sortedScores() {
       return this.sortedTeamScoreInfo.map(scoreInfo => scoreInfo[SCORE_INDEX])
     },
-    graphData () {
+    graphData() {
       return {
         labels: this.sortedNames,
         datasets: [{
           label: 'team points',
           backgroundColor: this.sortedNames.map(color => colors[color]),
-          data: this.sortedScores
-        }]
+          data: this.sortedScores,
+        }],
       }
-    }
-  }
+    },
+  },
 }
 </script>

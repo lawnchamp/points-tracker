@@ -7,7 +7,7 @@ firebase.initializeApp({
   databaseURL: 'https://point-tracker18.firebaseio.com',
   projectId: 'point-tracker18',
   storageBucket: 'point-tracker18.appspot.com',
-  messagingSenderId: '727305853236'
+  messagingSenderId: '727305853236',
 })
 
 export default firebase

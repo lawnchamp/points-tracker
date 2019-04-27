@@ -2,7 +2,7 @@
   <div class="text-xs font-bold">
     <div v-if="isAdmin" class="py-1">
       State:
-      <select :value="approvalState" @change="$emit('state-change', $event.target.value)" class="font-thin">
+      <select :value="approvalState" class="font-thin" @change="$emit('state-change', $event.target.value)">
         <option>submitted</option>
         <option>approved</option>
         <option>published</option>
@@ -10,7 +10,7 @@
     </div>
     <div>
       <div v-if="isAdmin && submittedBy" class="py-1">
-        Owner: <div class="inline font-thin">{{submittedBy.email}}</div>
+        Owner: <div class="inline font-thin">{{ submittedBy.email }}</div>
       </div>
       <div v-if="notes" class="py-1">
         Notes: <div class="inline font-thin">{{ notes }}</div>
@@ -25,20 +25,21 @@ export default {
   props: {
     isAdmin: {
       type: Boolean,
-      required: true
+      required: true,
     },
     approvalState: {
       type: String,
-      required: true
+      required: true,
     },
     submittedBy: {
       type: Object,
-      required: true
+      required: true,
     },
     notes: {
       type: String,
-      required: false
-    }
-  }
+      required: false,
+      default: '',
+    },
+  },
 }
 </script>
