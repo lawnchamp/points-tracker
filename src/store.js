@@ -11,11 +11,9 @@ export const TEAM_NAMES = ['black', 'blue', 'brown', 'green', 'grey', 'lime', 'o
 const store = new Vuex.Store({
   state: {
     user: {
-      name: {
-        first: '',
-        Last: '',
-      },
+      displayName: '',
       email: '',
+      photoURL: '',
       role: 'student',
       team: '',
     },
@@ -30,11 +28,9 @@ const store = new Vuex.Store({
     },
     SIGN_OUT(state) {
       state.user = {
-        name: {
-          first: '',
-          last: '',
-        },
+        displayName: '',
         email: '',
+        photoURL: '',
         role: 'student',
         team: '',
       }
@@ -86,8 +82,8 @@ const store = new Vuex.Store({
       return firestore.collection('users').doc(email).get()
         .then(function(user) {
           if (user.exists) {
-            const {name, role, team} = user.data()
-            commit('SET_USER_PROPERTIES', {name, role, team})
+            const {role, team} = user.data()
+            commit('SET_USER_PROPERTIES', {role, team})
           } else {
             commit('SET_ERROR', `user with ${email} does not exist`)
             throw new Error(`user with the following email does not exist: ${email}`)
@@ -109,9 +105,9 @@ const store = new Vuex.Store({
           commit('SET_LOADING', false)
         })
     },
-    autoSignIn({commit, dispatch}, user) {
-      commit('SET_USER_PROPERTIES', {email: user.email})
-      dispatch('getAdditionUserProps', user.email)
+    autoSignIn({commit, dispatch}, {email, photoURL, displayName}) {
+      commit('SET_USER_PROPERTIES', {email, photoURL, displayName})
+      dispatch('getAdditionUserProps', email)
     },
     userSignOut({commit}) {
       auth.signOut()
@@ -147,7 +143,7 @@ const store = new Vuex.Store({
     },
     addCompetition({commit, state}, newCompetition) {
       newCompetition.approvalState = 'submitted'
-      newCompetition.submittedBy = {email: state.user.email, name: state.user.name}
+      newCompetition.submittedBy = {email: state.user.email, name: state.user.displayName}
 
       if (newCompetition.tied) {
         const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}
