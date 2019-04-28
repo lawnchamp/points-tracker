@@ -89,10 +89,9 @@ const store = new Vuex.Store({
             const {name, role, team} = user.data()
             commit('SET_USER_PROPERTIES', {name, role, team})
           } else {
-            throw new Error(`Error: could not find user with email: ${email}`)
+            commit('SET_ERROR', `user with ${email} does not exist`)
+            throw new Error(`user with the following email does not exist: ${email}`)
           }
-        }).catch(function(error) {
-          throw new Error('Error getting document:', error)
         })
     },
     userSignIn({commit, dispatch}, {email, password}) {
