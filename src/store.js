@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import firebase from '@/firebase.js'
+import {auth, firestore} from '@/firebase'
 import router from '@/router'
+import unsubscribe from './main'
 
 Vue.use(Vuex)
 
@@ -82,7 +83,7 @@ const store = new Vuex.Store({
   },
   actions: {
     getAdditionUserProps({commit}, email) {
-      return firebase.firestore().collection('users').doc(email).get()
+      return firestore.collection('users').doc(email).get()
         .then(function(user) {
           if (user.exists) {
             const {name, role, team} = user.data()
@@ -96,7 +97,7 @@ const store = new Vuex.Store({
     },
     userSignIn({commit, dispatch}, {email, password}) {
       commit('SET_LOADING', true)
-      firebase.auth().signInWithEmailAndPassword(email, password)
+      auth.signInWithEmailAndPassword(email, password)
         .then((firebaseUser) => {
           commit('SET_USER_PROPERTIES', {email: firebaseUser.email})
           dispatch('getAdditionUserProps', firebaseUser.email)
@@ -114,13 +115,14 @@ const store = new Vuex.Store({
       dispatch('getAdditionUserProps', user.email)
     },
     userSignOut({commit}) {
-      firebase.auth().signOut()
+      auth.signOut()
+      unsubscribe()
       commit('SIGN_OUT')
       router.push('/points')
     },
     registerUser({commit}, {email, password}) {
       commit('SET_LOADING', true)
-      firebase.auth().createUserWithEmailAndPassword(email, password)
+      auth.createUserWithEmailAndPassword(email, password)
         .then((firebaseUser) => {
           commit('SET_USER_PROPERTIES', {email: firebaseUser.email})
           commit('SET_LOADING', false)
@@ -133,7 +135,7 @@ const store = new Vuex.Store({
         })
         },
     getAllCompetitions({commit}) {
-      return firebase.firestore().collection('competitions').get()
+      return firestore.collection('competitions').get()
         .then((querySnapshot) => {
           const competitions = []
           querySnapshot.forEach((doc) => {
@@ -150,18 +152,18 @@ const store = new Vuex.Store({
 
       if (newCompetition.tied) {
         const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}
-        firebase.firestore().collection('competitions').add(otherTeam)
+        firestore.collection('competitions').add(otherTeam)
           .then((docRef) => {
             commit('ADD_COMPETITION', {...otherTeam, id: docRef.id})
           })
       }
-      return firebase.firestore().collection('competitions').add(newCompetition)
+      return firestore.collection('competitions').add(newCompetition)
         .then((docRef) => {
           commit('ADD_COMPETITION', {...newCompetition, id: docRef.id})
         })
     },
     removeCompetition({commit}, id) {
-      return firebase.firestore().collection('competitions').doc(id).delete()
+      return firestore.collection('competitions').doc(id).delete()
         .then(() => {
           commit('REMOVE_COMPETITION', id)
         }).catch((error) => {
@@ -169,7 +171,7 @@ const store = new Vuex.Store({
         })
     },
     getWeights({commit}) {
-      return firebase.firestore().collection('weights').get()
+      return firestore.collection('weights').get()
         .then((querySnapshot) => {
           const weights = {}
           querySnapshot.forEach((doc) => {
@@ -179,25 +181,25 @@ const store = new Vuex.Store({
         })
     },
     addWeight({commit}, newWeight) {
-      return firebase.firestore().collection('weights').doc(newWeight.name).set({value: newWeight.value})
+      return firestore.collection('weights').doc(newWeight.name).set({value: newWeight.value})
         .then((docRef) => {
           commit('ADD_WEIGHT', newWeight)
         })
     },
     changeWeight({commit}, {weightName, updatedWeight}) {
-      return firebase.firestore().collection('weights').doc(weightName).update({
+      return firestore.collection('weights').doc(weightName).update({
         'value': updatedWeight,
       }).then(() => {
         commit('UPDATE_WEIGHT', {weightName, updatedWeight})
       })
     },
     removeWeight({commit}, weightName) {
-      return firebase.firestore().collection('weights').doc(weightName).delete()
+      return firestore.collection('weights').doc(weightName).delete()
         .then(() => commit('REMOVE_WEIGHT', weightName))
         .catch(error => commit('SET_ERROR', error))
     },
     publishAll({commit, state}) {
-      const db = firebase.firestore()
+      const db = firestore
       const batch = db.batch()
       const approvedCompetitions = state.competitions.filter(comp => comp.approvalState === 'approved')
       approvedCompetitions.forEach((competition) => {
@@ -209,7 +211,7 @@ const store = new Vuex.Store({
       })
     },
     updateApprovalState({commit}, {id, newApprovalState}) {
-      return firebase.firestore().collection('competitions').doc(id)
+      return firestore.collection('competitions').doc(id)
         .set({approvalState: newApprovalState}, {merge: true})
         .then(() => commit('UPDATE_APPROVAL_STATE', {id, newApprovalState}))
         .catch(error => commit('SET_ERROR', error))

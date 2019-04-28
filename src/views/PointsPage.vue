@@ -83,7 +83,6 @@ export default {
       return this.$store.getters.currentUserTeam
     },
   },
-
   methods: {
     setGraphApprovalState(state) {
       const index = this.selectedGraphState.indexOf(state)

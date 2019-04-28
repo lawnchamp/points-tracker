@@ -4,7 +4,7 @@ import PointsPage from '@/views/PointsPage.vue'
 import Register from '@/views/Register.vue'
 import Router from 'vue-router'
 import Weights from '@/views/Weights.vue'
-import firebase from '@/firebase.js'
+import {auth} from '@/firebase'
 
 Vue.use(Router)
 
@@ -39,7 +39,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  const currentUser = firebase.auth().currentUser
+  const currentUser = auth.currentUser
 
   const onAuthPage = to.name && to.name.match(/(Login)|(Register)/)
   if (currentUser && onAuthPage) next('points')
