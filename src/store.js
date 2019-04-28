@@ -90,21 +90,6 @@ const store = new Vuex.Store({
           }
         })
     },
-    userSignIn({commit, dispatch}, {email, password}) {
-      commit('SET_LOADING', true)
-      auth.signInWithEmailAndPassword(email, password)
-        .then((firebaseUser) => {
-          commit('SET_USER_PROPERTIES', {email: firebaseUser.email})
-          dispatch('getAdditionUserProps', firebaseUser.email)
-          commit('SET_LOADING', false)
-          commit('SET_ERROR', null)
-          router.push('/points')
-        })
-        .catch((error) => {
-          commit('SET_ERROR', error.message)
-          commit('SET_LOADING', false)
-        })
-    },
     autoSignIn({commit, dispatch}, {email, photoURL, displayName}) {
       commit('SET_USER_PROPERTIES', {email, photoURL, displayName})
       dispatch('getAdditionUserProps', email)
@@ -115,20 +100,6 @@ const store = new Vuex.Store({
       commit('SIGN_OUT')
       router.push('/points')
     },
-    registerUser({commit}, {email, password}) {
-      commit('SET_LOADING', true)
-      auth.createUserWithEmailAndPassword(email, password)
-        .then((firebaseUser) => {
-          commit('SET_USER_PROPERTIES', {email: firebaseUser.email})
-          commit('SET_LOADING', false)
-          commit('SET_ERROR', null)
-          router.push('/points')
-        })
-        .catch((error) => {
-          commit('SET_ERROR', error.message)
-          commit('SET_LOADING', false)
-        })
-        },
     getAllCompetitions({commit}) {
       return firestore.collection('competitions').get()
         .then((querySnapshot) => {

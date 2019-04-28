@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Login from '@/views/Login.vue'
 import PointsPage from '@/views/PointsPage.vue'
-import Register from '@/views/Register.vue'
 import Router from 'vue-router'
 import Weights from '@/views/Weights.vue'
 import {auth} from '@/firebase'
@@ -20,11 +19,6 @@ const router = new Router({
       component: Login,
     },
     {
-      path: '/register',
-      name: 'Register',
-      component: Register,
-    },
-    {
       path: '/points',
       name: 'Points',
       component: PointsPage,
@@ -41,7 +35,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   const currentUser = auth.currentUser
 
-  const onAuthPage = to.name && to.name.match(/(Login)|(Register)/)
+  const onAuthPage = to.name === 'Login'
   if (currentUser && onAuthPage) next('points')
 
   if (to.matched.some(record => record.meta.requiresAuth) && !currentUser) {
