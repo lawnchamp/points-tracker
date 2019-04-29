@@ -114,7 +114,7 @@ const store = new Vuex.Store({
     },
     addCompetition({commit, state}, newCompetition) {
       newCompetition.approvalState = 'submitted'
-      newCompetition.submittedBy = {email: state.user.email, name: state.user.displayName}
+      newCompetition.submittedBy = {email: state.user.email, displayName: state.user.displayName}
 
       if (newCompetition.tied) {
         const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}

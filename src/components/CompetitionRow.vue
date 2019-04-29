@@ -50,7 +50,7 @@ export default {
     submittedBy: {
       type: Object,
       required: true,
-      validator: obj => obj.email,
+      validator: obj => obj.email || obj.displayName,
     },
     tied: {type: Boolean, required: true},
     winner: {type: String.capitalize, required: true},

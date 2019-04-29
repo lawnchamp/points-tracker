@@ -10,7 +10,7 @@
     </div>
     <div>
       <div v-if="isAdmin && submittedBy" class="py-1">
-        Owner: <div class="inline font-thin">{{ submittedBy.email }}</div>
+        Owner: <div class="inline font-thin">{{ submittedBy.displayName || submittedBy.email }}</div>
       </div>
       <div v-if="notes" class="py-1">
         Notes: <div class="inline font-thin">{{ notes }}</div>
