@@ -1,5 +1,5 @@
 <template>
-  <HideAndShowContainer v-if="canAddPoints" :initialShow="true">
+  <HideAndShowContainer :initialShow="true">
     <template slot="title">
       <div v-if="isAdmin" class="inline">Add Competition</div>
       <div v-else-if="isLeader" class="inline font-semibold">
@@ -24,7 +24,7 @@
       </span>
       <span class="flex">
         <multiselect
-          v-if="$store.getters.isAdmin"
+          v-if="isAdmin"
           v-model="newCompetition.winner"
           :placeholder="firstTeamPlaceholder"
           :options="teamNames"
@@ -105,9 +105,6 @@ export default {
     },
     weights() {
       return this.$store.state.weights
-    },
-    canAddPoints() {
-      return this.$store.getters.isAdmin || this.$store.getters.isLeader
     },
     isAdmin() {
       return this.$store.getters.isAdmin
