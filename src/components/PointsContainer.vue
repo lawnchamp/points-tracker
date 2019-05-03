@@ -1,5 +1,5 @@
 <template>
-  <HideAndShowContainer v-if="canSeeContainer">
+  <HideAndShowContainer v-if="canSeeContainer" :initialShow="guestViewingPublishedContainer">
     <template slot="title">
       <div class="flex justify-between items-center">
         <div>
@@ -96,10 +96,16 @@ export default {
     },
     canSeeContainer() {
       switch (this.state) {
-        case 'submitted': return this.$store.getters.authenticatedUser
-        case 'approved': return this.$store.getters.authenticatedUser
+        case 'submitted': return this.isAuthenticated
+        case 'approved': return this.isAuthenticated
         case 'published': return true
       }
+    },
+    isAuthenticated() {
+      return this.$store.getters.authenticatedUser
+    },
+    guestViewingPublishedContainer() {
+      return this.isAuthenticated && this.state === 'published'
     },
   },
   methods: {
