@@ -20,6 +20,7 @@ const store = new Vuex.Store({
     error: null,
     weights: {},
     competitions: [],
+    users: [],
     loading: false,
   },
   mutations: {
@@ -35,6 +36,9 @@ const store = new Vuex.Store({
         team: '',
       }
     },
+    ADD_USERS: (state, users) => {
+      state.users.push(...users)
+    },
     ADD_COMPETITIONS: (state, competitions) => {
       state.competitions.push(...competitions)
     },
@@ -48,6 +52,7 @@ const store = new Vuex.Store({
       const index = state.competitions.findIndex(comp => comp.id === id)
       Vue.set(state.competitions[index], 'approvalState', newApprovalState)
     },
+    // set weights shouldn't be called multiple times
     SET_WEIGHTS: (state, weights) => {
       state.weights = Object.keys(weights).reduce((acc, weight) => {
         acc[weight] = weights[weight].value
@@ -88,6 +93,16 @@ const store = new Vuex.Store({
             commit('SET_ERROR', `user with ${email} does not exist`)
             throw new Error(`user with the following email does not exist: ${email}`)
           }
+        })
+    },
+    getUsers({commit}) {
+      return firestore.collection('users').get()
+        .then((querySnapshot) => {
+          const users = []
+          querySnapshot.forEach((doc) => {
+            users.push({id: doc.id, ...doc.data()})
+          })
+          commit('ADD_USERS', users)
         })
     },
     autoSignIn({commit, dispatch}, {email, photoURL, displayName}) {
