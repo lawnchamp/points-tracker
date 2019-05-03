@@ -14,7 +14,7 @@ const store = new Vuex.Store({
       displayName: '',
       email: '',
       photoURL: '',
-      role: 'student',
+      role: 'guest',
       team: '',
     },
     error: null,
@@ -31,7 +31,7 @@ const store = new Vuex.Store({
         displayName: '',
         email: '',
         photoURL: '',
-        role: 'student',
+        role: 'guest',
         team: '',
       }
     },
