@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Login from '@/views/Login.vue'
 import PointsPage from '@/views/PointsPage.vue'
 import Router from 'vue-router'
-import Weights from '@/views/Weights.vue'
+import Weights from '@/views/WeightsPage.vue'
 import {auth} from '@/firebase'
 
 Vue.use(Router)

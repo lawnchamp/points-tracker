@@ -20,25 +20,26 @@
           @click="remove(competitionName)"
         >x</button>
       </div>
-      <NewWeight @new-weight="addNewWeight"></NewWeight>
+      <AddNewWeight @new-weight="addNewWeight"></AddNewWeight>
     </div>
   </div>
 </template>
 
 <script>
 
-import NewWeight from '@/components/NewWeight.vue'
+import AddNewWeight from '@/components/AddNewWeight.vue'
 
 export default {
   name: 'Weights',
-  components: {NewWeight},
+  components: {AddNewWeight},
   computed: {
     weights() {
       return this.$store.state.weights
     },
   },
   created() {
-    this.$store.dispatch('getWeights')
+    // don't call this everytime you navigate to the weights page!
+    // this.$store.dispatch('getWeights')
   },
   methods: {
     remove(name) {

@@ -28,7 +28,7 @@
 <script>
 
 export default {
-  name: 'Weights',
+  name: 'AddNewWeight',
   components: {
   },
   data() {
