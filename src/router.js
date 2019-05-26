@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Login from '@/views/Login.vue'
 import PointsPage from '@/views/PointsPage.vue'
 import Router from 'vue-router'
+import UsersPage from '@/views/UsersPage.vue'
 import Weights from '@/views/WeightsPage.vue'
 import {auth} from '@/firebase'
 
@@ -22,6 +23,12 @@ const router = new Router({
       path: '/points',
       name: 'Points',
       component: PointsPage,
+    },
+    {
+      path: '/users',
+      name: 'Users',
+      component: UsersPage,
+      meta: {requiresAuth: true},
     },
     {
       path: '/weights',

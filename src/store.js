@@ -20,6 +20,7 @@ const store = new Vuex.Store({
     error: null,
     weights: {},
     competitions: [],
+    users: [],
     loading: false,
   },
   mutations: {
@@ -34,6 +35,23 @@ const store = new Vuex.Store({
         role: 'guest',
         team: '',
       }
+    },
+    ADD_USERS: (state, users) => {
+      state.users = users
+    },
+    ADD_USER: (state, newUserId) => {
+      state.users.push({id: newUserId, role: null, team: null})
+    },
+    SET_USER_RESONSIBILITY: (state, {userId, role, teamName}) => {
+      const index = state.users.findIndex(user => user.id === userId)
+      Vue.set(state.users, index, {
+        id: userId,
+        team: teamName,
+        role: role,
+      })
+    },
+    REMOVE_USER: (state, id) => {
+      Vue.delete(state.users, state.users.findIndex(user => user.id === id))
     },
     ADD_COMPETITIONS: (state, competitions) => {
       state.competitions.push(...competitions)
@@ -88,6 +106,36 @@ const store = new Vuex.Store({
             commit('SET_ERROR', `user with ${email} does not exist`)
             throw new Error(`user with the following email does not exist: ${email}`)
           }
+        })
+    },
+    getUsers({commit, state}) {
+      if (state.users.length > 0) return
+      return firestore.collection('users').get()
+        .then((querySnapshot) => {
+          const users = []
+          querySnapshot.forEach((doc) => {
+            users.push({id: doc.id, ...doc.data()})
+          })
+          commit('ADD_USERS', users)
+        })
+    },
+    setUserResponsibility({commit}, {userId, role, teamName}) {
+      return firestore.collection('users').doc(userId).update({
+        'role': role,
+        'team': teamName,
+      }).then(() => {
+        commit('SET_USER_RESONSIBILITY', {userId, role, teamName})
+      })
+    },
+    removeUser({ commit }, userId) {
+      return firestore.collection('users').doc(userId).delete()
+        .then(() => commit('REMOVE_USER', userId))
+        .catch(error => commit('SET_ERROR', error))
+    },
+    addUser({ commit }, newUserId) {
+      return firestore.collection('users').doc(newUserId).set({ role: null, team: null })
+        .then((docRef) => {
+          commit('ADD_USER', newUserId)
         })
     },
     autoSignIn({commit, dispatch}, {email, photoURL, displayName}) {

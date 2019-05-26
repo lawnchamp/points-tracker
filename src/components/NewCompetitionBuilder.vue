@@ -128,7 +128,6 @@ export default {
         this.resetNewCompetitionData()
       }).catch((error) => {
         this.saving = false
-        console.error('Error adding document: ', error)
         this.resetNewCompetitionData()
       })
     },
