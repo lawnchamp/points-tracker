@@ -38,8 +38,8 @@ export default {
     },
   },
   created() {
-    // don't call this everytime you navigate to the weights page!
-    // this.$store.dispatch('getWeights')
+    // probably don't need to get new weights everytime i come to the page
+    this.$store.dispatch('getWeights')
   },
   methods: {
     remove(name) {

@@ -37,7 +37,7 @@ const store = new Vuex.Store({
       }
     },
     ADD_USERS: (state, users) => {
-      state.users = users
+      Vue.set(state, 'users', users)
     },
     ADD_USER: (state, newUserId) => {
       state.users.push({id: newUserId, role: null, team: null})
@@ -66,11 +66,12 @@ const store = new Vuex.Store({
       const index = state.competitions.findIndex(comp => comp.id === id)
       Vue.set(state.competitions[index], 'approvalState', newApprovalState)
     },
+    // set weights shouldn't be called multiple times
     SET_WEIGHTS: (state, weights) => {
-      state.weights = Object.keys(weights).reduce((acc, weight) => {
+      Vue.set(state, 'weights', Object.keys(weights).reduce((acc, weight) => {
         acc[weight] = weights[weight].value
         return acc
-      }, {})
+      }, {}))
     },
     REMOVE_WEIGHT: (state, id) => {
       Vue.delete(state.weights, id)
@@ -108,8 +109,7 @@ const store = new Vuex.Store({
           }
         })
     },
-    getUsers({commit, state}) {
-      if (state.users.length > 0) return
+    getUsers({commit}) {
       return firestore.collection('users').get()
         .then((querySnapshot) => {
           const users = []
