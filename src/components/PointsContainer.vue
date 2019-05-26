@@ -22,6 +22,7 @@
         class="font-semibold flex justify-between items-center py-2"
       >Empty</div>
     </div>
+    <!-- <select
       name="sort by"
       class="h-6 block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
       @change="selectedTeamSort = $event.target.value"
@@ -29,7 +30,7 @@
       <option v-for="team in teamNames" :value="team" :key="team" class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
         {{ team }}
       </option>
-    </select>
+    </select> -->
     <CompetitionRow
       v-for="competition in orderedViewableCompetitions"
       v-bind="competition"
@@ -42,7 +43,6 @@
 import HideAndShowContainer from '@/components/HideAndShowContainer.vue'
 import CompetitionRow from '@/components/CompetitionRow.vue'
 import {TEAM_NAMES} from '@/store.js'
-import {sortBy as _sortBy} from 'lodash'
 export default {
   components: {HideAndShowContainer, CompetitionRow},
   props: {
@@ -78,10 +78,11 @@ export default {
       return this.$store.getters.currentUserTeam
     },
     orderedViewableCompetitions() {
-      return _sortBy(this.userViewableCompetitions, [competition => (competition.winner !== this.teamSortBy)])
+      const deepCopy = [...this.userViewableCompetitions]
+      return deepCopy.sort(competition => competition.winner == this.teamSortBy ? -1 : 1)
     },
     teamSortBy() {
-      return this.selectedTeamSort || this.$store.getters.currentUserTeam
+      return this.selectedTeamSort || this.currentUserTeam
     },
     canSeeContainer() {
       switch (this.state) {
