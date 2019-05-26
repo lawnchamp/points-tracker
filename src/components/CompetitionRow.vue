@@ -7,7 +7,7 @@
     <div class="py-2">
       <div class="flex justify-between" @click="showDetails = !showDetails">
         <div class="flex">
-          <div :class="teamColor()" class="team-icon flex-no-shrink"></div>
+          <div :class="teamColoring" class="team-icon flex-no-shrink"></div>
           <div class="px-2">
             <div class="capitalize font-semibold text-xl">{{ name }}</div>
             <div class="text-xs inline">
@@ -95,13 +95,13 @@ export default {
         return `vs ${this.loser}`
       }
     },
+    teamColoring() {
+      return `bg-${this.winner.toLowerCase()}`
+    },
   },
   methods: {
     approvalStateChange(newApprovalState) {
       this.$store.dispatch('updateApprovalState', {id: this.id, newApprovalState: newApprovalState})
-    },
-    teamColor() {
-      return `bg-${this.winner.toLowerCase()}`
     },
     removeCompetition() {
       this.$store.dispatch('removeCompetition', this.id)
