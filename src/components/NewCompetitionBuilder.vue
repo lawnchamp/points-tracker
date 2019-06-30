@@ -38,7 +38,7 @@
         <multiselect
           v-model="newCompetition.loser"
           :placeholder="secondTeamPlaceholder"
-          :options="[...teamNames, 'n/a']"
+          :options="teamNames"
           :showLabels="false"
           class="py-1 px-1"
         />
