@@ -6,7 +6,12 @@ import unsubscribe from './main'
 
 Vue.use(Vuex)
 
-export const TEAM_NAMES = ['black', 'blue', 'brown', 'green', 'grey', 'lime', 'orange', 'pink', 'purple', 'red', 'turquoise', 'yellow']
+export const TEAM_NAMES = [
+  'black', 'blue', 'brown',
+  'green', 'grey', 'lime',
+  'orange', 'pink', 'purple',
+  'red', 'turquoise', 'yellow',
+]
 
 const store = new Vuex.Store({
   state: {
