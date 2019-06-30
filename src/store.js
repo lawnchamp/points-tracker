@@ -6,7 +6,12 @@ import unsubscribe from './main'
 
 Vue.use(Vuex)
 
-export const TEAM_NAMES = ['black', 'blue', 'brown', 'green', 'grey', 'lime', 'orange', 'pink', 'purple', 'red', 'turquoise', 'yellow']
+export const TEAM_NAMES = [
+  'black', 'blue', 'brown',
+  'green', 'grey', 'lime',
+  'orange', 'pink', 'purple',
+  'red', 'turquoise', 'yellow',
+]
 
 const store = new Vuex.Store({
   state: {
@@ -127,13 +132,13 @@ const store = new Vuex.Store({
         commit('SET_USER_RESONSIBILITY', {userId, role, teamName})
       })
     },
-    removeUser({ commit }, userId) {
+    removeUser({commit}, userId) {
       return firestore.collection('users').doc(userId).delete()
         .then(() => commit('REMOVE_USER', userId))
         .catch(error => commit('SET_ERROR', error))
     },
-    addUser({ commit }, newUserId) {
-      return firestore.collection('users').doc(newUserId).set({ role: null, team: null })
+    addUser({commit}, newUserId) {
+      return firestore.collection('users').doc(newUserId).set({role: null, team: null})
         .then((docRef) => {
           commit('ADD_USER', newUserId)
         })
