@@ -23,22 +23,22 @@
 export default {
   name: 'CompetitionDetails',
   props: {
-    isAdmin: {
-      type: Boolean,
-      required: true,
-    },
     approvalState: {
       type: String,
       required: true,
     },
-    submittedBy: {
-      type: Object,
+    isAdmin: {
+      type: Boolean,
       required: true,
     },
     notes: {
       type: String,
       required: false,
       default: '',
+    },
+    submittedBy: {
+      type: Object,
+      required: true,
     },
   },
 }
