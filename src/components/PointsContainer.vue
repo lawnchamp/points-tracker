@@ -2,18 +2,6 @@
   <HideAndShowContainer v-if="canSeeContainer" :initialShow="guestViewingPublishedContainer">
     <template slot="title">
       <div class="flex justify-between items-center">
-        <div>
-          {{ state }}
-        </div>
-        <div v-if="state === 'approved'" class="-my-1">
-          <button
-            v-if="isAdmin"
-            class="text-xs font-semibold rounded-full px-4 py-1
-                  leading-normal bg-white border border-green text-green
-                  hover:bg-green hover:text-white"
-            @click="publishAll"
-          >Publish all</button>
-        </div>
       </div>
     </template>
     <div class="flex justify-between items-center">
@@ -36,15 +24,17 @@
       v-bind="competition"
       :key="competition.id"
     />
+    <PublishAllButton v-if="showPublishAll"/>
   </HideAndShowContainer>
 </template>
 
 <script>
 import HideAndShowContainer from '@/components/HideAndShowContainer.vue'
 import CompetitionRow from '@/components/CompetitionRow.vue'
+import PublishAllButton from '@/components/PublishAllButton.vue'
 import {TEAM_NAMES} from '@/store.js'
 export default {
-  components: {HideAndShowContainer, CompetitionRow},
+  components: {HideAndShowContainer, CompetitionRow, PublishAllButton},
   props: {
     state: {
       type: String,
@@ -97,6 +87,12 @@ export default {
     guestViewingPublishedContainer() {
       return this.isAuthenticated && this.state === 'published'
     },
+    showPublishAll() {
+      return !this.emptyContainer && this.state === 'approved' && this.isAdmin
+    },
+    emptyContainer() {
+      return this.userViewableCompetitions.length == 0
+    }
   },
   methods: {
     publishAll() {
