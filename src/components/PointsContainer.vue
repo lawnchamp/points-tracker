@@ -2,23 +2,19 @@
   <HideAndShowContainer v-if="canSeeContainer" :initialShow="guestViewingPublishedContainer">
     <template slot="title">
       <div class="flex justify-between items-center">
+        {{ state }}
+        <select
+          name="sort by"
+          @change="selectedTeamSort = $event.target.value"
+          v-on:click.stop
+        >
+          <option v-for="team in teamNames" :value="team" :key="team" class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+            {{ team }}
+          </option>
+        </select>
       </div>
     </template>
-    <div class="flex justify-between items-center">
-      <div
-        v-if="userViewableCompetitions.length == 0"
-        class="font-semibold flex justify-between items-center py-2"
-      >Empty</div>
-    </div>
-    <!-- <select
-      name="sort by"
-      class="h-6 block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-      @change="selectedTeamSort = $event.target.value"
-    >
-      <option v-for="team in teamNames" :value="team" :key="team" class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-        {{ team }}
-      </option>
-    </select> -->
+    <div v-if="emptyContainer" class="font-semibold py-2">Empty</div>
     <CompetitionRow
       v-for="competition in orderedViewableCompetitions"
       v-bind="competition"
