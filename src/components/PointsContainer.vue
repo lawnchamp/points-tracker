@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import HideAndShowContainer from '@/components/HideAndShowContainer.vue'
 import CompetitionRow from '@/components/CompetitionRow.vue'
+import HideAndShowContainer from '@/components/HideAndShowContainer.vue'
 import PublishAllButton from '@/components/PublishAllButton.vue'
 import {TEAM_NAMES} from '@/store.js'
 export default {
