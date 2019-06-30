@@ -8,13 +8,14 @@
         <option>published</option>
       </select>
     </div>
-    <div>
-      <div v-if="isAdmin && submittedBy" class="py-1">
-        Owner: <div class="inline font-thin">{{ submittedBy.displayName || submittedBy.email }}</div>
-      </div>
-      <div v-if="notes" class="py-1">
-        Notes: <div class="inline font-thin">{{ notes }}</div>
-      </div>
+    <div v-if="loser != ''" class="py-1">
+      {{tied ? 'Tied:' : 'Loser:'}} <div class="inline font-thin">{{ loser }}</div>
+    </div>
+    <div v-if="isAdmin && submittedBy" class="py-1">
+      Owner: <div class="inline font-thin">{{ submittedBy.displayName || submittedBy.email }}</div>
+    </div>
+    <div v-if="notes" class="py-1">
+      Notes: <div class="inline font-thin">{{ notes }}</div>
     </div>
   </div>
 </template>
@@ -31,6 +32,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    loser: {
+      type: String,
+      required: true,
+    },
     notes: {
       type: String,
       required: false,
@@ -39,6 +44,10 @@ export default {
     submittedBy: {
       type: Object,
       required: true,
+    },
+    tied: {
+      type: Boolean,
+      required: false,
     },
   },
 }

@@ -8,12 +8,7 @@
       <div class="flex justify-between" @click="showDetails = !showDetails">
         <div class="flex">
           <div :class="teamColoring" class="team-icon flex-no-shrink"></div>
-          <div class="px-2">
-            <div class="capitalize font-semibold text-xl">{{ name }}</div>
-            <div class="text-xs inline">
-              {{ loserText }}
-            </div>
-          </div>
+          <div class="capitalize font-semibold text-xl px-2 pt-2">{{ name }}</div>
         </div>
         <div class="flex self-center">
           <div :class="'font-semibold text-2xl px-2 ' + customValueIndicatorClass">
@@ -23,7 +18,7 @@
       </div>
       <CompetitionDetails
         v-if="showDetails && canSeeDetails"
-        v-bind="{isAdmin, approvalState, notes, submittedBy}"
+        v-bind="{isAdmin, approvalState, notes, submittedBy, loser, tied}"
         @state-change="approvalStateChange"
       ></CompetitionDetails>
     </div>
@@ -85,15 +80,6 @@ export default {
     },
     canSeeDetails() {
       return this.isAdmin || this.$store.getters.isLeader
-    },
-    loserText() {
-      if (this.tied) {
-        return `tied ${this.loser}`
-      } else if (this.loser === 'n/a' || this.loser === '') {
-        return ''
-      } else {
-        return `vs ${this.loser}`
-      }
     },
     teamColoring() {
       return `bg-${this.winner.toLowerCase()}`
