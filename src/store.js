@@ -133,7 +133,8 @@ const store = new Vuex.Store({
         .catch(error => commit('SET_ERROR', error))
     },
     addUser({ commit }, newUserId) {
-      return firestore.collection('users').doc(newUserId).set({ role: null, team: null })
+      // initially set role to none when creating new user
+      return firestore.collection('users').doc(newUserId).set({ role: 'none', team: null })
         .then((docRef) => {
           commit('ADD_USER', newUserId)
         })
