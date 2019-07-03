@@ -1,5 +1,5 @@
 <template>
-  <div v-if="userCanSeeCompetition" class="relative border-b">
+  <div v-if="userCanSeeCompetition" class="relative">
     <button v-if="isAdmin"
       class="btn-close text-grey-light"
       @click="removeCompetition"
