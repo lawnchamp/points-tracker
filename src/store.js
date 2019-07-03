@@ -127,14 +127,14 @@ const store = new Vuex.Store({
         commit('SET_USER_RESONSIBILITY', {userId, role, teamName})
       })
     },
-    removeUser({ commit }, userId) {
+    removeUser({commit}, userId) {
       return firestore.collection('users').doc(userId).delete()
         .then(() => commit('REMOVE_USER', userId))
         .catch(error => commit('SET_ERROR', error))
     },
-    addUser({ commit }, newUserId) {
+    addUser({commit}, newUserId) {
       // initially set role to none when creating new user
-      return firestore.collection('users').doc(newUserId).set({ role: 'none', team: null })
+      return firestore.collection('users').doc(newUserId).set({role: 'none', team: null})
         .then((docRef) => {
           commit('ADD_USER', newUserId)
         })
@@ -147,7 +147,7 @@ const store = new Vuex.Store({
       auth.signOut()
       unsubscribe()
       commit('SIGN_OUT')
-      router.push('/points')
+      router.push('/')
     },
     getAllCompetitions({commit}) {
       return firestore.collection('competitions').get()

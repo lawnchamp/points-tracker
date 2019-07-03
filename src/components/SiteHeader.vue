@@ -13,7 +13,7 @@
         </div>
       </div>
       <nav v-if="isAdmin" class="flex py-2">
-        <router-link class="text-grey-darker no-underline mr-2 px-2 py-2 rounded hover:bg-black-20 hover:text-white" to="/points">Points</router-link>
+        <router-link class="text-grey-darker no-underline mr-2 px-2 py-2 rounded hover:bg-black-20 hover:text-white" to="/">Points</router-link>
         <router-link class="text-grey-darker no-underline mr-2 px-2 py-2 rounded hover:bg-black-20 hover:text-white" to="/weights">Weights</router-link>
         <router-link class="text-grey-darker no-underline mr-2 px-2 py-2 rounded hover:bg-black-20 hover:text-white" to="/users">Users</router-link>
       </nav>

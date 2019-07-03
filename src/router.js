@@ -11,16 +11,12 @@ Vue.use(Router)
 const router = new Router({
   routes: [
     {
-      path: '/',
-      redirect: '/points',
-    },
-    {
       path: '/login',
       name: 'Login',
       component: Login,
     },
     {
-      path: '/points',
+      path: '/',
       name: 'Points',
       component: PointsPage,
     },
