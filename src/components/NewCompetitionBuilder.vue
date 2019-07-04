@@ -118,9 +118,13 @@ export default {
   methods: {
     addCompetition() {
       if (this.newCompetition.name === '') return
+      if (this.newCompetition.winner === '' && this.isAdmin) return
 
       this.saving = true
-      if (this.newCompetition.winner === '') this.newCompetition.winner = this.team
+
+      if (this.newCompetition.winner === '' && this.isLeader) {
+        this.newCompetition.winner = this.team
+      }
 
       this.$store.dispatch('addCompetition', this.newCompetition).then(() => {
         this.saving = false
@@ -137,7 +141,7 @@ export default {
     resetNewCompetitionData() {
       this.newCompetition = {
         name: '',
-        winner: this.team,
+        winner: '',
         loser: '',
         points: '',
         defaultPoints: '',
