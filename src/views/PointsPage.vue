@@ -4,7 +4,7 @@
       <div class="bg-white rounded-lg shadow p-2">
         <div v-if="isAdmin" class="container mx-auto">
           <div class="flex justify-between items-center">
-            <div class="flex items-center">
+            <div class="flex items-center pb-1">
               <div v-for="state in pointStates" :key="state">
                 <div :class="graphStateStyling(state)" @click="setGraphApprovalState(state)">
                   {{ state }}
