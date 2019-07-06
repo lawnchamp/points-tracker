@@ -1,5 +1,5 @@
 <template>
-  <div class="py-2 border-b">
+  <div class="py-2 border-b mr-3">
     <div class="flex justify-between relative">
       <input
         v-model="name"

@@ -1,27 +1,27 @@
 <template>
   <div class="container mx-auto px-4 -mt-32">
-    <div class="bg-white rounded-lg shadow max-w-md px-4 py-2">
-      <div
+    <ul class="bg-white rounded-lg shadow max-w-md px-4 py-2">
+      <li
         v-for="(competitionValue, competitionName) in weights"
         :key="competitionName"
-        class="flex justify-between py-4 border-b text-lg relative"
+        class="flex justify-between py-2 border-b text-lg relative"
       >
-        <div>
+        <div class="py-2">
           {{ competitionName }}
         </div>
         <input
           :value="competitionValue"
           type="number"
-          class="px-3 w-20 text-right"
+          class="text-right bg-grey-lighter appearance-none rounded w-20 py-1 mx-3 text-grey-darker leading-tight"
           @change="weightChange(competitionName, parseInt($event.target.value))"
         />
         <button
           class="btn-close text-grey-light text-base"
           @click="remove(competitionName)"
         >x</button>
-      </div>
-      <AddNewWeight @new-weight="addNewWeight"></AddNewWeight>
-    </div>
+      </li>
+      <AddNewWeight/>
+    </ul>
   </div>
 </template>
 
@@ -44,9 +44,6 @@ export default {
   methods: {
     remove(name) {
       this.$store.dispatch('removeWeight', name)
-    },
-    addNewWeight(newWeight) {
-      this.$store.dispatch('addWeight', newWeight)
     },
     weightChange(weightName, updatedWeight) {
       this.$store.dispatch('changeWeight', {weightName, updatedWeight})
