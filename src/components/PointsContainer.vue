@@ -14,8 +14,8 @@
             <div
               v-for="team in possibleTeamsToSortBy"
               :key="team"
-              @click="selectedTeamSort = team"
               class="no-underline block px-4 py-3 border-b text-grey-darkest bg-white hover:text-white hover:bg-blue"
+              @click="selectedTeamSort = team"
             >{{ team }}</div>
           </div>
         </SortDropdown>
