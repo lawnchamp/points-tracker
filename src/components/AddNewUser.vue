@@ -5,13 +5,15 @@
         v-model="email"
         type="text"
         placeholder="New email"
-        class="rounded border h-8 w-48 px-1 py-1"/>
+        class="rounded border h-8 w-48 px-1 py-1"
+        @keyup.enter="addNewUser"/>
       <button
-        :disabled="email.length == 0"
+        :disabled="invalidEmail"
+        :class="{'opacity-50 cursor-not-allowed':invalidEmail}"
         class="text-xs font-semibold rounded-full h-8 px-4 py-1
                bg-white border border-green text-green
                hover:bg-green hover:text-white"
-        @click="emitNewUser"
+        @click="addNewUser"
       >submit</button>
     </div>
   </div>
@@ -28,9 +30,19 @@ export default {
       email: '',
     }
   },
+  computed: {
+    invalidEmail() {
+      return !this.email.match(/^.+@.+\..+$/)
+    },
+    disableButtonClasses() {
+      return this.validEmail ? '' : 'opacity-50 cursor-not-allowed'
+    },
+  },
   methods: {
-    emitNewUser() {
-      this.$emit('new-user', this.email)
+    addNewUser() {
+      if (this.invalidEmail) return
+
+      this.$store.dispatch('addUser', this.email)
       this.email = ''
     },
   },

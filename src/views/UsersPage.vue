@@ -24,7 +24,7 @@
           @click="remove(id)"
         >x</button>
       </div>
-      <AddNewUser @new-user="addUser"></AddNewUser>
+      <AddNewUser/>
     </div>
   </div>
 </template>
@@ -69,9 +69,6 @@ export default {
   methods: {
     remove(id) {
       this.$store.dispatch('removeUser', id)
-    },
-    addUser(newUserId) {
-      this.$store.dispatch('addUser', newUserId)
     },
     teamChange(userId, teamName) {
       let role = 'leader'
