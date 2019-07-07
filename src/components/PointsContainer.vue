@@ -3,7 +3,7 @@
     <template slot="title">
       <div class="flex justify-between items-center">
         {{ state }}
-        <SortDropdown>
+        <SortDropdown v-if="possibleTeamsToSortBy.length > 1">
           <span slot="link" class="appearance-none flex items-center inline-block text-grey">
             <span class="mr-1">{{ teamSortBy }}</span>
             <svg class="h-4 w-4 text-grey" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
