@@ -3,7 +3,7 @@
     <template slot="title">
       <div v-if="isAdmin" class="inline">Add Competition</div>
       <div v-else-if="isLeader" class="inline font-semibold">
-        Add points for <span :class="`text-${team} capitalize`">{{ team }}</span> team
+        Add points for <span :class="`text-${leaderTeamName} capitalize`">{{ leaderTeamName }}</span> leaderTeamName
       </div>
     </template>
     <div>
@@ -90,7 +90,7 @@ export default {
     }
   },
   computed: {
-    team() {
+    leaderTeamName() {
       return this.$store.getters.currentUserTeam
     },
     competitionNames() {
@@ -124,6 +124,7 @@ export default {
 
       if (this.newCompetition.winner === '' && this.isLeader) {
         this.newCompetition.winner = this.team
+        this.newCompetition.winner = this.leaderTeamName
       }
 
       this.$store.dispatch('addCompetition', this.newCompetition).then(() => {
