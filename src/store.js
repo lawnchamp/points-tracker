@@ -160,16 +160,12 @@ const store = new Vuex.Store({
           const competitions = []
           querySnapshot.forEach((doc) => {
             const competition = {id: doc.id, ...doc.data()}
-            if (!competition.approvalState) competition.approvalState = 'submitted'
             competitions.push(competition)
           })
           commit('ADD_COMPETITIONS', competitions)
         })
     },
-    addCompetition({commit, state}, newCompetition) {
-      newCompetition.approvalState = 'submitted'
-      newCompetition.submittedBy = {email: state.user.email, displayName: state.user.displayName}
-
+    addCompetition({commit}, newCompetition) {
       if (newCompetition.tied) {
         const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}
         firestore.collection('competitions').add(otherTeam)
@@ -243,6 +239,8 @@ const store = new Vuex.Store({
   getters: {
     authenticatedUser: state => state.user.email,
     competitionNames: state => Object.keys(state.weights),
+    currentUserDislpayName: state => state.user.displayName,
+    currentUserEmail: state => state.user.email,
     currentUserTeam: state => state.user.team,
     isAdmin: state => state.user.role === 'admin',
     isLeader: state => state.user.role === 'leader',

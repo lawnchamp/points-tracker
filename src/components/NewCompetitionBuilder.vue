@@ -76,12 +76,17 @@ export default {
   data() {
     return {
       newCompetition: {
+        approvalState: 'submittted',
         customer: '',
         defaultPoints: 0,
         loser: '',
         name: '',
         notes: '',
         points: null,
+        submittedBy: {
+          displayName: this.$store.getters.currentUserDislpayName,
+          email: this.$store.getters.currentUserEmail,
+        },
         tied: false,
         winner: '',
       },
