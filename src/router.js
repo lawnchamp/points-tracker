@@ -21,6 +21,10 @@ const router = new Router({
       component: PointsPage,
     },
     {
+      path: '/points',
+      redirect: '/'
+    },
+    {
       path: '/users',
       name: 'Users',
       component: UsersPage,
