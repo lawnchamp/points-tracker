@@ -107,7 +107,7 @@ const store = new Vuex.Store({
   actions: {
     getAdditionUserProps({commit}, email) {
       return firestore.collection('users').doc(email).get()
-        .then(function(user) {
+        .then((user) => {
           if (user.exists) {
             const {role, team} = user.data()
             commit('SET_USER_PROPERTIES', {role, team})
@@ -132,22 +132,18 @@ const store = new Vuex.Store({
       return firestore.collection('users').doc(userId).update({
         'role': role,
         'team': teamName,
-      }).then(() => {
-        commit('SET_USER_RESONSIBILITY', {userId, role, teamName})
       })
+      .then(commit('SET_USER_RESONSIBILITY', {userId, role, teamName}))
       .catch(error => commit('SET_ERROR', error, "Setting user team and role"))
     },
     removeUser({commit}, userId) {
       return firestore.collection('users').doc(userId).delete()
-        .then(() => commit('REMOVE_USER', userId))
+        .then(commit('REMOVE_USER', userId))
         .catch(error => commit('SET_ERROR', error, "Removing user"))
     },
     addUser({commit}, newUserId) {
-      // initially set role to none when creating new user
       return firestore.collection('users').doc(newUserId).set({role: 'none', team: null})
-        .then((docRef) => {
-          commit('ADD_USER', newUserId)
-        })
+        .then(commit('ADD_USER', newUserId))
         .catch(error => commit('SET_ERROR', error, "Adding new user"))
     },
     autoSignIn({commit, dispatch}, {email, photoURL, displayName}) {
@@ -176,24 +172,16 @@ const store = new Vuex.Store({
       if (newCompetition.tied) {
         const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}
         firestore.collection('competitions').add(otherTeam)
-          .then((docRef) => {
-            commit('ADD_COMPETITION', {...otherTeam, id: docRef.id})
-          })
+          .then((docRef) => commit('ADD_COMPETITION', {...otherTeam, id: docRef.id}))
           .catch(error => commit('SET_ERROR', error, "Submitting losers points after a tie"))
       }
       return firestore.collection('competitions').add(newCompetition)
-        .then((docRef) => {
-          commit('ADD_COMPETITION', {...newCompetition, id: docRef.id})
-        })
+        .then((docRef) =>  commit('ADD_COMPETITION', {...newCompetition, id: docRef.id}))
         .catch((error) => commit('SET_ERROR', error, "Submitting new competition results"))
     },
     removeCompetition({commit}, id) {
       return firestore.collection('competitions').doc(id).delete()
-        .then(() => {
-          commit('REMOVE_COMPETITION', id)
-        }).catch((error) => {
-          commit('SET_ERROR', error)
-        })
+        .then(commit('REMOVE_COMPETITION', id))
         .catch((error) => commit('SET_ERROR', error, 'Removing competition'))
     },
     getWeights({commit}) {
@@ -218,15 +206,13 @@ const store = new Vuex.Store({
     changeWeight({commit}, {weightName, updatedWeight}) {
       return firestore.collection('weights').doc(weightName).update({
         'value': updatedWeight,
-      }).then(() => {
-        commit('UPDATE_WEIGHT', {weightName, updatedWeight})
       })
+      .then(commit('UPDATE_WEIGHT', {weightName, updatedWeight}))
       .catch(error => commit('SET_ERROR', error, "Trying to change weight"))
     },
     removeWeight({commit}, weightName) {
       return firestore.collection('weights').doc(weightName).delete()
-        .then(() => commit('REMOVE_WEIGHT', weightName))
-        .catch(error => commit('SET_ERROR', error))
+        .then(commit('REMOVE_WEIGHT', weightName))
         .catch(error => commit('SET_ERROR', error, "Removing weight"))
     },
     publishAll({commit, state}) {
@@ -237,16 +223,14 @@ const store = new Vuex.Store({
         const compRef = db.collection('competitions').doc(competition.id)
         batch.update(compRef, {approvalState: 'published'})
       })
-      batch.commit().then(() => {
-        commit('PUBLISH_ALL', approvedCompetitions.map(comp => comp.id))
-      })
+      batch.commit()
+      .then(commit('PUBLISH_ALL', approvedCompetitions.map(comp => comp.id)))
       .catch(error => commit('SET_ERROR', error, "Publishing all approved points"))
     },
     updateApprovalState({commit}, {id, newApprovalState}) {
       return firestore.collection('competitions').doc(id)
         .set({approvalState: newApprovalState}, {merge: true})
-        .then(() => commit('UPDATE_APPROVAL_STATE', {id, newApprovalState}))
-        .catch(error => commit('SET_ERROR', error))
+        .then(commit('UPDATE_APPROVAL_STATE', {id, newApprovalState}))
         .catch(error => commit('SET_ERROR', error, "Trying to update approval state"))
     },
   },
