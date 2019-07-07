@@ -76,13 +76,14 @@ export default {
   data() {
     return {
       newCompetition: {
-        name: '',
-        winner: '',
-        loser: '',
-        points: null,
+        customer: '',
         defaultPoints: 0,
-        tied: false,
+        loser: '',
+        name: '',
         notes: '',
+        points: null,
+        tied: false,
+        winner: '',
       },
       saving: false,
       show: true,
@@ -141,13 +142,13 @@ export default {
     },
     resetNewCompetitionData() {
       this.newCompetition = {
-        name: '',
-        winner: '',
-        loser: '',
-        points: '',
         defaultPoints: '',
-        tied: false,
+        loser: '',
+        name: '',
         notes: '',
+        points: '',
+        tied: false,
+        winner: '',
       }
     },
   },
