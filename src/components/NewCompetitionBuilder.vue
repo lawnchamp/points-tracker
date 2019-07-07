@@ -122,14 +122,16 @@ export default {
     this.$store.dispatch('getWeights')
   },
   methods: {
+    adminHasNotSelectedWinner() {
+      return this.isAdmin && this.newCompetition.winner === ''
+    },
     addCompetition() {
       if (this.newCompetition.name === '') return
-      if (this.newCompetition.winner === '' && this.isAdmin) return
+      if (this.adminHasNotSelectedWinner()) return
 
       this.saving = true
 
-      if (this.newCompetition.winner === '' && this.isLeader) {
-        this.newCompetition.winner = this.team
+      if (this.isLeader) {
         this.newCompetition.winner = this.leaderTeamName
       }
 
