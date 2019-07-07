@@ -22,7 +22,7 @@ const store = new Vuex.Store({
       role: 'guest',
       team: '',
     },
-    error: null,
+    error: [],
     weights: {},
     competitions: [],
     users: [],
@@ -90,8 +90,11 @@ const store = new Vuex.Store({
     SET_LOADING(state, payload) {
       state.loading = payload
     },
-    SET_ERROR(state, payload) {
-      state.error = payload
+    SET_ERROR(state, error, actionDescription) {
+      state.error.push({
+        error: error.toString(),
+        actionDescription,
+      })
     },
     PUBLISH_ALL(state, newlyPublishedIds) {
       state.competitions.forEach((competition) => {
@@ -109,10 +112,10 @@ const store = new Vuex.Store({
             const {role, team} = user.data()
             commit('SET_USER_PROPERTIES', {role, team})
           } else {
-            commit('SET_ERROR', `user with ${email} does not exist`)
-            throw new Error(`user with the following email does not exist: ${email}`)
+            commit('SET_ERROR', `user with ${email} does not exist`, 'firebase saying user does not exist?')
           }
         })
+        .catch(error => commit('SET_ERROR', error, "Requesting additional user properties"))
     },
     getUsers({commit}) {
       return firestore.collection('users').get()
@@ -123,6 +126,7 @@ const store = new Vuex.Store({
           })
           commit('ADD_USERS', users)
         })
+        .catch(error => commit('SET_ERROR', error, "Requesting all users"))
     },
     setUserResponsibility({commit}, {userId, role, teamName}) {
       return firestore.collection('users').doc(userId).update({
@@ -131,11 +135,12 @@ const store = new Vuex.Store({
       }).then(() => {
         commit('SET_USER_RESONSIBILITY', {userId, role, teamName})
       })
+      .catch(error => commit('SET_ERROR', error, "Setting user team and role"))
     },
     removeUser({commit}, userId) {
       return firestore.collection('users').doc(userId).delete()
         .then(() => commit('REMOVE_USER', userId))
-        .catch(error => commit('SET_ERROR', error))
+        .catch(error => commit('SET_ERROR', error, "Removing user"))
     },
     addUser({commit}, newUserId) {
       // initially set role to none when creating new user
@@ -143,6 +148,7 @@ const store = new Vuex.Store({
         .then((docRef) => {
           commit('ADD_USER', newUserId)
         })
+        .catch(error => commit('SET_ERROR', error, "Adding new user"))
     },
     autoSignIn({commit, dispatch}, {email, photoURL, displayName}) {
       commit('SET_USER_PROPERTIES', {email, photoURL, displayName})
@@ -164,6 +170,7 @@ const store = new Vuex.Store({
           })
           commit('ADD_COMPETITIONS', competitions)
         })
+        .catch(error => commit('SET_ERROR', error, "Requesting all competitions"))
     },
     addCompetition({commit}, newCompetition) {
       if (newCompetition.tied) {
@@ -172,11 +179,13 @@ const store = new Vuex.Store({
           .then((docRef) => {
             commit('ADD_COMPETITION', {...otherTeam, id: docRef.id})
           })
+          .catch(error => commit('SET_ERROR', error, "Submitting losers points after a tie"))
       }
       return firestore.collection('competitions').add(newCompetition)
         .then((docRef) => {
           commit('ADD_COMPETITION', {...newCompetition, id: docRef.id})
         })
+        .catch((error) => commit('SET_ERROR', error, "Submitting new competition results"))
     },
     removeCompetition({commit}, id) {
       return firestore.collection('competitions').doc(id).delete()
@@ -185,6 +194,7 @@ const store = new Vuex.Store({
         }).catch((error) => {
           commit('SET_ERROR', error)
         })
+        .catch((error) => commit('SET_ERROR', error, 'Removing competition'))
     },
     getWeights({commit}) {
       return firestore.collection('weights').get()
@@ -211,11 +221,13 @@ const store = new Vuex.Store({
       }).then(() => {
         commit('UPDATE_WEIGHT', {weightName, updatedWeight})
       })
+      .catch(error => commit('SET_ERROR', error, "Trying to change weight"))
     },
     removeWeight({commit}, weightName) {
       return firestore.collection('weights').doc(weightName).delete()
         .then(() => commit('REMOVE_WEIGHT', weightName))
         .catch(error => commit('SET_ERROR', error))
+        .catch(error => commit('SET_ERROR', error, "Removing weight"))
     },
     publishAll({commit, state}) {
       const db = firestore
@@ -228,12 +240,14 @@ const store = new Vuex.Store({
       batch.commit().then(() => {
         commit('PUBLISH_ALL', approvedCompetitions.map(comp => comp.id))
       })
+      .catch(error => commit('SET_ERROR', error, "Publishing all approved points"))
     },
     updateApprovalState({commit}, {id, newApprovalState}) {
       return firestore.collection('competitions').doc(id)
         .set({approvalState: newApprovalState}, {merge: true})
         .then(() => commit('UPDATE_APPROVAL_STATE', {id, newApprovalState}))
         .catch(error => commit('SET_ERROR', error))
+        .catch(error => commit('SET_ERROR', error, "Trying to update approval state"))
     },
   },
   getters: {
