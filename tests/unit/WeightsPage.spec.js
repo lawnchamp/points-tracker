@@ -1,5 +1,5 @@
-import AddNewWeight from "@/components/AddNewWeight"
-import { createLocalVue, mount} from "@vue/test-utils"
+import AddNewWeight from '@/components/AddNewWeight'
+import {createLocalVue, mount} from '@vue/test-utils'
 import Vuex from 'vuex'
 
 const localVue = createLocalVue()
@@ -15,7 +15,7 @@ describe('AddNewWeight.vue', () => {
       addWeight: jest.fn(),
     }
     store = new Vuex.Store({
-      actions
+      actions,
     })
     wrapper = mount(AddNewWeight, {store, localVue})
   })
@@ -31,14 +31,14 @@ describe('AddNewWeight.vue', () => {
     it('does not allow empty, null, or undefined string name', () => {
       wrapper.vm.value = 100
       const badNames = ['', null, undefined]
-      badNames.forEach(name => {
+      badNames.forEach((name) => {
         wrapper.vm.name = name
         expect(wrapper.vm.invalidWeight).toEqual(true)
       })
     })
 
     it('does not allow null, undefined, non number name', () => {
-      wrapper.vm.name = "soccer"
+      wrapper.vm.name = 'soccer'
       const badValues = [null, undefined, 'string', '']
       badValues.forEach((value) => {
         wrapper.vm.value = value
@@ -86,5 +86,4 @@ describe('AddNewWeight.vue', () => {
       expect(actions.addWeight).toHaveBeenCalled()
     })
   })
-
 })

@@ -3,7 +3,6 @@ import Login from '@/views/Login.vue'
 import PointsPage from '@/views/PointsPage.vue'
 import Router from 'vue-router'
 import UsersPage from '@/views/UsersPage.vue'
-import store from './store'
 import Weights from '@/views/WeightsPage.vue'
 import {auth} from '@/firebase'
 
@@ -23,7 +22,7 @@ const router = new Router({
     },
     {
       path: '/points',
-      redirect: '/'
+      redirect: '/',
     },
     {
       path: '/users',
