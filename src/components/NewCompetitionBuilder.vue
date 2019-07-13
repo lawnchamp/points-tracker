@@ -76,7 +76,7 @@ export default {
   data() {
     return {
       newCompetition: {
-        approvalState: 'submittted',
+        approvalState: 'submitted',
         customer: '',
         defaultPoints: 0,
         loser: '',
