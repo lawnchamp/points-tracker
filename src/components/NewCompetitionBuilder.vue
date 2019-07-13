@@ -123,10 +123,11 @@ export default {
   },
   methods: {
     adminHasNotSelectedWinner() {
-      return this.isAdmin && this.newCompetition.winner === ''
+      return this.isAdmin && !this.newCompetition.winner
     },
     addCompetition() {
-      if (this.newCompetition.name === '') return
+      if (!this.newCompetition.name) return
+      if (typeof this.newCompetition.points != 'number') return
       if (this.adminHasNotSelectedWinner()) return
 
       this.saving = true
