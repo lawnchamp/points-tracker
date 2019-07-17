@@ -75,21 +75,7 @@ export default {
   },
   data() {
     return {
-      newCompetition: {
-        approvalState: 'submitted',
-        customer: '',
-        defaultPoints: 0,
-        loser: '',
-        name: '',
-        notes: '',
-        points: null,
-        submittedBy: {
-          displayName: this.$store.getters.currentUserDislpayName,
-          email: this.$store.getters.currentUserEmail,
-        },
-        tied: false,
-        winner: '',
-      },
+      newCompetition: {},
       saving: false,
       show: true,
       teamNames: TEAM_NAMES,
@@ -119,9 +105,27 @@ export default {
     },
   },
   created() {
+    this.newCompetition = this.buildNewCompetition()
     this.$store.dispatch('getWeights')
   },
   methods: {
+    buildNewCompetition() {
+      return {
+        approvalState: 'submitted',
+        customer: 'covfel',
+        defaultPoints: 0,
+        loser: '',
+        name: '',
+        notes: '',
+        points: null,
+        submittedBy: {
+          displayName: this.$store.getters.currentUserDislpayName,
+          email: this.$store.getters.currentUserEmail,
+        },
+        tied: false,
+        winner: this.leaderTeamName || null,
+      }
+    },
     adminHasNotSelectedWinner() {
       return this.isAdmin && !this.newCompetition.winner
     },
@@ -138,26 +142,14 @@ export default {
 
       this.$store.dispatch('addCompetition', this.newCompetition).then(() => {
         this.saving = false
-        this.resetNewCompetitionData()
+        this.newCompetition = this.buildNewCompetition()
       }).catch((error) => {
         this.saving = false
-        this.resetNewCompetitionData()
       })
     },
     initializePoints() {
       this.newCompetition.defaultPoints = this.weights[this.newCompetition.name]
       this.newCompetition.points = this.weights[this.newCompetition.name]
-    },
-    resetNewCompetitionData() {
-      this.newCompetition = {
-        defaultPoints: '',
-        loser: '',
-        name: '',
-        notes: '',
-        points: '',
-        tied: false,
-        winner: '',
-      }
     },
   },
 }
