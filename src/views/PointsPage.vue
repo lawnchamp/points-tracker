@@ -95,9 +95,6 @@ export default {
     graphStateStyling(state) {
       return `px-2 text-sm ${this.selectedGraphState.includes(state) ? 'text-grey-dark border border-grey-dark rounded-full' : 'text-grey-light'}`
     },
-    removeCompetition(id) {
-      this.$store.dispatch('removeCompetition', id)
-    },
   },
 }
 </script>
