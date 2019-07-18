@@ -41,7 +41,9 @@ export default {
   },
   computed: {
     invalidWeight() {
-      return !this.name || typeof this.value != 'number'
+      return typeof this.name != 'string' ||
+        this.name.length == 0 ||
+        typeof this.value != 'number'
     },
   },
   methods: {
