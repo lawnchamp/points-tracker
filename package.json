@@ -38,6 +38,9 @@
     "tailwindcss": "^0.5.2",
     "vue-template-compiler": "^2.5.13"
   },
+  "resolutions": {
+    "**/lodash": "^4.17.13"
+  },
   "babel": {
     "presets": [
       "@vue/app"
