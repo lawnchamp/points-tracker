@@ -15,6 +15,7 @@ export const TEAM_NAMES = [
 
 const store = new Vuex.Store({
   state: {
+    errors: [],
     user: {
       displayName: '',
       email: '',
@@ -22,7 +23,6 @@ const store = new Vuex.Store({
       role: 'guest',
       team: '',
     },
-    error: [],
     weights: {},
     competitions: [],
     users: [],
@@ -91,7 +91,7 @@ const store = new Vuex.Store({
       state.loading = payload
     },
     SET_ERROR(state, error, actionDescription) {
-      state.error.push({
+      state.errors.push({
         error: error.toString(),
         actionDescription,
       })
@@ -105,7 +105,7 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    getAdditionUserProps({commit}, email) {
+    getAdditionalUserProps({commit}, email) {
       return firestore.collection('users').doc(email).get()
         .then((user) => {
           if (user.exists) {
@@ -148,7 +148,7 @@ const store = new Vuex.Store({
     },
     autoSignIn({commit, dispatch}, {email, photoURL, displayName}) {
       commit('SET_USER_PROPERTIES', {email, photoURL, displayName})
-      dispatch('getAdditionUserProps', email)
+      dispatch('getAdditionalUserProps', email)
     },
     userSignOut({commit}) {
       auth.signOut()
