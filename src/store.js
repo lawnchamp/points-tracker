@@ -15,7 +15,10 @@ export const TEAM_NAMES = [
 
 const store = new Vuex.Store({
   state: {
+    competitions: [],
+    currentCustomer: window.location.host.split('.')[0],
     errors: [],
+    loading: false,
     user: {
       displayName: '',
       email: '',
@@ -23,10 +26,8 @@ const store = new Vuex.Store({
       role: 'guest',
       team: '',
     },
-    weights: {},
-    competitions: [],
     users: [],
-    loading: false,
+    weights: {},
   },
   mutations: {
     SET_USER_PROPERTIES(state, user) {
