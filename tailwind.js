@@ -154,7 +154,9 @@ const colors = {
 }
 
 module.exports = {
-
+  presets: [
+    '@vue/app'
+  ],
   /*
   |-----------------------------------------------------------------------------
   | Colors                                  https://tailwindcss.com/docs/colors
