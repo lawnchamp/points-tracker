@@ -1,0 +1,31 @@
+version: '3.2'
+
+services:
+
+  dnsmasq:
+    image: andyshinn/dnsmasq:latest
+    cap_add:
+      - NET_ADMIN
+    command: --log-facility=- --log-queries --address=/dev/127.0.0.1
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  proxy:
+    image: traefik:alpine
+    networks:
+      - webgateway
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+      - "8080:8080/tcp"
+    volumes:
+      - ./certs:/certs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.toml:/traefik.toml
+  
+networks:
+  webgateway:
+    driver: bridge

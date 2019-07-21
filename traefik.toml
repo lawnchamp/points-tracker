@@ -1,0 +1,28 @@
+logLevel = "INFO"
+
+defaultEntryPoints = ["http","https"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+      certFile = "/certs/points.dev.pem"
+      keyFile = "/certs/points.dev-key.pem"
+
+[file]
+
+[backends]
+  [backends.backend1]
+    [backends.backend1.servers.server1]
+    url = "http://host.docker.internal:3000"
+    weight = 1
+
+[frontends]
+  [frontends.frontend1]
+  entryPoints = ["http", "https"]
+  backend = "backend1"

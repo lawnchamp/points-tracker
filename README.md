@@ -22,3 +22,14 @@ http://points-tracker.netlify.com/ is used to track points for mutiple teams acr
 * Can submit points for any team
 * Can approve points submitted by team leaders
 * Can publish points that let the entire camp see the competition
+
+# Development
+
+[traefik](https://github.com/containous/traefik)
+[mkcert](https://github.com/FiloSottile/mkcert)
+
+````
+make cert // only do this once
+docker-compose up -d
+yarn serve
+```
