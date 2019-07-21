@@ -4,6 +4,7 @@ export SHELL := /bin/bash
 
 certs: ## generate certificates
 	@sudo mkdir -p /etc/resolver/;
+	@mkdir certs;
 	@sudo sh -c 'echo "nameserver 127.0.0.1" > /etc/resolver/dev';
 	@mkcert -install;
 	@mkcert \
