@@ -86,7 +86,7 @@ export default {
       return this.$store.getters.currentUserTeam
     },
     competitionNames() {
-      return this.$store.getters.competitionNames
+      return this.weights.map(weight => weight.name)
     },
     firstTeamPlaceholder() {
       return this.newCompetition.tied ? 'Team 1' : 'Winner'
@@ -112,7 +112,6 @@ export default {
     buildNewCompetition() {
       return {
         approvalState: 'submitted',
-        customer: 'covfel',
         defaultPoints: 0,
         loser: '',
         name: '',
@@ -148,8 +147,9 @@ export default {
       })
     },
     initializePoints() {
-      this.newCompetition.defaultPoints = this.weights[this.newCompetition.name]
-      this.newCompetition.points = this.weights[this.newCompetition.name]
+      const pointValue = this.weights.find(weight => weight.name == this.newCompetition.name).value
+      this.newCompetition.defaultPoints = pointValue // i think this could be one step
+      this.newCompetition.points = pointValue
     },
   },
 }

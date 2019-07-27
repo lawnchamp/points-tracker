@@ -13,10 +13,16 @@ export const TEAM_NAMES = [
   'red', 'turquoise', 'yellow',
 ]
 
+const DEFAULT_CUSTOMER = 'covfel'
+function setCurrentCustomer() {
+  const subdomain = window.location.host.split('.')[0]
+  return subdomain === 'points' ? DEFAULT_CUSTOMER : subdomain
+}
+
 const store = new Vuex.Store({
   state: {
     competitions: [],
-    currentCustomer: window.location.host.split('.')[0],
+    currentCustomer: setCurrentCustomer(),
     errors: [],
     loading: false,
     user: {
@@ -27,7 +33,7 @@ const store = new Vuex.Store({
       team: '',
     },
     users: [],
-    weights: {},
+    weights: [],
   },
   mutations: {
     SET_USER_PROPERTIES(state, user) {
@@ -45,8 +51,8 @@ const store = new Vuex.Store({
     ADD_USERS: (state, users) => {
       Vue.set(state, 'users', users)
     },
-    ADD_USER: (state, newUserId) => {
-      state.users.push({id: newUserId, role: null, team: null})
+    ADD_USER: (state, user) => {
+      state.users.push(user)
     },
     SET_USER_RESONSIBILITY: (state, {userId, role, teamName}) => {
       const index = state.users.findIndex(user => user.id === userId)
@@ -74,19 +80,21 @@ const store = new Vuex.Store({
     },
     // set weights shouldn't be called multiple times
     SET_WEIGHTS: (state, weights) => {
-      Vue.set(state, 'weights', Object.keys(weights).reduce((acc, weight) => {
-        acc[weight] = weights[weight].value
-        return acc
-      }, {}))
+      state.weights = weights
     },
     REMOVE_WEIGHT: (state, id) => {
-      Vue.delete(state.weights, id)
+      Vue.delete(state.weights, state.weights.findIndex(weight => weight.id === id))
     },
     ADD_WEIGHT: (state, newWeight) => {
+      state.weights.push(newWeight)
       Vue.set(state.weights, newWeight.name, newWeight.value)
     },
-    UPDATE_WEIGHT: (state, {weightName, updatedWeight}) => {
-      Vue.set(state.weights, weightName, updatedWeight)
+    UPDATE_WEIGHT: (state, {weightId, updatedWeightValue}) => {
+      Vue.set(
+        state.weights.find(weight => weight.id === weightId),
+        'value',
+        updatedWeightValue
+      )
     },
     SET_LOADING(state, payload) {
       state.loading = payload
@@ -118,8 +126,8 @@ const store = new Vuex.Store({
         })
         .catch(error => commit('SET_ERROR', error, 'Requesting additional user properties'))
     },
-    getUsers({commit}) {
-      return firestore.collection('users').get()
+    getUsers({commit, state}) {
+      return firestore.collection('users').where('customer', '==', state.currentCustomer).get()
         .then((querySnapshot) => {
           const users = []
           querySnapshot.forEach((doc) => {
@@ -142,9 +150,16 @@ const store = new Vuex.Store({
         .then(commit('REMOVE_USER', userId))
         .catch(error => commit('SET_ERROR', error, 'Removing user'))
     },
-    addUser({commit}, newUserId) {
-      return firestore.collection('users').doc(newUserId).set({role: 'none', team: null})
-        .then(commit('ADD_USER', newUserId))
+    addUser({commit, state}, email) {
+      const newUser = {
+        id: email,
+        customer: state.currentCustomer,
+        role: 'none',
+        team: null,
+      }
+      return firestore.collection('users').doc(email)
+        .set(newUser)
+        .then(commit('ADD_USER', newUser))
         .catch(error => commit('SET_ERROR', error, 'Adding new user'))
     },
     autoSignIn({commit, dispatch}, {email, photoURL, displayName}) {
@@ -157,8 +172,8 @@ const store = new Vuex.Store({
       commit('SIGN_OUT')
       router.push('/')
     },
-    getAllCompetitions({commit}) {
-      return firestore.collection('competitions').get()
+    getAllCompetitions({commit, state}) {
+      return firestore.collection('competitions').where('customer', '==', state.currentCustomer).get()
         .then((querySnapshot) => {
           const competitions = []
           querySnapshot.forEach((doc) => {
@@ -169,7 +184,8 @@ const store = new Vuex.Store({
         })
         .catch(error => commit('SET_ERROR', error, 'Requesting all competitions'))
     },
-    addCompetition({commit}, newCompetition) {
+    addCompetition({commit, state}, newCompetition) {
+      newCompetition['customer'] = state.currentCustomer
       if (newCompetition.tied) {
         const otherTeam = {...newCompetition, winner: newCompetition.loser, loser: newCompetition.winner}
         firestore.collection('competitions').add(otherTeam)
@@ -185,28 +201,39 @@ const store = new Vuex.Store({
         .then(commit('REMOVE_COMPETITION', id))
         .catch(error => commit('SET_ERROR', error, 'Removing competition'))
     },
-    getWeights({commit}) {
-      return firestore.collection('weights').get()
+    getWeights({commit, state}) {
+      return firestore.collection('weights').where('customer', '==', state.currentCustomer).get()
         .then((querySnapshot) => {
-          const weights = {}
+          const weights = []
           querySnapshot.forEach((doc) => {
-            weights[doc.id] = doc.data()
+            const {name, value} = doc.data()
+            weights.push({
+              id: doc.id,
+              name,
+              value,
+            })
           })
           commit('SET_WEIGHTS', weights)
+          return weights
         })
     },
-    addWeight({commit}, newWeight) {
-      commit('ADD_WEIGHT', newWeight)
-      return firestore.collection('weights').doc(newWeight.name).set({value: newWeight.value})
+    addWeight({commit, state}, {name, value}) {
+      const newWeight = {
+        name,
+        value,
+        customer: state.currentCustomer,
+      }
+      return firestore.collection('weights').add(newWeight)
+        .then(({id}) => commit('ADD_WEIGHT', {...newWeight, id}))
         .catch((error) => {
           commit('SET_ERROR', error, 'Adding weight')
-          commit('REMOVE_WEIGHT', newWeight.name) })
+        })
     },
-    changeWeight({commit}, {weightName, updatedWeight}) {
-      return firestore.collection('weights').doc(weightName).update({
-        'value': updatedWeight,
+    changeWeight({commit}, {weightId, updatedWeightValue}) {
+      return firestore.collection('weights').doc(weightId).update({
+        'value': updatedWeightValue,
       })
-      .then(commit('UPDATE_WEIGHT', {weightName, updatedWeight}))
+      .then(commit('UPDATE_WEIGHT', {weightId, updatedWeightValue}))
       .catch(error => commit('SET_ERROR', error, 'Trying to change weight'))
     },
     removeWeight({commit}, weightName) {
@@ -241,6 +268,7 @@ const store = new Vuex.Store({
     currentUserTeam: state => state.user.team,
     isAdmin: state => state.user.role === 'admin',
     isLeader: state => state.user.role === 'leader',
+    weights: state => [...state.weights].sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1),
   },
   strict: process.env.NODE_ENV !== 'production',
 })
