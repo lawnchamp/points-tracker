@@ -259,6 +259,18 @@ const store = new Vuex.Store({
         .then(commit('UPDATE_APPROVAL_STATE', {id, newApprovalState}))
         .catch(error => commit('SET_ERROR', error, 'Trying to update approval state'))
     },
+    initializeAppData({dispatch}) {
+      dispatch('getAllCompetitions')
+
+      dispatch('fetchCurrentUser').then((currentUser) => {
+        if (currentUser.role == 'admin') {
+          dispatch('getWeights')
+          dispatch('getUsers')
+        } else if (currentUser.role == 'leader') {
+          dispatch('getWeights')
+        }
+      })
+    },
   },
   getters: {
     isLeaderOfAdmin: state => state.user.role === 'leader' || state.user.role === 'admin',
