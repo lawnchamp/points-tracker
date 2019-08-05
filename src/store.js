@@ -261,7 +261,7 @@ const store = new Vuex.Store({
     },
   },
   getters: {
-    authenticatedUser: state => state.user.email,
+    isLeaderOfAdmin: state => state.user.role === 'leader' || state.user.role === 'admin',
     competitionNames: state => Object.keys(state.weights),
     currentUserDislpayName: state => state.user.displayName,
     currentUserEmail: state => state.user.email,

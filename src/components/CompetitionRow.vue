@@ -65,7 +65,7 @@ export default {
       return this.points / (this.tied ? 2 : 1)
     },
     customValueIndicatorClass() {
-      return this.$store.getters.authenticatedUser && this.usingCustomValue ? 'italic text-blue-dark' : ''
+      return this.$store.getters.isLeaderOfAdmin && this.usingCustomValue ? 'italic text-blue-dark' : ''
     },
     usingCustomValue() {
       return this.defaultPoints && this.defaultPoints !== this.points

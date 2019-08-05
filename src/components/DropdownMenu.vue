@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     isAuthenticated() {
-      return !!this.$store.getters.authenticatedUser
+      return !!this.userEmail
     },
     photoURL() {
       return this.$store.state.user.photoURL
@@ -45,7 +45,7 @@ export default {
       return this.$store.state.user.displayName
     },
     userEmail() {
-      return this.$store.getters.authenticatedUser
+      return this.$store.getters.currentUserEmail
     },
     logInOrOut() {
       return this.isAuthenticated ? 'Logout' : 'Login'
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     changeAuthState() {
-      if (this.$store.getters.authenticatedUser) {
+      if (this.isAuthenticated) {
         this.$store.dispatch('userSignOut')
       } else {
         this.$router.replace('login')
