@@ -39,7 +39,7 @@ https://points.live is used to track points for multiple teams across many diffe
 
 ```bash
 yarn install
-make cert # only do this once
+make certs # only do this once
 docker-compose up -d
 yarn serve
 ```
