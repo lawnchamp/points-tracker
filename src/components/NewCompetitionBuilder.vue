@@ -3,7 +3,7 @@
     <template slot="title">
       <div v-if="isAdmin" class="inline">Add Competition</div>
       <div v-else-if="isLeader" class="inline font-semibold">
-        Add points for <span :class="`text-${leaderTeamName} capitalize`">{{ leaderTeamName }}</span> leaderTeamName
+        Add points for <span :class="`text-${leaderTeamName} capitalize`">{{ leaderTeamName }}</span> team
       </div>
     </template>
     <div>
