@@ -34,6 +34,11 @@
       :state="state"
       :competitionsByApprovalState="competitions.filter(comp => comp.approvalState == state)"
     />
+    <button
+      v-if="$store.state.currentCustomer == 'test'"
+      class="font-thin mr-4 border rounded-lg bg-white p-2"
+      @click="generateError"
+    >generate error</button>
   </div>
 </template>
 
@@ -81,6 +86,10 @@ export default {
     },
   },
   methods: {
+    generateError() {
+      const test = null
+      console.log('generating error!', test.fun.length)
+    },
     setGraphApprovalState(state) {
       const index = this.selectedGraphState.indexOf(state)
       if (index === -1) {
