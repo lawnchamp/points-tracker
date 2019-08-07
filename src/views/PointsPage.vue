@@ -35,7 +35,7 @@
       :competitionsByApprovalState="competitions.filter(comp => comp.approvalState == state)"
     />
     <button
-      v-if="$store.state.currentCustomer == 'test'"
+      v-if="showErrorGenerator"
       class="font-thin mr-4 border rounded-lg bg-white p-2"
       @click="generateError"
     >generate error</button>
@@ -83,6 +83,9 @@ export default {
     },
     isLeader() {
       return this.$store.getters.isLeader
+    },
+    showErrorGenerator() {
+      return this.$store.getters.currentUserEmail == 'rjshenk@gmail.com'
     },
   },
   methods: {
