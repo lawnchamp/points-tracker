@@ -102,6 +102,7 @@ const store = new Vuex.Store({
       state.loading = payload
     },
     SET_ERROR(state, error, actionDescription) {
+      Vue.rollbar.error(actionDescription, error)
       state.errors.push({
         error: error.toString(),
         actionDescription,
@@ -149,6 +150,14 @@ const store = new Vuex.Store({
               role: user.data().role,
               team: user.data().team,
             }
+            Vue.rollbar.configure({
+              payload: {
+                person: {
+                  id: email,
+                  ...completedUser
+                },
+              },
+            })
             commit('SET_USER_PROPERTIES', completedUser)
             return completedUser
           } else {
