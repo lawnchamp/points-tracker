@@ -154,7 +154,7 @@ const store = new Vuex.Store({
               payload: {
                 person: {
                   id: email,
-                  ...completedUser
+                  ...completedUser,
                 },
               },
             })

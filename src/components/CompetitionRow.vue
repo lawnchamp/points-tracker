@@ -1,6 +1,6 @@
 <template>
   <div v-if="userCanSeeCompetition" class="relative border-b">
-    <button v-if="isAdmin"
+    <button v-if="canDeleteCompetition"
       class="btn-close text-grey-light"
       @click="removeCompetition"
     >x</button>
@@ -83,8 +83,11 @@ export default {
     isAdmin() {
       return this.$store.getters.isAdmin
     },
+    isLeader() {
+      return this.$store.getters.isLeader
+    },
     canSeeDetails() {
-      return this.isAdmin || this.$store.getters.isLeader
+      return this.isAdmin || this.isLeader
     },
     loserText() {
       if (this.tied) {
@@ -97,6 +100,12 @@ export default {
     },
     teamColoring() {
       return `bg-${this.winner.toLowerCase()}`
+    },
+    canDeleteCompetition() {
+      return this.isAdmin || this.leaderLookingAtSubmittedPoints
+    },
+    leaderLookingAtSubmittedPoints() {
+      return this.isLeader && this.approvalState == 'submitted'
     },
   },
   methods: {
