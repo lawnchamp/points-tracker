@@ -92,7 +92,7 @@ export default {
   methods: {
     generateError() {
       const test = null
-      console.log('generating error!', test.fun.length)
+      console.log('generating error!', test.newError.length)
     },
     setGraphApprovalState(state) {
       const index = this.selectedGraphState.indexOf(state)
