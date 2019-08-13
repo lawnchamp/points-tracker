@@ -2,15 +2,16 @@
   <div class="font-sans text-grey-darkest leading tight">
     <div class="container mx-auto max-w-md px-4 -mt-32 py-1">
       <div class="bg-white rounded-lg shadow p-2">
-        <div v-if="isAdmin" class="container mx-auto">
+        <div class="container mx-auto">
           <div class="flex justify-between items-center">
-            <div class="flex items-center pb-1">
+            <div v-if="isAdmin" class="flex items-center pb-1">
               <div v-for="state in pointStates" :key="state">
                 <div :class="graphStateStyling(state)" @click="setGraphApprovalState(state)">
                   {{ state }}
                 </div>
               </div>
             </div>
+            <div v-else></div>
             <svg
               class="text-grey-dark h-4 w-4 hover:text-grey-darkest"
               fill="currentColor"
