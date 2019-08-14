@@ -328,6 +328,9 @@ const store = new Vuex.Store({
         }
       })
     },
+    setError({commit}, error) {
+      commit('SET_ERROR', { error, description: 'generic error'})
+    }
   },
   getters: {
     isLeaderOfAdmin: state => state.user.role === 'leader' || state.user.role === 'admin',
