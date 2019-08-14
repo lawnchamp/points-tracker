@@ -46,6 +46,9 @@ router.beforeEach((to, from, next) => {
   }
 
   store.dispatch('fetchCurrentUser').then((currentUser) => {
+    if (!currentUser || !currentUser.role) store.dispatch('setError', `This should never happen. fetchCurrentUser returned "${currentUser}"!`)
+
+
     if (adminOnAdminPage(currentUser, to)) {
       next()
     } else if (guestOnAdminPage(currentUser, to)) {
