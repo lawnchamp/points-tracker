@@ -177,9 +177,16 @@ const store = new Vuex.Store({
               error: `user with ${email} does not exist`,
               description: 'firebase saying user does not exist?',
             })
+            return originalUser
           }
         })
-        .catch(error => commit('SET_ERROR', {error, description: 'Requesting additional user properties'}))
+        .catch(error => {
+          commit('SET_ERROR', {
+            error,
+            description: `Requesting additional properties of ${email}, ${displayName}`
+          })
+          return originalUser
+        })
     },
     getUsers({commit, state}) {
       return firestore.collection('users').where('customer', '==', state.currentCustomer).get()
