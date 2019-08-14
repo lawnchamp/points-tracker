@@ -49,6 +49,11 @@ const store = new Vuex.Store({
         team: '',
       }
       state.userInitialized = true
+      Vue.rollbar.configure({
+        payload: {
+          person: null,
+        },
+      })
     },
     ADD_USERS: (state, users) => {
       Vue.set(state, 'users', users)
