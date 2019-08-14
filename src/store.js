@@ -107,12 +107,10 @@ const store = new Vuex.Store({
       state.loading = payload
     },
     SET_ERROR(state, {error, description}) {
-      console.error(description, error)
-      Vue.rollbar.error({description, error})
-      state.errors.push({
-        error: error.toString(),
-        description,
-      })
+      const stringError = `Error ${description}: ${error.toString()}`
+      console.error(stringError)
+      Vue.rollbar.error(stringError)
+      state.errors.push(stringError)
     },
     PUBLISH_ALL(state, newlyPublishedIds) {
       state.competitions.forEach((competition) => {
