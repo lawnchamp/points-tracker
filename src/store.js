@@ -149,7 +149,9 @@ const store = new Vuex.Store({
         }
       })
     },
-    userSignIn({commit}, {email, photoURL, displayName}) {
+    userSignIn({commit, state}, {email, photoURL, displayName}) {
+      const originalUser = {...state.user, email, photoURL, displayName}
+      commit('SET_USER_PROPERTIES', originalUser)
       return firestore.collection('users').doc(email).get()
         .then((user) => {
           if (user.exists) {
