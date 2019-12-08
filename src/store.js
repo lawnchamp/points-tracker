@@ -12,7 +12,7 @@ export const TEAM_NAMES = [
   'red', 'turquoise', 'yellow',
 ]
 
-const DEFAULT_CUSTOMER = 'covfel'
+const DEFAULT_CUSTOMER = 'test'
 function setCurrentCustomer() {
   const subdomain = window.location.host.split('.')[0]
   return subdomain === 'points' ? DEFAULT_CUSTOMER : subdomain
