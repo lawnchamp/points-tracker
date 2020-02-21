@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 -mt-32">
+  <div class="mx-auto max-w-md px-4 -mt-32">
     <ul class="bg-white rounded-lg shadow max-w-md px-4 py-2">
       <li
         v-for="{name, value, id} in weights"
