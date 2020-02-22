@@ -42,7 +42,7 @@ export default {
     addNewUser() {
       if (this.invalidEmail) return
 
-      this.$store.dispatch('addUser', this.email)
+      this.$store.dispatch('addUser', this.email.trim())
       this.email = ''
     },
   },

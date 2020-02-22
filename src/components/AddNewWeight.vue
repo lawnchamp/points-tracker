@@ -51,7 +51,7 @@ export default {
       if (this.invalidWeight) return
 
       this.$store.dispatch('addWeight', {
-        name: this.name,
+        name: this.name.trim(),
         value: this.value,
       })
 
