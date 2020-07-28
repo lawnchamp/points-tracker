@@ -13,9 +13,12 @@
               <path d="M1 10h3v10H1V10zM6 0h3v20H6V0zm5 8h3v12h-3V8zm5-4h3v16h-3V4z" />
             </svg>
           </div>
-          <h1 class="inline-block font-semibold tracking-wide text-xl text-grey-light antialiased pl-4 pt-3">
-            2020 Northeast
-            <br><span>Regional Youth Event</span>
+          <h1
+            class="inline-block font-semibold tracking-wide text-xl text-grey-light antialiased pl-4 pt-3"
+          >
+            2020 Youth Camp
+            <br />
+            <span class="text-sm font-medium">Covenant Fellowship Church</span>
           </h1>
         </div>
         <div>
@@ -49,6 +52,6 @@ export default {
     isAdmin() {
       return this.$store.getters.isAdmin;
     },
-  }
+  },
 };
 </script>
