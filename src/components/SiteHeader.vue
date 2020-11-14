@@ -18,7 +18,7 @@
           >
             2020 Youth Camp
             <br />
-            <span class="text-sm font-medium">Covenant Fellowship Church</span>
+            <span class="text-sm font-medium">Covenant Fellowship</span>
           </h1>
         </div>
         <div>
