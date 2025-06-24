@@ -16,7 +16,7 @@
           <h1
             class="inline-block font-semibold tracking-wide text-xl text-grey-light antialiased pl-4 pt-3"
           >
-            2024 Youth Camp
+            2025 Youth Camp
             <br />
             <span class="text-sm font-medium">Covenant Fellowship</span>
           </h1>
